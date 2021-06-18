@@ -17,62 +17,87 @@ namespace HorizonEngine
         private Texture2D _texture;
         private Texture2D box;
 
+        private static Scene _main;
+        private List<GameObject> _gameObjects;
+        private Dictionary<string, Texture2D> _textures;
+        private ISceneStarter _sceneStarter;
+        private List<IDrawable> _drawables;
+        private List<IUpdatable> _updatables;
 
-        private List<GameObject> gameObjects = new List<GameObject>();
+        internal static Scene main
+        {
+            get
+            {
+                return _main;
+            }
+        }
 
-        public Scene()
+        internal static void EnableComponent(Component component)
+        {
+            Scene scene = Scene.main;
+            if(component is IDrawable) scene._drawables.Add((IDrawable)component);
+            if(component is IUpdatable) scene._updatables.Add((IUpdatable)component);
+        }
+
+        internal static void DisableComponent(Component component)
+        {
+            Scene scene = Scene.main;
+            if (component is IDrawable) scene._drawables.Remove((IDrawable)component);
+            if (component is IUpdatable) scene._updatables.Remove((IUpdatable)component);
+        }
+
+        public Scene(ISceneStarter sceneStarter)
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+
+            _gameObjects = new List<GameObject>();
+            _sceneStarter = sceneStarter;
+            _textures = new Dictionary<string, Texture2D>();
+            _drawables = new List<IDrawable>();
+            _updatables = new List<IUpdatable>();
+            _main = this;
+        }     
+
+        public static GameObject CreateGameObject(string name = "GameObject")
+        {
+            GameObject gameObject = new GameObject(name);
+            Scene.main._gameObjects.Add(gameObject);
+            return gameObject;
+        }
+
+        public static Texture2D GetTexture(string name)
+        {
+            Scene scene = Scene.main;
+            if(scene._textures.ContainsKey(name))
+            {
+                return scene._textures[name];
+            }
+
+            Texture2D texture = main.Content.Load<Texture2D>(name);
+            scene._textures.Add(name, texture);
+            return texture;
         }
 
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
             IsFixedTimeStep = false;
             _graphics.PreferredBackBufferWidth = 1280;
             _graphics.PreferredBackBufferHeight = 720;
             _graphics.ApplyChanges();
 
             _timeCounter = _fps = 0;
-
-
-
-            // Testing
-
-            GameObject a = new GameObject("1");
-            GameObject b = new GameObject("2");
-            GameObject c = new GameObject("3");
-
-            a.Size = new Vector2(100, 100);
-            b.Size = new Vector2(50, 50);
-            c.Size = new Vector2(50, 50);
-
-            b.Position = new Vector2(0, 0);
-            c.Position = new Vector2(50, 50);
-
-            gameObjects.Add(a);
-            gameObjects.Add(b);
-            gameObjects.Add(c);
-
-            b.Parent = a;
-            c.Parent = b;
-
+            _sceneStarter.Start();
             base.Initialize();
-
         }
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
-
-            _spriteFont = Content.Load<SpriteFont>("TestFont");
-            _texture = Content.Load<Texture2D>("TestTexture");
-            box = Content.Load<Texture2D>("Box");
+            // TODO: use this.Content to load your game content here           
         }
 
         protected override void Update(GameTime gameTime)
@@ -89,49 +114,17 @@ namespace HorizonEngine
                 _timeCounter = _fps = 0;
             }
 
-
-            KeyboardState state = Keyboard.GetState();
-            if (state.IsKeyDown(Keys.A))
-            {
-                gameObjects[0].Position += new Vector2(100, 0) * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            }
-            if (state.IsKeyDown(Keys.S))
-            {
-                gameObjects[1].Position += new Vector2(100, 0) * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            }
-            if (state.IsKeyDown(Keys.D))
-            {
-                gameObjects[2].Position += new Vector2(100, 0) * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            }
-            if (state.IsKeyDown(Keys.W))
-            {
-                gameObjects[2].Parent = gameObjects[0];
-            }
-            if (state.IsKeyDown(Keys.E))
-            {
-                gameObjects[0].Position = new Vector2(500, 500);
-                gameObjects[0].Size = new Vector2(300, 100);
-            }
-            if (state.IsKeyDown(Keys.R))
-            {
-                gameObjects[0].Size = new Vector2(350, 350);
-                gameObjects[0].Position = new Vector2(500, 0);
-            }
-
+            Input.Update();
+            _updatables.ForEach(x => x.Update(gameTime));
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
-            //gameObjects.ForEach(x => _spriteBatch.DrawString(_spriteFont, x.Name, x.Position, Color.White));
-            //_spriteBatch.DrawString(_spriteFont, "Hello", new Vector2(300, 300), Color.White);
-            _spriteBatch.Draw(box, new Rectangle((int)gameObjects[0].Position.X, (int)gameObjects[0].Position.Y, (int)gameObjects[0].Size.X, (int)gameObjects[0].Size.Y), Color.White);
-            _spriteBatch.Draw(box, new Rectangle((int)gameObjects[1].Position.X, (int)gameObjects[1].Position.Y, (int)gameObjects[1].Size.X, (int)gameObjects[1].Size.Y), Color.Red);
-            _spriteBatch.Draw(box, new Rectangle((int)gameObjects[2].Position.X, (int)gameObjects[2].Position.Y, (int)gameObjects[2].Size.X, (int)gameObjects[2].Size.Y), Color.Green);
+            _drawables.ForEach(x => x.Draw(_spriteBatch));
             _spriteBatch.End();
 
             base.Draw(gameTime);

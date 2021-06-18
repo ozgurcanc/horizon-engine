@@ -7,22 +7,24 @@ using Microsoft.Xna.Framework.Input;
 
 namespace HorizonEngine
 {
-    class GameObject
+    public class GameObject
     {
         private string _name;
         private Vector2 _position;
         private GameObject _parent;
         private List<GameObject> _childs;
         private Vector2 _size;
+        private List<Component> _components;
 
-        public GameObject(string name = "GameObject")
+        internal GameObject(string name = "GameObject")
         {
             _childs = new List<GameObject>();
+            _components = new List<Component>();
             _parent = null;
             _name = name;
         }
 
-        public Vector2 Position
+        public Vector2 position
         {
             get
             {
@@ -32,11 +34,11 @@ namespace HorizonEngine
             {
                 Vector2 change = value - _position;
                 _position = value;
-                _childs.ForEach(x => x.Position += change);
+                _childs.ForEach(x => x.position += change);
             }
         }
 
-        public Vector2 Size
+        public Vector2 size
         {
             get
             {
@@ -44,13 +46,13 @@ namespace HorizonEngine
             }
             set
             {
-                Vector2 change = new Vector2(value.X / _size.X, value.Y / Size.Y);
+                Vector2 change = new Vector2(value.X / _size.X, value.Y / size.Y);
                 _size = value;
-                _childs.ForEach(x => { x.Size *= change; x.Position = _position + (x.Position - _position) * change; });
+                _childs.ForEach(x => { x.size *= change; x.position = _position + (x.position - _position) * change; });
             }
         }
 
-        public GameObject Parent
+        public GameObject parent
         {
             get
             {
@@ -67,7 +69,7 @@ namespace HorizonEngine
             }
         }
 
-        public string Name
+        public string name
         {
             get
             {
@@ -77,6 +79,25 @@ namespace HorizonEngine
             {
                 _name = value;
             }
+        }
+
+        internal Rectangle rect
+        {
+            get
+            {
+                return new Rectangle((int)_position.X, (int)_position.Y, (int)size.X, (int)size.Y);
+            }
+        }
+
+        public T AddComponent<T>() where T : Component, new()
+        {
+            Component component = new T();
+            component.gameObject = this;
+            _components.Add(component);
+
+            Scene.EnableComponent(component);
+
+            return (T)component;
         }
     }
 }
