@@ -35,15 +35,37 @@ namespace HorizonEngine
         internal static void EnableComponent(Component component)
         {
             Scene scene = Scene.main;
-            if(component is IDrawable) scene._drawables.Add((IDrawable)component);
-            if(component is IUpdatable) scene._updatables.Add((IUpdatable)component);
+            if (component is IDrawable)
+            {
+                component.drawableID = scene._drawables.Count;
+                scene._drawables.Add((IDrawable)component);
+            }
+            if(component is IUpdatable)
+            {
+                component.updatableID = scene._updatables.Count;
+                scene._updatables.Add((IUpdatable)component);
+            }
         }
 
         internal static void DisableComponent(Component component)
         {
             Scene scene = Scene.main;
-            if (component is IDrawable) scene._drawables.Remove((IDrawable)component);
-            if (component is IUpdatable) scene._updatables.Remove((IUpdatable)component);
+            if (component is IDrawable)
+            {
+                int lastIndex = scene._drawables.Count - 1;
+                IDrawable temp = scene._drawables[lastIndex];
+                ((Component)temp).drawableID = component.drawableID;
+                scene._drawables[component.drawableID] = temp;
+                scene._drawables.RemoveAt(lastIndex);
+            }
+            if (component is IUpdatable)
+            {
+                int lastIndex = scene._updatables.Count - 1;
+                IUpdatable temp = scene._updatables[lastIndex];
+                ((Component)temp).updatableID = component.updatableID;
+                scene._updatables[component.updatableID] = temp;
+                scene._updatables.RemoveAt(lastIndex);
+            }
         }
 
         public Scene(ISceneStarter sceneStarter)
@@ -115,7 +137,8 @@ namespace HorizonEngine
             }
 
             Input.Update();
-            _updatables.ForEach(x => x.Update(gameTime));
+            foreach (var x in _updatables.ToArray()) x.Update(gameTime);
+            //_updatables.ForEach(x => x.Update(gameTime));
             base.Update(gameTime);
         }
 
@@ -124,7 +147,8 @@ namespace HorizonEngine
             GraphicsDevice.Clear(Color.CornflowerBlue);
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
-            _drawables.ForEach(x => x.Draw(_spriteBatch));
+            //_drawables.ForEach(x => x.Draw(_spriteBatch));
+            foreach (var x in _drawables.ToArray()) x.Draw(_spriteBatch);
             _spriteBatch.End();
 
             base.Draw(gameTime);

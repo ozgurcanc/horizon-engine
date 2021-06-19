@@ -78,6 +78,18 @@ namespace Project_Horizon
                 {
                     gameObject.position -= new Vector2(0, 100) * (float)gameTime.ElapsedGameTime.TotalSeconds;
                 }
+                if(Input.GetKeyDown(Keys.R))
+                {
+                    this.enabled = false;
+                }
+                if (Input.GetKeyDown(Keys.T))
+                {
+                    gameObject.GetComponent<Sprite>().enabled = false;
+                }
+                if (Input.GetKeyDown(Keys.Y))
+                {
+                    gameObject.GetComponent<Sprite>().enabled = true;
+                }
             }
         }
         public void Start()
@@ -125,6 +137,12 @@ namespace Project_Horizon
             s_c.texture = Scene.GetTexture("Box");
             s_c.color = Color.Green;
 
+            /*
+            s_c.enabled = false;
+            s_b.enabled = false;
+            s_a.enabled = false;
+            */
+
             Test t = a.AddComponent<Test>();
             t._gameObjects[0] = a;
             t._gameObjects[1] = b;
@@ -161,7 +179,7 @@ namespace Project_Horizon
             //using (var game = new Scene())
             //  game.Run();
 
-            var game = new Scene(new NewGame());
+            var game = new Scene(new Benchmark());
             game.Run();
         }
     }

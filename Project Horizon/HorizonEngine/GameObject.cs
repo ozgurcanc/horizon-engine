@@ -4,24 +4,36 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Diagnostics;
 
 namespace HorizonEngine
 {
     public class GameObject
     {
+        private bool _activeSelf;
+        private bool _activeInHierarchy;
         private string _name;
         private Vector2 _position;
         private GameObject _parent;
         private List<GameObject> _childs;
         private Vector2 _size;
-        private List<Component> _components;
+        private Dictionary<Type, Component> _components;
 
         internal GameObject(string name = "GameObject")
         {
             _childs = new List<GameObject>();
-            _components = new List<Component>();
+            _components = new Dictionary<Type, Component>();
             _parent = null;
             _name = name;
+            _activeSelf = _activeInHierarchy = true;
+        }
+
+        public bool activeInHierarchy
+        {
+            get
+            {
+                return _activeInHierarchy;
+            }
         }
 
         public Vector2 position
@@ -91,13 +103,24 @@ namespace HorizonEngine
 
         public T AddComponent<T>() where T : Component, new()
         {
+            Debug.Assert(_components.ContainsKey(typeof(T)) == false);
             Component component = new T();
             component.gameObject = this;
-            _components.Add(component);
+            _components.Add(typeof(T), component);
 
             Scene.EnableComponent(component);
 
             return (T)component;
+        }
+
+        public T GetComponent<T>() where T : Component
+        {
+            if(_components.ContainsKey(typeof(T)))
+            {
+                return (T)_components[typeof(T)];
+            }
+
+            return null;
         }
     }
 }
