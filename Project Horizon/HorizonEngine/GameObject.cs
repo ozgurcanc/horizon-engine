@@ -28,6 +28,21 @@ namespace HorizonEngine
             _activeSelf = _activeInHierarchy = true;
         }
 
+        public bool activeSelf
+        {
+            get
+            {
+                return _activeSelf;
+            }
+            set
+            {
+                if (_activeSelf == value) return;
+                _activeSelf = value;
+                UpdateHierarchy(this);
+            }
+        }
+
+
         public bool activeInHierarchy
         {
             get
@@ -121,6 +136,24 @@ namespace HorizonEngine
             }
 
             return null;
+        }
+
+        private void UpdateHierarchy(GameObject gameObject)
+        {
+            bool previous = gameObject._activeInHierarchy;
+            gameObject._activeInHierarchy = gameObject._activeSelf;
+            if (gameObject.parent != null) gameObject._activeInHierarchy &= gameObject._parent._activeInHierarchy;
+            if (previous != gameObject._activeInHierarchy)
+            {
+                var components = gameObject._components.Values;
+                foreach (Component temp in components)
+                {
+                    if (!temp.enabled) continue;
+                    if (gameObject._activeInHierarchy) Scene.EnableComponent(temp);
+                    else Scene.DisableComponent(temp);
+                }
+                gameObject._childs.ForEach(x => UpdateHierarchy(x));
+            }
         }
     }
 }

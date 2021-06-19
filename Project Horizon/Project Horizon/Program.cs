@@ -39,17 +39,17 @@ namespace Project_Horizon
                 _gameObjects[0].position = new Vector2(500, 0);
             }
 
-            if(Input.GetKeyDown(Keys.Y))
+            if(Input.GetKeyDown(Keys.Z))
             {
-                Debug.WriteLine("down");
+                _gameObjects[0].activeSelf = !_gameObjects[0].activeSelf;
             }
-            if (Input.GetKey(Keys.Y))
+            if (Input.GetKeyDown(Keys.X))
             {
-                //Debug.WriteLine("still");
+                _gameObjects[1].activeSelf = !_gameObjects[1].activeSelf;
             }
-            if (Input.GetKeyUp(Keys.Y))
+            if (Input.GetKeyDown(Keys.C))
             {
-                Debug.WriteLine("up");
+                _gameObjects[2].activeSelf = !_gameObjects[2].activeSelf;
             }
 
             
@@ -89,6 +89,10 @@ namespace Project_Horizon
                 if (Input.GetKeyDown(Keys.Y))
                 {
                     gameObject.GetComponent<Sprite>().enabled = true;
+                }
+                if (Input.GetKeyDown(Keys.X))
+                {
+                    gameObject.activeSelf = false;
                 }
             }
         }
@@ -179,7 +183,7 @@ namespace Project_Horizon
             //using (var game = new Scene())
             //  game.Run();
 
-            var game = new Scene(new Benchmark());
+            var game = new Scene(new NewGame());
             game.Run();
         }
     }
