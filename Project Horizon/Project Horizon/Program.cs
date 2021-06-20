@@ -14,29 +14,34 @@ namespace Project_Horizon
         {
             if (Input.GetKey(Keys.A))
             {
-                _gameObjects[0].position += new Vector2(100, 0) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                _gameObjects[0].position -= new Vector2(2, 0) * (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
             if (Input.GetKey(Keys.S))
             {
-                _gameObjects[1].position += new Vector2(100, 0) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                _gameObjects[0].position -= new Vector2(0, 2) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                //_gameObjects[1].position += new Vector2(2, 0) * (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
             if (Input.GetKey(Keys.D))
             {
-                _gameObjects[2].position += new Vector2(100, 0) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                _gameObjects[0].position += new Vector2(2, 0) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                //_gameObjects[2].position += new Vector2(2, 0) * (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
-            if (Input.GetKeyDown(Keys.W))
+            if (Input.GetKey(Keys.W))
             {
-                _gameObjects[2].parent = _gameObjects[0];
+                _gameObjects[0].position += new Vector2(0, 2) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                //_gameObjects[2].parent = _gameObjects[0];
             }
             if (Input.GetKeyDown(Keys.E))
             {
-                _gameObjects[0].position = new Vector2(500, 500);
-                _gameObjects[0].size = new Vector2(300, 100);
+                //_gameObjects[0].position = new Vector2(500, 500);
+                //_gameObjects[0].size = new Vector2(300, 100);
+                Scene.camera.width = 40;
+                Scene.camera.height = 40;
             }
             if (Input.GetKey(Keys.R))
             {
-                _gameObjects[0].size = new Vector2(350, 350);
-                _gameObjects[0].position = new Vector2(500, 0);
+                _gameObjects[0].size = new Vector2(20, 20);
+                //_gameObjects[0].position = new Vector2(500, 0);
             }
 
             if(Input.GetKeyDown(Keys.Z))
@@ -51,8 +56,20 @@ namespace Project_Horizon
             {
                 _gameObjects[2].activeSelf = !_gameObjects[2].activeSelf;
             }
+            if (Input.GetKeyDown(Keys.Y))
+            {
+                //Debug.WriteLine(Mouse.GetState().Position.ToVector2());
+                _gameObjects[0].position = Scene.camera.ScreenToWorldPoint(Mouse.GetState().Position.ToVector2());
+                Debug.WriteLine(Mouse.GetState().Position.ToVector2());
+                Debug.WriteLine(_gameObjects[0].position);
+                Debug.WriteLine(Scene.camera.WorldToScreenPoint(_gameObjects[0].position));
+            }
+            if (Input.GetKey(Keys.K))
+            {
+                //Debug.WriteLine(Mouse.GetState().Position.ToVector2());
+                Scene.camera.rotation += 20f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
 
-            
         }
     }
 
@@ -86,7 +103,7 @@ namespace Project_Horizon
                 {
                     gameObject.GetComponent<Sprite>().enabled = false;
                 }
-                if (Input.GetKeyDown(Keys.Y))
+                if (Input.GetKeyDown(Keys.K))
                 {
                     gameObject.GetComponent<Sprite>().enabled = true;
                 }
@@ -94,14 +111,28 @@ namespace Project_Horizon
                 {
                     gameObject.activeSelf = false;
                 }
+                if(Input.GetKeyDown(Keys.Y))
+                {
+                    gameObject.position = Scene.camera.ScreenToWorldPoint(Mouse.GetState().Position.ToVector2());
+                    Debug.WriteLine(Mouse.GetState().Position.ToVector2());
+                    Debug.WriteLine(gameObject.position);
+                    Debug.WriteLine(Scene.camera.WorldToScreenPoint(gameObject.position));
+                }
             }
         }
         public void Start()
         {
-            int count = 10000;
+            int count = 1;
             Random r = new Random();
 
-            for(int i=0; i<count; i++)
+            Camera cam = Scene.camera;
+            cam.position = new Vector2(350, 350);
+            cam.width = 1000;
+            cam.height = 1000;
+            cam.rotation = 0;
+            
+
+            for (int i=0; i<count; i++)
             {
                 GameObject temp = Scene.CreateGameObject("1");
                 temp.position = new Vector2(r.Next(100, 600), r.Next(100, 600));
@@ -120,12 +151,17 @@ namespace Project_Horizon
             GameObject b = Scene.CreateGameObject("2");
             GameObject c = Scene.CreateGameObject("3");
 
-            a.size = new Vector2(100, 100);
-            b.size = new Vector2(50, 50);
-            c.size = new Vector2(50, 50);
+            Camera cam = Scene.camera;
+            cam.width = 20;
+            cam.height = 20;
 
-            b.position = new Vector2(0, 0);
-            c.position = new Vector2(50, 50);
+            a.size = new Vector2(10, 10);
+            b.size = new Vector2(5, 5);
+            c.size = new Vector2(5, 5);
+
+            a.position = new Vector2(0, 0);
+            b.position = new Vector2(-2.5f, 2.5f);
+            c.position = new Vector2(2.5f, -2.5f);
 
             b.parent = a;
             c.parent = b;

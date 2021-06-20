@@ -112,7 +112,8 @@ namespace HorizonEngine
         {
             get
             {
-                return new Rectangle((int)_position.X, (int)_position.Y, (int)size.X, (int)size.Y);
+                float scale = Camera.scale;
+                return new Rectangle((int)((_position.X - _size.X / 2) * scale), (int)((_position.Y + _size.Y / 2) * scale) , (int)(_size.X * scale), (int)(_size.Y * -scale));
             }
         }
 

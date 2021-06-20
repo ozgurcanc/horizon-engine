@@ -9,7 +9,7 @@ namespace HorizonEngine
 {
     public class Scene : Game
     {
-        private GraphicsDeviceManager _graphics;
+        //private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private int _fps;
         private double _timeCounter;
@@ -23,6 +23,7 @@ namespace HorizonEngine
         private ISceneStarter _sceneStarter;
         private List<IDrawable> _drawables;
         private List<IUpdatable> _updatables;
+        private Camera _camera;
 
         internal static Scene main
         {
@@ -70,7 +71,8 @@ namespace HorizonEngine
 
         public Scene(ISceneStarter sceneStarter)
         {
-            _graphics = new GraphicsDeviceManager(this);
+            //_graphics = new GraphicsDeviceManager(this);
+            _camera = new Camera(new GraphicsDeviceManager(this));
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
@@ -102,13 +104,19 @@ namespace HorizonEngine
             return texture;
         }
 
+        public static Camera camera
+        {
+            get
+            {
+                return Scene.main._camera;
+            }
+        }
+
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
             IsFixedTimeStep = false;
-            _graphics.PreferredBackBufferWidth = 1280;
-            _graphics.PreferredBackBufferHeight = 720;
-            _graphics.ApplyChanges();
+            _camera.resolution = new Vector2(1280, 720);
 
             _timeCounter = _fps = 0;
             _sceneStarter.Start();
@@ -136,6 +144,7 @@ namespace HorizonEngine
                 _timeCounter = _fps = 0;
             }
 
+            _camera.Update();
             Input.Update();
             foreach (var x in _updatables.ToArray()) x.Update(gameTime);
             //_updatables.ForEach(x => x.Update(gameTime));
@@ -144,9 +153,11 @@ namespace HorizonEngine
 
         protected override void Draw(GameTime gameTime)
         {
+            //Debug.WriteLine(Vector2.Transform(new Vector2(-5 * Camera.scale, +5 * Camera.scale), _camera.renderTransform));
             GraphicsDevice.Clear(Color.CornflowerBlue);
             // TODO: Add your drawing code here
-            _spriteBatch.Begin();
+            //Debug.WriteLine(Vector2.Transform(new Vector2(0, 0), _camera.worldToScreen));
+            _spriteBatch.Begin(transformMatrix: _camera.renderTransform);
             //_drawables.ForEach(x => x.Draw(_spriteBatch));
             foreach (var x in _drawables.ToArray()) x.Draw(_spriteBatch);
             _spriteBatch.End();
