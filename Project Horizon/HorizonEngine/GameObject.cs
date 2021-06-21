@@ -19,6 +19,7 @@ namespace HorizonEngine
         private List<GameObject> _childs;
         private Vector2 _size;
         private Dictionary<Type, Component> _components;
+        private Layer _layer;
 
         internal GameObject(string name = "GameObject")
         {
@@ -27,6 +28,7 @@ namespace HorizonEngine
             _parent = null;
             _name = name;
             _activeSelf = _activeInHierarchy = true;
+            _layer = 0;
         }
 
         public bool activeSelf
@@ -115,6 +117,18 @@ namespace HorizonEngine
             set
             {
                 _name = value;
+            }
+        }
+
+        public Layer layer
+        {
+            get
+            {
+                return _layer;
+            }
+            set
+            {
+                _layer = value;
             }
         }
 

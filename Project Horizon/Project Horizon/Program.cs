@@ -83,6 +83,44 @@ namespace Project_Horizon
 
     class Benchmark : ISceneStarter
     {
+        class LayerTest : Behaviour
+        {
+            public override void Update(float deltaTime)
+            {
+                if(Input.GetKeyDown(Keys.NumPad0))
+                {
+                    Camera.CullLayer(Layer.Default, true);
+                }
+                if (Input.GetKeyDown(Keys.NumPad1))
+                {
+                    Camera.CullLayer(Layer.Default, false);
+                }
+                if (Input.GetKeyDown(Keys.NumPad2))
+                {
+                    Camera.CullLayer(Layer.Layer1, true);
+                }
+                if (Input.GetKeyDown(Keys.NumPad3))
+                {
+                    Camera.CullLayer(Layer.Layer1, false);
+                }
+                if (Input.GetKeyDown(Keys.NumPad4))
+                {
+                    Camera.CullLayer(Layer.Layer2, true);
+                }
+                if (Input.GetKeyDown(Keys.NumPad5))
+                {
+                    Camera.CullLayer(Layer.Layer2, false);
+                }
+                if (Input.GetKeyDown(Keys.NumPad6))
+                {
+                    Camera.CullLayer(Layer.Layer3, true);
+                }
+                if (Input.GetKeyDown(Keys.NumPad7))
+                {
+                    Camera.CullLayer(Layer.Layer3, false);
+                }
+            }
+        }
         class BenchmarkScript : Behaviour
         {
             void Test(float deltaTime)
@@ -160,14 +198,15 @@ namespace Project_Horizon
         }
         public void Start()
         {
-            int count = 10000;
+            int count = 1000;
             Random r = new Random();
 
             Camera.position = new Vector2(350, 350);
             Camera.width = 1000;
             Camera.height = 1000;
             Camera.rotation = 0;
-            
+
+            Scene.CreateGameObject("1").AddComponent<LayerTest>();
 
             for (int i=0; i<count; i++)
             {
@@ -180,6 +219,27 @@ namespace Project_Horizon
                 rb.velocity = new Vector2(r.Next(100, 150), r.Next(100, 150));
                 if (i % 2 == 0) rb.velocity *= new Vector2(-1, -1);
                 rb.angularVelocity = r.Next(30, 60);
+
+                if(i%4 == 0)
+                {
+                    temp.GetComponent<Sprite>().color = Color.Red;
+                    temp.layer = Layer.Layer1;
+                }
+                else if (i % 4 == 1)
+                {
+                    temp.GetComponent<Sprite>().color = Color.Green;
+                    temp.layer = Layer.Layer2;
+                }
+                else if (i % 4 == 2)
+                {
+                    temp.GetComponent<Sprite>().color = Color.Blue;
+                    temp.layer = Layer.Layer3;
+                }
+                else 
+                {
+                    //temp.GetComponent<Sprite>().color = Color.Red;
+                    //temp.layer = Layer.Layer1;
+                }
             }
         }
     }

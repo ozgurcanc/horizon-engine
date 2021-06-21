@@ -168,7 +168,7 @@ namespace HorizonEngine
             //Debug.WriteLine(Vector2.Transform(new Vector2(0, 0), _camera.worldToScreen));
             _spriteBatch.Begin(transformMatrix: Camera.renderTransform);
             //_drawables.ForEach(x => x.Draw(_spriteBatch));
-            foreach (var x in _renderers.ToArray()) x.Draw(_spriteBatch);
+            foreach (var x in _renderers.ToArray()) if ((Camera.cullingMask & (1 << (int)x.gameObject.layer)) == 0) x.Draw(_spriteBatch);
             _spriteBatch.End();
 
             base.Draw(gameTime);

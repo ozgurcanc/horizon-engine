@@ -20,6 +20,7 @@ namespace HorizonEngine
         private static Matrix _renderTransform;
         private static Matrix _worldToScreen;
         private static Matrix _screenToWorld;
+        private static int _cullingMask;
         
 
         internal static void InitCamera(GraphicsDeviceManager graphics)
@@ -28,6 +29,7 @@ namespace HorizonEngine
             _rotation = 0;
             _width = _height = 10;
             _resolution = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+            _cullingMask = 0;
         }
 
         internal static float scale
@@ -127,6 +129,14 @@ namespace HorizonEngine
             }
         }
 
+        internal static int cullingMask
+        {
+            get
+            {
+                return _cullingMask;
+            }
+        }
+
         public static Vector2 WorldToScreenPoint(Vector2 position)
         {
             return Vector2.Transform(position, _worldToScreen);
@@ -135,6 +145,12 @@ namespace HorizonEngine
         public static Vector2 ScreenToWorldPoint(Vector2 position)
         {
             return Vector2.Transform(position, _screenToWorld);
+        }
+
+        public static void CullLayer(Layer layer, bool cull = true)
+        {
+            if (cull) _cullingMask |= 1 << (int)layer;
+            else _cullingMask &= ~(1 << (int)layer);
         }
     }
 }
