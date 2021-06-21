@@ -72,11 +72,11 @@ namespace HorizonEngine
             }
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        internal override void Draw(SpriteBatch spriteBatch)
         {
             if (texture == null) return;
 
-            spriteBatch.Draw(_texture, gameObject.rect, null, _color, 0f, Vector2.Zero, (SpriteEffects)_flipState, 0f);
+            spriteBatch.Draw(_texture, gameObject.rect, null, _color, MathHelper.ToRadians(gameObject.rotation), new Vector2(texture.Width / 2, texture.Height / 2), (SpriteEffects)_flipState, 0f);
         }
     }
 }

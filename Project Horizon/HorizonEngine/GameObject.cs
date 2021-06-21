@@ -14,6 +14,7 @@ namespace HorizonEngine
         private bool _activeInHierarchy;
         private string _name;
         private Vector2 _position;
+        private float _rotation;
         private GameObject _parent;
         private List<GameObject> _childs;
         private Vector2 _size;
@@ -62,6 +63,18 @@ namespace HorizonEngine
                 Vector2 change = value - _position;
                 _position = value;
                 _childs.ForEach(x => x.position += change);
+            }
+        }
+
+        public float rotation
+        {
+            get
+            {
+                return _rotation;
+            }
+            set
+            {
+                _rotation = value % 360f;
             }
         }
 

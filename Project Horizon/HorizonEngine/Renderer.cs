@@ -11,6 +11,6 @@ namespace HorizonEngine
 {
     public abstract class Renderer : Component
     {
-        public abstract void Draw(SpriteBatch spriteBatch);
+        internal abstract void Draw(SpriteBatch spriteBatch);
     }
 }

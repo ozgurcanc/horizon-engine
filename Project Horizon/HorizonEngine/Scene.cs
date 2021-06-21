@@ -23,6 +23,7 @@ namespace HorizonEngine
         private ISceneStarter _sceneStarter;
         private List<Renderer> _renderers;
         private List<Behaviour> _behaviours;
+        private List<Rigidbody> _rigidbodies;
         private Camera _camera;
 
         internal static Scene main
@@ -46,6 +47,11 @@ namespace HorizonEngine
                 component.componetID = scene._behaviours.Count;
                 scene._behaviours.Add((Behaviour)component);
             }
+            else if(component is Rigidbody)
+            {
+                component.componetID = scene._rigidbodies.Count;
+                scene._rigidbodies.Add((Rigidbody)component);
+            }
         }
 
         internal static void DisableComponent(Component component)
@@ -67,6 +73,14 @@ namespace HorizonEngine
                 scene._behaviours[component.componetID] = temp;
                 scene._behaviours.RemoveAt(lastIndex);
             }
+            else if (component is Rigidbody)
+            {
+                int lastIndex = scene._rigidbodies.Count - 1;
+                Rigidbody temp = scene._rigidbodies[lastIndex];
+                temp.componetID = component.componetID;
+                scene._rigidbodies[component.componetID] = temp;
+                scene._rigidbodies.RemoveAt(lastIndex);
+            }
         }
 
         public Scene(ISceneStarter sceneStarter)
@@ -81,6 +95,7 @@ namespace HorizonEngine
             _textures = new Dictionary<string, Texture2D>();
             _renderers = new List<Renderer>();
             _behaviours = new List<Behaviour>();
+            _rigidbodies = new List<Rigidbody>();
             _main = this;
         }     
 
@@ -148,6 +163,7 @@ namespace HorizonEngine
 
             _camera.Update();
             Input.Update();
+            foreach (var x in _rigidbodies.ToArray()) x.UpdatePhysics(deltaTime);
             foreach (var x in _behaviours.ToArray()) x.Update(deltaTime);
             //_updatables.ForEach(x => x.Update(gameTime));
             base.Update(gameTime);

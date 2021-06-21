@@ -85,8 +85,9 @@ namespace Project_Horizon
     {
         class BenchmarkScript : Behaviour
         {
-            public override void Update(float deltaTime)
+            void Test(float deltaTime)
             {
+                /*
                 if (Input.GetKey(Keys.A))
                 {
                     gameObject.position -= new Vector2(100, 0) * deltaTime;
@@ -103,9 +104,10 @@ namespace Project_Horizon
                 {
                     gameObject.position -= new Vector2(0, 100) * deltaTime;
                 }
-                if(Input.GetKeyDown(Keys.R))
+                if(Input.GetKey(Keys.R))
                 {
-                    this.enabled = false;
+                    //this.enabled = false;
+                    gameObject.rotation += 30f * deltaTime;
                 }
                 if (Input.GetKeyDown(Keys.T))
                 {
@@ -126,11 +128,39 @@ namespace Project_Horizon
                     //Debug.WriteLine(gameObject.position);
                     //Debug.WriteLine(Scene.camera.WorldToScreenPoint(gameObject.position));
                 }
+                */
+            }
+            public override void Update(float deltaTime)
+            {
+                //Test(deltaTime);
+
+                Vector2 pos = Scene.camera.position;
+                float w = Scene.camera.width / 2;
+                float h = Scene.camera.height / 2;
+
+
+                if (gameObject.position.X > (pos.X + w) || gameObject.position.X < (pos.X - w))
+                {
+                    gameObject.GetComponent<Rigidbody>().velocity *= new Vector2(-1, 0);
+                }
+                if (gameObject.position.Y > (pos.Y + h) || gameObject.position.Y < (pos.Y - h))
+                {
+                    gameObject.GetComponent<Rigidbody>().velocity *= new Vector2(0, -1);
+                }
+                if (Input.GetKeyDown(Keys.S))
+                {
+                    gameObject.GetComponent<Rigidbody>().enabled = false;
+                }
+                if (Input.GetKeyDown(Keys.D))
+                {
+                    gameObject.GetComponent<Rigidbody>().enabled = true;
+                }
+                //Debug.WriteLine(gameObject.GetComponent<Rigidbody>().velocity);
             }
         }
         public void Start()
         {
-            int count = 10000;
+            int count = 1000;
             Random r = new Random();
 
             Camera cam = Scene.camera;
@@ -147,6 +177,10 @@ namespace Project_Horizon
                 temp.size = new Vector2(10, 10);
                 temp.AddComponent<BenchmarkScript>();
                 temp.AddComponent<Sprite>().texture = Scene.GetTexture("Box");
+                Rigidbody rb = temp.AddComponent<Rigidbody>();
+                rb.velocity = new Vector2(r.Next(100, 150), r.Next(100, 150));
+                if (i % 2 == 0) rb.velocity *= new Vector2(-1, -1);
+                rb.angularVelocity = r.Next(30, 60);
             }
         }
     }
