@@ -9,20 +9,20 @@ using Microsoft.Xna.Framework.Input;
 
 namespace HorizonEngine
 {
-    public class Camera
+    public static class Camera
     {
-        private GraphicsDeviceManager _graphics;
-        private Vector2 _position;
-        private float _rotation;
-        private float _width;
-        private float _height;
-        private Vector2 _resolution;
-        private Matrix _renderTransform;
-        private Matrix _worldToScreen;
-        private Matrix _screenToWorld;
+        private static GraphicsDeviceManager _graphics;
+        private static Vector2 _position;
+        private static float _rotation;
+        private static float _width;
+        private static float _height;
+        private static Vector2 _resolution;
+        private static Matrix _renderTransform;
+        private static Matrix _worldToScreen;
+        private static Matrix _screenToWorld;
         
 
-        internal Camera(GraphicsDeviceManager graphics)
+        internal static void InitCamera(GraphicsDeviceManager graphics)
         {
             _graphics = graphics;
             _rotation = 0;
@@ -38,7 +38,7 @@ namespace HorizonEngine
             }
         }
 
-        internal void Update()
+        internal static void Update()
         {
             Matrix m = Matrix.CreateTranslation(-_position.X * scale, -_position.Y * scale, 0);
             m *= Matrix.CreateRotationZ(MathHelper.ToRadians(-_rotation));
@@ -55,7 +55,7 @@ namespace HorizonEngine
             _screenToWorld = Matrix.Invert(m);
         }
 
-        internal Matrix renderTransform
+        internal static Matrix renderTransform
         {
             get
             {
@@ -63,7 +63,7 @@ namespace HorizonEngine
             }
         }
 
-        public Vector2 position
+        public static Vector2 position
         {
             get
             {
@@ -75,7 +75,7 @@ namespace HorizonEngine
             }
         }
 
-        public float rotation
+        public static float rotation
         {
             get
             {
@@ -87,7 +87,7 @@ namespace HorizonEngine
             }
         }
 
-        public float width
+        public static float width
         {
             get
             {
@@ -99,7 +99,7 @@ namespace HorizonEngine
             }
         }
 
-        public float height
+        public static float height
         {
             get
             {
@@ -111,7 +111,7 @@ namespace HorizonEngine
             }
         }
 
-        public Vector2 resolution
+        public static Vector2 resolution
         {
             get
             {
@@ -127,12 +127,12 @@ namespace HorizonEngine
             }
         }
 
-        public Vector2 WorldToScreenPoint(Vector2 position)
+        public static Vector2 WorldToScreenPoint(Vector2 position)
         {
             return Vector2.Transform(position, _worldToScreen);
         }
 
-        public Vector2 ScreenToWorldPoint(Vector2 position)
+        public static Vector2 ScreenToWorldPoint(Vector2 position)
         {
             return Vector2.Transform(position, _screenToWorld);
         }

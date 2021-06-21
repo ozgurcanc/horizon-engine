@@ -24,7 +24,6 @@ namespace HorizonEngine
         private List<Renderer> _renderers;
         private List<Behaviour> _behaviours;
         private List<Rigidbody> _rigidbodies;
-        private Camera _camera;
 
         internal static Scene main
         {
@@ -86,7 +85,7 @@ namespace HorizonEngine
         public Scene(ISceneStarter sceneStarter)
         {
             //_graphics = new GraphicsDeviceManager(this);
-            _camera = new Camera(new GraphicsDeviceManager(this));
+            Camera.InitCamera(new GraphicsDeviceManager(this));
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
@@ -119,19 +118,11 @@ namespace HorizonEngine
             return texture;
         }
 
-        public static Camera camera
-        {
-            get
-            {
-                return Scene.main._camera;
-            }
-        }
-
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
             IsFixedTimeStep = false;
-            _camera.resolution = new Vector2(1280, 720);
+            Camera.resolution = new Vector2(1280, 720);
 
             _timeCounter = _fps = 0;
             _sceneStarter.Start();
@@ -161,7 +152,7 @@ namespace HorizonEngine
 
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            _camera.Update();
+            Camera.Update();
             Input.Update();
             foreach (var x in _rigidbodies.ToArray()) x.UpdatePhysics(deltaTime);
             foreach (var x in _behaviours.ToArray()) x.Update(deltaTime);
@@ -175,7 +166,7 @@ namespace HorizonEngine
             GraphicsDevice.Clear(Color.CornflowerBlue);
             // TODO: Add your drawing code here
             //Debug.WriteLine(Vector2.Transform(new Vector2(0, 0), _camera.worldToScreen));
-            _spriteBatch.Begin(transformMatrix: _camera.renderTransform);
+            _spriteBatch.Begin(transformMatrix: Camera.renderTransform);
             //_drawables.ForEach(x => x.Draw(_spriteBatch));
             foreach (var x in _renderers.ToArray()) x.Draw(_spriteBatch);
             _spriteBatch.End();

@@ -118,15 +118,6 @@ namespace HorizonEngine
             }
         }
 
-        internal Rectangle rect
-        {
-            get
-            {
-                float scale = Camera.scale;
-                return new Rectangle((int)((_position.X - _size.X / 2) * scale), (int)((_position.Y + _size.Y / 2) * scale) , (int)(_size.X * scale), (int)(_size.Y * -scale));
-            }
-        }
-
         public T AddComponent<T>() where T : Component, new()
         {
             Debug.Assert(_components.ContainsKey(typeof(T)) == false);

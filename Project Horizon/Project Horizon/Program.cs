@@ -35,8 +35,8 @@ namespace Project_Horizon
             {
                 //_gameObjects[0].position = new Vector2(500, 500);
                 //_gameObjects[0].size = new Vector2(300, 100);
-                Scene.camera.width = 40;
-                Scene.camera.height = 40;
+                Camera.width = 40;
+                Camera.height = 40;
             }
             if (Input.GetKey(Keys.R))
             {
@@ -67,15 +67,15 @@ namespace Project_Horizon
             if (Input.GetKeyDown(Keys.Y))
             {
                 //Debug.WriteLine(Mouse.GetState().Position.ToVector2());
-                _gameObjects[0].position = Scene.camera.ScreenToWorldPoint(Mouse.GetState().Position.ToVector2());
+                _gameObjects[0].position = Camera.ScreenToWorldPoint(Mouse.GetState().Position.ToVector2());
                 Debug.WriteLine(Mouse.GetState().Position.ToVector2());
                 Debug.WriteLine(_gameObjects[0].position);
-                Debug.WriteLine(Scene.camera.WorldToScreenPoint(_gameObjects[0].position));
+                Debug.WriteLine(Camera.WorldToScreenPoint(_gameObjects[0].position));
             }
             if (Input.GetKey(Keys.K))
             {
                 //Debug.WriteLine(Mouse.GetState().Position.ToVector2());
-                Scene.camera.rotation += 20f * deltaTime;
+                Camera.rotation += 20f * deltaTime;
             }
 
         }
@@ -134,9 +134,9 @@ namespace Project_Horizon
             {
                 //Test(deltaTime);
 
-                Vector2 pos = Scene.camera.position;
-                float w = Scene.camera.width / 2;
-                float h = Scene.camera.height / 2;
+                Vector2 pos = Camera.position;
+                float w = Camera.width / 2;
+                float h = Camera.height / 2;
 
 
                 if (gameObject.position.X > (pos.X + w) || gameObject.position.X < (pos.X - w))
@@ -160,14 +160,13 @@ namespace Project_Horizon
         }
         public void Start()
         {
-            int count = 1000;
+            int count = 10000;
             Random r = new Random();
 
-            Camera cam = Scene.camera;
-            cam.position = new Vector2(350, 350);
-            cam.width = 1000;
-            cam.height = 1000;
-            cam.rotation = 0;
+            Camera.position = new Vector2(350, 350);
+            Camera.width = 1000;
+            Camera.height = 1000;
+            Camera.rotation = 0;
             
 
             for (int i=0; i<count; i++)
@@ -193,9 +192,8 @@ namespace Project_Horizon
             GameObject b = Scene.CreateGameObject("2");
             GameObject c = Scene.CreateGameObject("3");
 
-            Camera cam = Scene.camera;
-            cam.width = 20;
-            cam.height = 20;
+            Camera.width = 20;
+            Camera.height = 20;
 
             a.size = new Vector2(10, 10);
             b.size = new Vector2(5, 5);

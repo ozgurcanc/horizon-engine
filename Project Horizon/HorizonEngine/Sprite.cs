@@ -76,7 +76,7 @@ namespace HorizonEngine
         {
             if (texture == null) return;
 
-            spriteBatch.Draw(_texture, gameObject.rect, null, _color, MathHelper.ToRadians(gameObject.rotation), new Vector2(texture.Width / 2, texture.Height / 2), (SpriteEffects)_flipState, 0f);
+            spriteBatch.Draw(_texture, rect, null, _color, MathHelper.ToRadians(gameObject.rotation), new Vector2(texture.Width / 2, texture.Height / 2), (SpriteEffects)_flipState, 0f);
         }
     }
 }
