@@ -21,8 +21,8 @@ namespace HorizonEngine
         private List<GameObject> _gameObjects;
         private Dictionary<string, Texture2D> _textures;
         private ISceneStarter _sceneStarter;
-        private List<IDrawable> _drawables;
-        private List<IUpdatable> _updatables;
+        private List<Renderer> _renderers;
+        private List<Behaviour> _behaviours;
         private Camera _camera;
 
         internal static Scene main
@@ -36,36 +36,36 @@ namespace HorizonEngine
         internal static void EnableComponent(Component component)
         {
             Scene scene = Scene.main;
-            if (component is IDrawable)
+            if (component is Renderer)
             {
-                component.drawableID = scene._drawables.Count;
-                scene._drawables.Add((IDrawable)component);
+                component.componetID = scene._renderers.Count;
+                scene._renderers.Add((Renderer)component);
             }
-            if(component is IUpdatable)
+            else if(component is Behaviour)
             {
-                component.updatableID = scene._updatables.Count;
-                scene._updatables.Add((IUpdatable)component);
+                component.componetID = scene._behaviours.Count;
+                scene._behaviours.Add((Behaviour)component);
             }
         }
 
         internal static void DisableComponent(Component component)
         {
             Scene scene = Scene.main;
-            if (component is IDrawable)
+            if (component is Renderer)
             {
-                int lastIndex = scene._drawables.Count - 1;
-                IDrawable temp = scene._drawables[lastIndex];
-                ((Component)temp).drawableID = component.drawableID;
-                scene._drawables[component.drawableID] = temp;
-                scene._drawables.RemoveAt(lastIndex);
+                int lastIndex = scene._renderers.Count - 1;
+                Renderer temp = scene._renderers[lastIndex];
+                temp.componetID = component.componetID;
+                scene._renderers[component.componetID] = temp;
+                scene._renderers.RemoveAt(lastIndex);
             }
-            if (component is IUpdatable)
+            else if (component is Behaviour)
             {
-                int lastIndex = scene._updatables.Count - 1;
-                IUpdatable temp = scene._updatables[lastIndex];
-                ((Component)temp).updatableID = component.updatableID;
-                scene._updatables[component.updatableID] = temp;
-                scene._updatables.RemoveAt(lastIndex);
+                int lastIndex = scene._behaviours.Count - 1;
+                Behaviour temp = scene._behaviours[lastIndex];
+                temp.componetID = component.componetID;
+                scene._behaviours[component.componetID] = temp;
+                scene._behaviours.RemoveAt(lastIndex);
             }
         }
 
@@ -79,8 +79,8 @@ namespace HorizonEngine
             _gameObjects = new List<GameObject>();
             _sceneStarter = sceneStarter;
             _textures = new Dictionary<string, Texture2D>();
-            _drawables = new List<IDrawable>();
-            _updatables = new List<IUpdatable>();
+            _renderers = new List<Renderer>();
+            _behaviours = new List<Behaviour>();
             _main = this;
         }     
 
@@ -144,9 +144,11 @@ namespace HorizonEngine
                 _timeCounter = _fps = 0;
             }
 
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
             _camera.Update();
             Input.Update();
-            foreach (var x in _updatables.ToArray()) x.Update(gameTime);
+            foreach (var x in _behaviours.ToArray()) x.Update(deltaTime);
             //_updatables.ForEach(x => x.Update(gameTime));
             base.Update(gameTime);
         }
@@ -159,7 +161,7 @@ namespace HorizonEngine
             //Debug.WriteLine(Vector2.Transform(new Vector2(0, 0), _camera.worldToScreen));
             _spriteBatch.Begin(transformMatrix: _camera.renderTransform);
             //_drawables.ForEach(x => x.Draw(_spriteBatch));
-            foreach (var x in _drawables.ToArray()) x.Draw(_spriteBatch);
+            foreach (var x in _renderers.ToArray()) x.Draw(_spriteBatch);
             _spriteBatch.End();
 
             base.Draw(gameTime);

@@ -87,12 +87,9 @@ namespace HorizonEngine
             }
             set
             {
-                if (_parent != null)
-                {
-                    _parent._childs.Remove(this);
-                }
+                if (_parent != null) _parent._childs.Remove(this);
                 _parent = value;
-                _parent._childs.Add(this);
+                if(value != null ) _parent._childs.Add(this);
             }
         }
 

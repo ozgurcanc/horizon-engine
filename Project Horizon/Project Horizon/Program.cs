@@ -7,28 +7,28 @@ using System.Diagnostics;
 
 namespace Project_Horizon
 {
-    class Test : Component, IUpdatable
+    class Test : Behaviour
     {
         public GameObject[] _gameObjects = new GameObject[3];
-        public void Update(GameTime gameTime)
+        public override void Update(float deltaTime)
         {
             if (Input.GetKey(Keys.A))
             {
-                _gameObjects[0].position -= new Vector2(2, 0) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                _gameObjects[0].position -= new Vector2(2, 0) * deltaTime;
             }
             if (Input.GetKey(Keys.S))
             {
-                _gameObjects[0].position -= new Vector2(0, 2) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                _gameObjects[0].position -= new Vector2(0, 2) * deltaTime;
                 //_gameObjects[1].position += new Vector2(2, 0) * (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
             if (Input.GetKey(Keys.D))
             {
-                _gameObjects[0].position += new Vector2(2, 0) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                _gameObjects[0].position += new Vector2(2, 0) * deltaTime;
                 //_gameObjects[2].position += new Vector2(2, 0) * (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
             if (Input.GetKey(Keys.W))
             {
-                _gameObjects[0].position += new Vector2(0, 2) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                _gameObjects[0].position += new Vector2(0, 2) * deltaTime;
                 //_gameObjects[2].parent = _gameObjects[0];
             }
             if (Input.GetKeyDown(Keys.E))
@@ -56,6 +56,14 @@ namespace Project_Horizon
             {
                 _gameObjects[2].activeSelf = !_gameObjects[2].activeSelf;
             }
+            if (Input.GetKeyDown(Keys.V))
+            {
+                _gameObjects[2].parent = null;
+            }
+            if (Input.GetKeyDown(Keys.B))
+            {
+                _gameObjects[2].parent = _gameObjects[0];
+            }
             if (Input.GetKeyDown(Keys.Y))
             {
                 //Debug.WriteLine(Mouse.GetState().Position.ToVector2());
@@ -67,7 +75,7 @@ namespace Project_Horizon
             if (Input.GetKey(Keys.K))
             {
                 //Debug.WriteLine(Mouse.GetState().Position.ToVector2());
-                Scene.camera.rotation += 20f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                Scene.camera.rotation += 20f * deltaTime;
             }
 
         }
@@ -75,25 +83,25 @@ namespace Project_Horizon
 
     class Benchmark : ISceneStarter
     {
-        class BenchmarkScript : Component, IUpdatable
+        class BenchmarkScript : Behaviour
         {
-            public void Update(GameTime gameTime)
+            public override void Update(float deltaTime)
             {
                 if (Input.GetKey(Keys.A))
                 {
-                    gameObject.position -= new Vector2(100, 0) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    gameObject.position -= new Vector2(100, 0) * deltaTime;
                 }
                 if (Input.GetKey(Keys.D))
                 {
-                    gameObject.position += new Vector2(100, 0) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    gameObject.position += new Vector2(100, 0) * deltaTime;
                 }
                 if (Input.GetKey(Keys.W))
                 {
-                    gameObject.position += new Vector2(0, 100) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    gameObject.position += new Vector2(0, 100) * deltaTime;
                 }
                 if (Input.GetKey(Keys.S))
                 {
-                    gameObject.position -= new Vector2(0, 100) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    gameObject.position -= new Vector2(0, 100) * deltaTime;
                 }
                 if(Input.GetKeyDown(Keys.R))
                 {
@@ -114,15 +122,15 @@ namespace Project_Horizon
                 if(Input.GetKeyDown(Keys.Y))
                 {
                     gameObject.position = Scene.camera.ScreenToWorldPoint(Mouse.GetState().Position.ToVector2());
-                    Debug.WriteLine(Mouse.GetState().Position.ToVector2());
-                    Debug.WriteLine(gameObject.position);
-                    Debug.WriteLine(Scene.camera.WorldToScreenPoint(gameObject.position));
+                    //Debug.WriteLine(Mouse.GetState().Position.ToVector2());
+                    //Debug.WriteLine(gameObject.position);
+                    //Debug.WriteLine(Scene.camera.WorldToScreenPoint(gameObject.position));
                 }
             }
         }
         public void Start()
         {
-            int count = 1;
+            int count = 10000;
             Random r = new Random();
 
             Camera cam = Scene.camera;
@@ -219,7 +227,7 @@ namespace Project_Horizon
             //using (var game = new Scene())
             //  game.Run();
 
-            var game = new Scene(new NewGame());
+            var game = new Scene(new Benchmark());
             game.Run();
         }
     }

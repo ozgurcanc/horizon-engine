@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace HorizonEngine
 {
-    public class Sprite : Component, IDrawable
+    public class Sprite : Renderer
     {
         private Texture2D _texture;
         private Color _color;
@@ -72,7 +72,7 @@ namespace HorizonEngine
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
             if (texture == null) return;
 

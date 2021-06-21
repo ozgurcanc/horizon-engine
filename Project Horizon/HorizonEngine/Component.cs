@@ -14,8 +14,7 @@ namespace HorizonEngine
     {
         private GameObject _gameObject;
         private bool _enabled = true;
-        private int _updatableID;
-        private int _drawableID;
+        private int _componentID;
 
         public GameObject gameObject
         {
@@ -47,27 +46,15 @@ namespace HorizonEngine
             }
         }
 
-        internal int drawableID
+        internal int componetID
         {
             get
             {
-                return _drawableID;
+                return _componentID;
             }
             set
             {
-                _drawableID = value;
-            }
-        }
-
-        internal int updatableID
-        {
-            get
-            {
-                return _updatableID;
-            }
-            set
-            {
-                _updatableID = value;
+                _componentID = value;
             }
         }
     }
@@ -75,16 +62,6 @@ namespace HorizonEngine
     public interface ISceneStarter
     {
         void Start();
-    }
-
-    public interface IDrawable
-    {
-        void Draw(SpriteBatch spriteBatch);
-    }
-
-    public interface IUpdatable
-    {
-        void Update(GameTime gameTime);
     }
 
 
