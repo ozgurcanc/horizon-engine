@@ -248,6 +248,7 @@ namespace Project_Horizon
     {
         public void Start()
         {
+            /*
             GameObject a = Scene.CreateGameObject("1");
             GameObject b = Scene.CreateGameObject("2");
             GameObject c = Scene.CreateGameObject("3");
@@ -276,6 +277,7 @@ namespace Project_Horizon
             Sprite s_c = c.AddComponent<Sprite>();
             s_c.texture = Scene.GetTexture("Box");
             s_c.color = Color.Green;
+            */
 
             /*
             s_c.enabled = false;
@@ -283,6 +285,7 @@ namespace Project_Horizon
             s_a.enabled = false;
             */
 
+            /*
             Test t = a.AddComponent<Test>();
             t._gameObjects[0] = a;
             t._gameObjects[1] = b;
@@ -292,6 +295,7 @@ namespace Project_Horizon
             Debug.WriteLine(ss.GetType());
             ss = t;
             Debug.WriteLine(ss.GetType());
+            */
 
             /*
             GameObject d = Scene.CreateGameObject("4");
@@ -307,6 +311,116 @@ namespace Project_Horizon
             s_d.flipY = false;
             s_d.flipY = false;
             */
+
+            
+            GameObject a = Scene.CreateGameObject("1");
+            GameObject b = Scene.CreateGameObject("2");
+            Camera.width = 300;
+            Camera.height = 300;
+            Camera.resolution = new Vector2(800, 800);
+
+            
+            a.AddComponent<Sprite>().texture = Scene.GetTexture("Box");
+            //a.GetComponent<Sprite>().color = Color.Red;
+            b.AddComponent<Sprite>().texture = Scene.GetTexture("Box");
+
+            a.position = new Vector2(0f, -40f);
+            b.position = new Vector2(0f, 40f);
+
+            a.size = new Vector2(800, 40);
+            b.size = new Vector2(8, 8);
+
+            a.AddComponent<BoxCollider>();
+            b.AddComponent<BoxCollider>();
+
+            a.AddComponent<Rigidbody>().velocity = new Vector2(0, 0);
+            b.AddComponent<Rigidbody>().velocity = new Vector2(0, -20f);
+
+
+            //b.GetComponent<Rigidbody>().inertia = 0;
+            //b.GetComponent<Rigidbody>().linearDrag = 0.01f;
+
+            //b.AddComponent<P>();
+            
+            
+            Vector2 start = new Vector2(0, 200f);
+            
+            for(int i=0; i<20; i++)
+            {
+                for(int j=0; j<10; j++)
+                {
+                    GameObject temp = Scene.CreateGameObject("1");
+                    
+                    temp.position = start + new Vector2(j * 6f, -i * 6f);
+                    temp.size = new Vector2(4, 4);
+                    temp.AddComponent<Rigidbody>().velocity = new Vector2(0, -20f);
+                    //temp.GetComponent<Rigidbody>().inertia = 0;
+                    //temp.AddComponent<CircleCollider>().radius = 2f;
+                    if (i % 2 == 0)
+                    {
+                        temp.AddComponent<CircleCollider>().radius = 2;
+                        temp.AddComponent<Sprite>().texture = Scene.GetTexture("Circle");
+                        temp.GetComponent<Sprite>().color = Color.Red;
+                    }
+                    else
+                    {
+                        temp.AddComponent<BoxCollider>();
+                        temp.AddComponent<Sprite>().texture = Scene.GetTexture("Box");
+                        temp.GetComponent<Sprite>().color = Color.Green;
+                        temp.GetComponent<Rigidbody>().angularDrag = 40f;
+                    }
+                }
+            }
+            
+
+            a.rotation = 0f;
+            a.GetComponent<Rigidbody>().mass = 0;
+            a.GetComponent<Rigidbody>().gravityScale = 0;
+            a.GetComponent<Rigidbody>().inertia = 0;
+            b.GetComponent<Rigidbody>().angularVelocity = 0;
+            //a.AddComponent<P>();
+            Physics.gravity = new Vector2(0, -10);
+            //a.activeSelf = false;
+
+            //a.AddComponent<P>();
+            
+
+            /*
+            a.AddComponent<Sprite>().texture = Scene.GetTexture("Box");
+            //a.GetComponent<Sprite>().color = Color.Red;
+            b.AddComponent<Sprite>().texture = Scene.GetTexture("Circle");
+
+            a.AddComponent<BoxCollider>();
+            b.AddComponent<CircleCollider>().radius = 2;
+
+            a.AddComponent<Rigidbody>();
+            b.AddComponent<Rigidbody>();
+
+            a.size = new Vector2(4, 4);
+            b.size = new Vector2(4, 4);
+            b.position = new Vector2(2, -2);
+            */
+
+            //b.position = new Vector2(1, 0);
+        }
+
+        class P : Behaviour
+        {
+            public override void Update(float deltaTime)
+            {
+                if(Input.GetKey(Keys.D))
+                {
+                    gameObject.GetComponent<Rigidbody>().AddForce(new Vector2(20, 0));
+                }
+                if (Input.GetKeyDown(Keys.W))
+                {
+                    gameObject.GetComponent<Rigidbody>().velocity = new Vector2(0, 40);
+                }
+                if (Input.GetKey(Keys.S))
+                {
+                    gameObject.GetComponent<Rigidbody>().AddForce(new Vector2(-20, 0));
+                }
+            }
         }
     }
 
@@ -319,7 +433,7 @@ namespace Project_Horizon
             //using (var game = new Scene())
             //  game.Run();
 
-            var game = new Scene(new Benchmark());
+            var game = new Scene(new NewGame());
             game.Run();
         }
     }

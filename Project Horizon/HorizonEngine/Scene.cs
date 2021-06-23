@@ -24,6 +24,7 @@ namespace HorizonEngine
         private List<Renderer> _renderers;
         private List<Behaviour> _behaviours;
         private List<Rigidbody> _rigidbodies;
+        private List<Collider> _colliders;
 
         internal static Scene main
         {
@@ -50,6 +51,11 @@ namespace HorizonEngine
             {
                 component.componetID = scene._rigidbodies.Count;
                 scene._rigidbodies.Add((Rigidbody)component);
+            }
+            else if (component is Collider)
+            {
+                component.componetID = scene._colliders.Count;
+                scene._colliders.Add((Collider)component);
             }
         }
 
@@ -80,6 +86,14 @@ namespace HorizonEngine
                 scene._rigidbodies[component.componetID] = temp;
                 scene._rigidbodies.RemoveAt(lastIndex);
             }
+            else if (component is Collider)
+            {
+                int lastIndex = scene._colliders.Count - 1;
+                Collider temp = scene._colliders[lastIndex];
+                temp.componetID = component.componetID;
+                scene._colliders[component.componetID] = temp;
+                scene._colliders.RemoveAt(lastIndex);
+            }
         }
 
         public Scene(ISceneStarter sceneStarter)
@@ -95,6 +109,7 @@ namespace HorizonEngine
             _renderers = new List<Renderer>();
             _behaviours = new List<Behaviour>();
             _rigidbodies = new List<Rigidbody>();
+            _colliders = new List<Collider>();
             _main = this;
         }     
 
@@ -122,6 +137,7 @@ namespace HorizonEngine
         {
             // TODO: Add your initialization logic here
             IsFixedTimeStep = false;
+            //TargetElapsedTime = TimeSpan.FromTicks((long)(TimeSpan.TicksPerSecond / 30f));
             Camera.resolution = new Vector2(1280, 720);
 
             _timeCounter = _fps = 0;
@@ -146,7 +162,7 @@ namespace HorizonEngine
             _timeCounter += gameTime.ElapsedGameTime.TotalSeconds;
             if (_timeCounter > 1.0)
             {
-                Debug.WriteLine(_fps);
+                //Debug.WriteLine(_fps);
                 _timeCounter = _fps = 0;
             }
 
@@ -154,6 +170,16 @@ namespace HorizonEngine
 
             Camera.Update();
             Input.Update();
+            var watch = new Stopwatch();
+            watch.Start();
+            Collider[] colliders = _colliders.ToArray();
+            foreach (var x in colliders) x.UpdateCollider();
+            for (int i = 0; i < colliders.Length; i++)
+                for (int j = i + 1; j < colliders.Length; j++)
+                    CollisionSystem.ResolveCollision(colliders[i], colliders[j]);
+            watch.Stop();
+            //Debug.WriteLine(watch.ElapsedMilliseconds);
+
             foreach (var x in _rigidbodies.ToArray()) x.UpdatePhysics(deltaTime);
             foreach (var x in _behaviours.ToArray()) x.Update(deltaTime);
             //_updatables.ForEach(x => x.Update(gameTime));

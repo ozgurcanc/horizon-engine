@@ -137,6 +137,22 @@ namespace HorizonEngine
             }
         }
 
+        internal float inverseMass
+        {
+            get
+            {
+                return _inverseMass;
+            }
+        }
+
+        internal float inverseInertia
+        {
+            get
+            {
+                return _inverseInertia;
+            }
+        }
+
         internal void UpdatePhysics(float deltaTime)
         {
             Vector2 linearAcceleration = Physics.gravity * _gravityScale;

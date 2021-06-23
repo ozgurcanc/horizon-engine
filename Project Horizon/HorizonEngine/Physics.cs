@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace HorizonEngine
 {
-    static class Physics
+    public static class Physics
     {
         private static Vector2 _gravity;
 
