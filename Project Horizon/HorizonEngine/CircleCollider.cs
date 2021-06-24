@@ -34,6 +34,8 @@ namespace HorizonEngine
         {
             transformMatrix = new TransformMatrix(gameObject.position, gameObject.rotation);
             rigidbody = gameObject.GetComponent<Rigidbody>();
+            Vector2 r = new Vector2(radius, radius);
+            aabb = new AABB(gameObject.position + r, gameObject.position - r);
         }
     }
 }

@@ -13,6 +13,7 @@ namespace HorizonEngine
     {
         private TransformMatrix _transform;
         private Rigidbody _rigidbody;
+        private AABB _aabb;
         
         internal TransformMatrix transformMatrix
         {
@@ -35,6 +36,18 @@ namespace HorizonEngine
             set
             {
                 _rigidbody = value;
+            }
+        }
+
+        internal AABB aabb
+        {
+            get
+            {
+                return _aabb;
+            }
+            set
+            {
+                _aabb = value;
             }
         }
 

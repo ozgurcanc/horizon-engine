@@ -173,12 +173,21 @@ namespace HorizonEngine
             var watch = new Stopwatch();
             watch.Start();
             Collider[] colliders = _colliders.ToArray();
+           
+            
             foreach (var x in colliders) x.UpdateCollider();
             for (int i = 0; i < colliders.Length; i++)
                 for (int j = i + 1; j < colliders.Length; j++)
-                    CollisionSystem.ResolveCollision(colliders[i], colliders[j]);
+                    CollisionSystem.ResolveCollision(colliders[i], colliders[j]);       
+            
+ 
+            
+            //BVH bvh = new BVH(colliders);
+            //bvh.ReselveCollision();
+            
+
             watch.Stop();
-            //Debug.WriteLine(watch.ElapsedMilliseconds);
+            Debug.WriteLine(watch.ElapsedMilliseconds);
 
             foreach (var x in _rigidbodies.ToArray()) x.UpdatePhysics(deltaTime);
             foreach (var x in _behaviours.ToArray()) x.Update(deltaTime);

@@ -341,9 +341,8 @@ namespace Project_Horizon
             //b.GetComponent<Rigidbody>().linearDrag = 0.01f;
 
             //b.AddComponent<P>();
-            
-            
-            Vector2 start = new Vector2(0, 200f);
+
+            Vector2 start = new Vector2(0, 400f);
             
             for(int i=0; i<20; i++)
             {
