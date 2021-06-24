@@ -331,10 +331,11 @@ namespace Project_Horizon
             b.size = new Vector2(8, 8);
 
             a.AddComponent<BoxCollider>();
-            b.AddComponent<BoxCollider>();
+            //b.AddComponent<BoxCollider>();
 
             a.AddComponent<Rigidbody>().velocity = new Vector2(0, 0);
             b.AddComponent<Rigidbody>().velocity = new Vector2(0, -20f);
+            //b.GetComponent<Rigidbody>().angularDrag = 30f;
 
 
             //b.GetComponent<Rigidbody>().inertia = 0;
@@ -342,15 +343,17 @@ namespace Project_Horizon
 
             //b.AddComponent<P>();
 
-            Vector2 start = new Vector2(0, 400f);
+            int l = 20;
+            Vector2 start = new Vector2(0, l * 10f);
+            Random r = new Random();
             
-            for(int i=0; i<20; i++)
+            for(int i=0; i<l; i++)
             {
                 for(int j=0; j<10; j++)
                 {
                     GameObject temp = Scene.CreateGameObject("1");
                     
-                    temp.position = start + new Vector2(j * 6f, -i * 6f);
+                    temp.position = start + new Vector2(j * r.Next(6,8), -i * r.Next(6, 10));
                     temp.size = new Vector2(4, 4);
                     temp.AddComponent<Rigidbody>().velocity = new Vector2(0, -20f);
                     //temp.GetComponent<Rigidbody>().inertia = 0;

@@ -122,8 +122,9 @@ namespace HorizonEngine
             return nodeIndex;
         }
 
-        public void ReselveCollision()
+        public int ReselveCollision()
         {
+            List<Contact> contacts = new List<Contact>();
             int k = -1;
             foreach(LeafElement element in _elements)
             {
@@ -141,8 +142,11 @@ namespace HorizonEngine
                     {
                         for(int i=node.start; i<node.end; i++)
                         {
-                            if(k != i)
-                                CollisionSystem.ResolveCollision(element.collider, _elements[i].collider);
+                            if(k > i)
+                            {
+                                Contact c = CollisionSystem.ResolveCollision(element.collider, _elements[i].collider); ;
+                                if (c != null) contacts.Add(c);
+                            }                                
                         }
                         pointer--;
                     }
@@ -161,6 +165,9 @@ namespace HorizonEngine
                     }
                 }
             }
+
+            foreach (var x in contacts) x.ResolveContact();
+            return contacts.Count;
         }
 
     }

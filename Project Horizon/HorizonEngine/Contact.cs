@@ -57,7 +57,8 @@ namespace HorizonEngine
             //Debug.WriteLine(_contactPoint);
             //if (float.IsNaN(_contactNormal.X) || float.IsNaN(_contactNormal.Y)) return;
 
-            Vector2 distance = _penetration * _contactNormal;
+            if (_penetration < 0.05f) _penetration = 0f;
+            Vector2 distance = _penetration * _contactNormal * 0.4f;
 
             float totalMass = _rigidbodies[0].inverseMass + _rigidbodies[1].inverseMass;
             if (totalMass == 0) Debug.WriteLine("Nan");

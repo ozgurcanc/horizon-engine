@@ -28,7 +28,7 @@ namespace HorizonEngine
             return new Vector2(-f * v.Y, f * v.X);
         }
 
-        public static void ResolveCollision(Collider collider1, Collider collider2)
+        public static Contact ResolveCollision(Collider collider1, Collider collider2)
         {
             Contact contact = null;
             
@@ -49,8 +49,7 @@ namespace HorizonEngine
                 contact = BoxAndBox((BoxCollider)collider1, (BoxCollider)collider2);
             }
 
-            if (contact == null) return;
-            contact.ResolveContact();
+            return contact;
         }
 
         private static Contact CircleAndCircle(CircleCollider collider1, CircleCollider collider2)
