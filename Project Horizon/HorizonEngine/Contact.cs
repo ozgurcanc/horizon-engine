@@ -31,23 +31,43 @@ namespace HorizonEngine
             _friction = friction;
             _restitution = restitution;
             
-            /*
+            
             if (float.IsNaN(contactNormal.X) || float.IsNaN(contactNormal.Y))
             {
+                Collider one = null, two = null;
                 if(rigidbody1.gameObject.GetComponent<BoxCollider>() != null && rigidbody2.gameObject.GetComponent<BoxCollider>() != null)
+                {
                     Debug.WriteLine("box-box");
+                    one = rigidbody1.gameObject.GetComponent<BoxCollider>();
+                    two = rigidbody2.gameObject.GetComponent<BoxCollider>();
+                }
                 if (rigidbody1.gameObject.GetComponent<CircleCollider>() != null && rigidbody2.gameObject.GetComponent<BoxCollider>() != null)
+                {
                     Debug.WriteLine("box-circle");
+                    one = rigidbody1.gameObject.GetComponent<CircleCollider>();
+                    two = rigidbody2.gameObject.GetComponent<BoxCollider>();
+                }
                 if (rigidbody1.gameObject.GetComponent<BoxCollider>() != null && rigidbody2.gameObject.GetComponent<CircleCollider>() != null)
-                    Debug.WriteLine("circle-box");
+                {
+                    Debug.WriteLine("box-circle");
+                    one = rigidbody1.gameObject.GetComponent<BoxCollider>();
+                    two = rigidbody2.gameObject.GetComponent<CircleCollider>();
+                }
                 if (rigidbody1.gameObject.GetComponent<CircleCollider>() != null && rigidbody2.gameObject.GetComponent<CircleCollider>() != null)
+                {
                     Debug.WriteLine("circle-circle");
+                    one = rigidbody1.gameObject.GetComponent<CircleCollider>();
+                    two = rigidbody2.gameObject.GetComponent<CircleCollider>();
+                }
+            
 
                 Debug.WriteLine(rigidbody1.gameObject.position);
                 Debug.WriteLine(rigidbody2.gameObject.position);
-                throw new NotImplementedException();
+               // throw new NotImplementedException();
+                CollisionSystem.ResolveCollision(one, two);
+                
             }
-            */
+            
             
         }
 
@@ -102,7 +122,7 @@ namespace HorizonEngine
             _rigidbodies[1].velocity -= impulse * _rigidbodies[1].inverseMass;
 
             _rigidbodies[0].angularVelocity += Cross(impulse, relativePosition1) * _rigidbodies[0].inverseInertia;
-            _rigidbodies[1].angularVelocity -= Cross(impulse, relativePosition1) * _rigidbodies[1].inverseInertia;
+            _rigidbodies[1].angularVelocity -= Cross(impulse, relativePosition2) * _rigidbodies[1].inverseInertia;
         }
 
         private float Cross(Vector2 v1, Vector2 v2)

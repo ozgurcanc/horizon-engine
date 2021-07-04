@@ -100,11 +100,84 @@ namespace HorizonEngine
             Vector2 center = circle.transformMatrix.GetColumn(2);
             Vector2 localCenter = box.transformMatrix.InverseTransformPoint(center);
 
-            if (Math.Abs(localCenter.X) > (box.halfSize.X + circle.radius))
-                return null;
-            if (Math.Abs(localCenter.Y) > (box.halfSize.Y + circle.radius))
-                return null;
+            //if (Math.Abs(localCenter.X) > (box.halfSize.X + circle.radius))
+            //  return null;
+            //if (Math.Abs(localCenter.Y) > (box.halfSize.Y + circle.radius))
+            //  return null;
 
+            float w = box.halfSize.X;
+            float h = box.halfSize.Y;
+            Vector2[] normals = { new Vector2(0, -1), new Vector2(1, 0), new Vector2(0, 1), new Vector2(-1, 0) };
+            Vector2[] vertex = { new Vector2(-w, -h), new Vector2(w, -h), new Vector2(w, h), new Vector2(-w, h) };
+            float[] distanceToVertex = { -h - localCenter.Y, -w + localCenter.X, -h + localCenter.Y, -w - localCenter.X };
+
+            float sep = float.MinValue;
+            int faceIndex = -1;
+            for (int i = 0; i < 4; i++)
+            {
+                if (distanceToVertex[i] > circle.radius)
+                    return null;
+
+                if (distanceToVertex[i] > sep)
+                {
+                    sep = distanceToVertex[i];
+                    faceIndex = i;
+                }
+            }
+
+            Vector2 vertex1 = vertex[faceIndex];
+            Vector2 vertex2 = vertex[(faceIndex + 1) % 4];
+            int edge1 = (faceIndex + 3) % 4;
+            int edge2 = (faceIndex + 1) % 4;
+            
+            Vector2 contactPoint;
+            Vector2 contactNormal;
+            float penetration = circle.radius - sep;
+
+            if (sep < 0.001f)
+            {
+                contactNormal = -box.transformMatrix.TransformNormal(normals[faceIndex]);
+                contactPoint = contactNormal * circle.radius + center;
+                penetration = circle.radius;
+            }      
+            else if (distanceToVertex[edge1] >= 0.0f)
+            {          
+                contactNormal = vertex1 - localCenter;
+                if (contactNormal.Length() > circle.radius) return null;
+                contactNormal = box.transformMatrix.TransformNormal(contactNormal);
+                contactNormal.Normalize();
+                vertex1 = box.transformMatrix.TransformPoint(vertex1);
+                contactPoint = vertex1;
+            }
+            else if (distanceToVertex[edge2] >= 0.0f)
+            {
+                contactNormal = vertex2 - localCenter;
+                if (contactNormal.Length() > circle.radius) return null;
+                contactNormal = box.transformMatrix.TransformNormal(contactNormal);
+                contactNormal.Normalize();
+                vertex2 = box.transformMatrix.TransformPoint(vertex2);
+                contactPoint = vertex2;
+            }
+            else
+            {
+                contactNormal = normals[faceIndex];
+                if (Vector2.Dot(localCenter - vertex1, contactNormal) > circle.radius) return null;
+                contactNormal = -box.transformMatrix.TransformNormal(contactNormal);
+                contactPoint = contactNormal * circle.radius + center;
+            }
+
+            return new Contact
+                (
+                    box.rigidbody,
+                    circle.rigidbody,
+                    contactPoint,
+                    contactNormal,
+                    penetration,
+                    0f,
+                    1f
+                );
+
+            /*
             Vector2 closestPoint = Vector2.Zero;
             float distance;
 
@@ -169,6 +242,7 @@ namespace HorizonEngine
                 );
 
             return contact;
+            */
         }
 
         private static Contact BoxAndBox(BoxCollider collider1, BoxCollider collider2)

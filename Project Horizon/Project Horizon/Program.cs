@@ -315,8 +315,8 @@ namespace Project_Horizon
             
             GameObject a = Scene.CreateGameObject("1");
             GameObject b = Scene.CreateGameObject("2");
-            Camera.width = 300;
-            Camera.height = 300;
+            Camera.width = 500;
+            Camera.height = 500;
             Camera.resolution = new Vector2(800, 800);
 
             
@@ -343,7 +343,7 @@ namespace Project_Horizon
 
             //b.AddComponent<P>();
 
-            int l = 20;
+            int l = 200;
             Vector2 start = new Vector2(0, l * 10f);
             Random r = new Random();
             
@@ -358,7 +358,7 @@ namespace Project_Horizon
                     temp.AddComponent<Rigidbody>().velocity = new Vector2(0, -20f);
                     //temp.GetComponent<Rigidbody>().inertia = 0;
                     //temp.AddComponent<CircleCollider>().radius = 2f;
-                    if (i % 2 == 0)
+                    if (false)
                     {
                         temp.AddComponent<CircleCollider>().radius = 2;
                         temp.AddComponent<Sprite>().texture = Scene.GetTexture("Circle");
@@ -369,7 +369,7 @@ namespace Project_Horizon
                         temp.AddComponent<BoxCollider>();
                         temp.AddComponent<Sprite>().texture = Scene.GetTexture("Box");
                         temp.GetComponent<Sprite>().color = Color.Green;
-                        temp.GetComponent<Rigidbody>().angularDrag = 40f;
+                        //temp.GetComponent<Rigidbody>().angularDrag = 40f;
                     }
                 }
             }

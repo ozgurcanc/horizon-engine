@@ -39,6 +39,14 @@ namespace HorizonEngine
             return temp;
         }
 
+        internal Vector2 TransformNormal(Vector2 point)
+        {
+            Vector2 temp = new Vector2();
+            temp.X = point.X * _columns[0].X + point.Y * _columns[1].X;
+            temp.Y = point.X * _columns[0].Y + point.Y * _columns[1].Y;
+            return temp;
+        }
+
         internal Vector2 InverseTransformPoint(Vector2 point)
         {
             point -= _columns[2];
