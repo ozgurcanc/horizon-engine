@@ -13,21 +13,6 @@ namespace HorizonEngine
 {
     internal static class CollisionSystem
     {
-        private static float Cross(Vector2 v1, Vector2 v2)
-        {
-            return v1.X * v2.Y - v1.Y * v2.X;
-        }
-
-        private static Vector2 Cross(Vector2 v, float f)
-        {
-            return new Vector2(f * v.Y, -f * v.X);
-        }
-
-        private static Vector2 Cross(float f, Vector2 v)
-        {
-            return new Vector2(-f * v.Y, f * v.X);
-        }
-
         public static Contact ResolveCollision(Collider collider1, Collider collider2)
         {
             Contact contact = null;

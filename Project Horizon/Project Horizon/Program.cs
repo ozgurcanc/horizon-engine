@@ -7,6 +7,37 @@ using System.Diagnostics;
 
 namespace Project_Horizon
 {
+    class Testing : ISceneStarter
+    {
+        class T : Behaviour
+        {
+            public override void Update(float deltaTime)
+            {
+                if(Input.GetKeyDown(Keys.A))
+                {
+                    gameObject.GetComponent<Sprite>().color = Color.Red;
+                    this.enabled = false;
+                }
+            }
+        }
+
+        public void Start()
+        {
+            Camera.resolution = new Vector2(800, 800);
+            Camera.position = Vector2.Zero;
+            Camera.width = 20;
+            Camera.height = 20;
+
+            GameObject g = Scene.CreateGameObject("1");
+            g.AddComponent<Sprite>().texture = Scene.GetTexture("Box");
+            g.size = new Vector2(1,1);
+            g.position = Vector2.Zero;
+
+            g.AddComponent<T>();
+
+        }
+    }
+
     class Test : Behaviour
     {
         public GameObject[] _gameObjects = new GameObject[3];
@@ -333,7 +364,7 @@ namespace Project_Horizon
             a.AddComponent<BoxCollider>();
             //b.AddComponent<BoxCollider>();
 
-            a.AddComponent<Rigidbody>().velocity = new Vector2(0, 0);
+            //a.AddComponent<Rigidbody>().velocity = new Vector2(0, 0);
             b.AddComponent<Rigidbody>().velocity = new Vector2(0, -20f);
             //b.GetComponent<Rigidbody>().angularDrag = 30f;
 
@@ -358,7 +389,7 @@ namespace Project_Horizon
                     temp.AddComponent<Rigidbody>().velocity = new Vector2(0, -20f);
                     //temp.GetComponent<Rigidbody>().inertia = 0;
                     //temp.AddComponent<CircleCollider>().radius = 2f;
-                    if (false)
+                    if (i % 2 == 0)
                     {
                         temp.AddComponent<CircleCollider>().radius = 2;
                         temp.AddComponent<Sprite>().texture = Scene.GetTexture("Circle");
@@ -376,9 +407,9 @@ namespace Project_Horizon
             
 
             a.rotation = 0f;
-            a.GetComponent<Rigidbody>().mass = 0;
-            a.GetComponent<Rigidbody>().gravityScale = 0;
-            a.GetComponent<Rigidbody>().inertia = 0;
+            //a.GetComponent<Rigidbody>().mass = 0;
+            //a.GetComponent<Rigidbody>().gravityScale = 0;
+            //a.GetComponent<Rigidbody>().inertia = 0;
             b.GetComponent<Rigidbody>().angularVelocity = 0;
             //a.AddComponent<P>();
             Physics.gravity = new Vector2(0, -10);

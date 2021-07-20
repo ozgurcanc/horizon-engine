@@ -188,8 +188,11 @@ namespace HorizonEngine
             foreach (var x in contacts) x.ResolveContact();
             */
             
-            BVH bvh = new BVH(colliders);
-            bvh.ReselveCollision();
+            if(colliders.Length > 0)
+            {
+                BVH bvh = new BVH(colliders);
+                bvh.ReselveCollision();
+            }        
             //Debug.WriteLine(contacts.Count);
             //Debug.WriteLine(bvh.ReselveCollision());
             //Debug.WriteLine("---");
