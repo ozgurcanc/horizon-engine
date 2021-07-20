@@ -46,6 +46,7 @@ namespace HorizonEngine
             {
                 component.componetID = scene._behaviours.Count;
                 scene._behaviours.Add((Behaviour)component);
+                ((Behaviour)component).OnEnable();
             }
             else if(component is Rigidbody)
             {
@@ -77,6 +78,7 @@ namespace HorizonEngine
                 temp.componetID = component.componetID;
                 scene._behaviours[component.componetID] = temp;
                 scene._behaviours.RemoveAt(lastIndex);
+                ((Behaviour)component).OnDisable();
             }
             else if (component is Rigidbody)
             {

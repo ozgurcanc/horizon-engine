@@ -19,6 +19,23 @@ namespace Project_Horizon
                     this.enabled = false;
                 }
             }
+
+            public override void OnEnable()
+            {
+                Debug.WriteLine("Enabled");
+                Random r = new Random();
+                if(r.NextDouble() < 0.5f)
+                    gameObject.GetComponent<Sprite>().color = Color.Green;
+                else
+                    gameObject.GetComponent<Sprite>().color = Color.Blue;
+            }
+
+            public override void OnDisable()
+            {
+                Debug.WriteLine("Disabled");
+                Debug.WriteLine("----");
+                this.enabled = true;
+            }
         }
 
         public void Start()
@@ -466,7 +483,7 @@ namespace Project_Horizon
             //using (var game = new Scene())
             //  game.Run();
 
-            var game = new Scene(new NewGame());
+            var game = new Scene(new Testing());
             game.Run();
         }
     }
