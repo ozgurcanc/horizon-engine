@@ -13,27 +13,35 @@ namespace HorizonEngine
     internal class Contact
     {
         public static int i = 0;
+        private Collider[] _colliders;
         private Rigidbody[] _rigidbodies;
         private float _friction;
         private float _restitution;
         private float _penetration;
         private Vector2 _contactPoint;
         private Vector2 _contactNormal;
+        private bool _isTrigger;
 
-        internal Contact(Rigidbody rigidbody1, Rigidbody rigidbody2, Vector2 contactPoint, Vector2 contactNormal, float penetration, float friction, float restitution)
+        internal Contact(Collider collider1, Collider collider2, Vector2 contactPoint, Vector2 contactNormal, float penetration, float friction, float restitution)
         {
+            _colliders = new Collider[2];
             _rigidbodies = new Rigidbody[2];
-            _rigidbodies[0] = rigidbody1;
-            _rigidbodies[1] = rigidbody2;
+            _colliders[0] = collider1;
+            _colliders[1] = collider2;
+            _rigidbodies[0] = collider1.attachedRigidbody;
+            _rigidbodies[1] = collider2.attachedRigidbody;
             _contactPoint = contactPoint;
             _contactNormal = contactNormal;
             _penetration = penetration;
             _friction = friction;
             _restitution = restitution;
-            
-            
+            _isTrigger = collider1.isTrigger || collider2.isTrigger;
+
+
             if (float.IsNaN(contactNormal.X) || float.IsNaN(contactNormal.Y))
             {
+                Rigidbody rigidbody1 = collider1.attachedRigidbody;
+                Rigidbody rigidbody2 = collider2.attachedRigidbody;
                 Collider one = null, two = null;
                 if(rigidbody1.gameObject.GetComponent<BoxCollider>() != null && rigidbody2.gameObject.GetComponent<BoxCollider>() != null)
                 {
@@ -71,8 +79,18 @@ namespace HorizonEngine
             
         }
 
+        internal bool isTrigger
+        {
+            get
+            {
+                return _isTrigger;
+            }
+        }
+
         internal void ResolveContact()
         {
+            if (_isTrigger) return;
+
             if(_rigidbodies[0] == null)
             {
                 _rigidbodies[0] = _rigidbodies[1];
@@ -157,6 +175,22 @@ namespace HorizonEngine
         private Vector2 Cross(float f, Vector2 v)
         {
             return new Vector2(-f * v.Y, f * v.X);
+        }
+
+        internal Collision GetCollisionData(int collider)
+        {
+            Collision collision = new Collision();
+            collision.collider = collider == 0 ? _colliders[1] : _colliders[0];
+            collision.contactNormal = _contactNormal;
+            collision.contactPoint = _contactPoint;
+            collision.penetration = _penetration;
+
+            return collision;
+        }
+
+        internal Tuple<Collider, Collider> GetContactPair()
+        {
+            return Tuple.Create(_colliders[0], _colliders[1]);
         }
     }
 }

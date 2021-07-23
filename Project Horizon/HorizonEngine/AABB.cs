@@ -32,6 +32,12 @@ namespace HorizonEngine
             _max = Vector2.Max(position1, position2);
         }
 
+        public AABB(Vector2 position1, Vector2 position2, Vector2 position3, Vector2 position4)
+        {
+            _min = Vector2.Min(Vector2.Min(position1, position2), Vector2.Min(position3, position4));
+            _max = Vector2.Max(Vector2.Max(position1, position2), Vector2.Max(position3, position4));
+        }
+
 
         public Vector2 center
         {
@@ -81,6 +87,14 @@ namespace HorizonEngine
                 return false;
 
             return true;
+        }
+
+        public static bool Intersect(AABB aabb, Vector2 point)
+        {
+            if (point.X >= aabb.min.X && point.X <= aabb.max.X && point.Y >= aabb.min.Y && point.Y <= aabb.max.Y)
+                return true;
+
+            return false;
         }
 
         public int MaximumExtent()

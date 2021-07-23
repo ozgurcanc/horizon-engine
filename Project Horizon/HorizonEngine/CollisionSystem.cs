@@ -37,6 +37,30 @@ namespace HorizonEngine
             return contact;
         }
 
+        public static bool Intersect(Collider collider, Vector2 point)
+        {
+            if(collider is BoxCollider)
+            {
+                return PointAndBox((BoxCollider)collider, point);
+            }
+            else
+            {
+                return PointAndCircle((CircleCollider)collider, point);
+            }
+        }
+
+        private static bool PointAndCircle(CircleCollider collider, Vector2 point)
+        {
+            Vector2 distance = collider.transformMatrix.GetColumn(2) - point;
+            return distance.LengthSquared() <= collider.radius * collider.radius;
+        }
+
+        private static bool PointAndBox(BoxCollider collider, Vector2 point)
+        {
+            Vector2 localPoint = collider.transformMatrix.InverseTransformPoint(point);
+            return Math.Abs(localPoint.X) <= collider.halfSize.X && Math.Abs(localPoint.Y) <= collider.halfSize.Y;
+        }
+
         private static Contact CircleAndCircle(CircleCollider collider1, CircleCollider collider2)
         {
             Vector2 center1 = collider1.transformMatrix.GetColumn(2);
@@ -68,8 +92,8 @@ namespace HorizonEngine
 
             Contact contact = new Contact
                 (
-                    collider1.rigidbody,
-                    collider2.rigidbody,
+                    collider1,
+                    collider2,
                     contactPoint,
                     normal,
                     penetration,
@@ -153,8 +177,8 @@ namespace HorizonEngine
 
             return new Contact
                 (
-                    box.rigidbody,
-                    circle.rigidbody,
+                    box,
+                    circle,
                     contactPoint,
                     contactNormal,
                     penetration,
@@ -265,8 +289,8 @@ namespace HorizonEngine
 
             Contact contact = new Contact
                 (
-                    collider1.rigidbody,
-                    collider2.rigidbody,
+                    collider1,
+                    collider2,
                     collider2.transformMatrix.TransformPoint(vertex),
                     normal,
                     penetration,

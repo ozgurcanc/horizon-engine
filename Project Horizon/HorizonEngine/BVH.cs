@@ -24,6 +24,7 @@ namespace HorizonEngine
         {
             public AABB aabb;
             public Collider collider;
+            public bool hasRigidbody;
         }
 
         private LeafElement[] _elements;
@@ -41,11 +42,12 @@ namespace HorizonEngine
                 LeafElement temp = new LeafElement();
                 temp.aabb = colliders[i].aabb;
                 temp.collider = colliders[i];
-                _elements[i] = temp;
+                temp.hasRigidbody = temp.collider.attachedRigidbody != null;
+                _elements[i] = temp;            
             }
 
             //Debug.WriteLine(count);
-            BuildBVH(0, count);
+            if(count > 0) BuildBVH(0, count);
         }
 
         private int BuildBVH(int start, int end)
@@ -122,8 +124,9 @@ namespace HorizonEngine
             return nodeIndex;
         }
 
-        public int ReselveCollision()
+        public HashSet<Tuple<Collider,Collider>> ReselveCollision()
         {
+            HashSet<Tuple<Collider, Collider>> contactPairs = new HashSet<Tuple<Collider, Collider>>();
             List<Contact> contacts = new List<Contact>();
             int k = -1;
             foreach(LeafElement element in _elements)
@@ -144,8 +147,16 @@ namespace HorizonEngine
                         {
                             if(k > i)
                             {
-                                Contact c = CollisionSystem.ResolveCollision(element.collider, _elements[i].collider); ;
-                                if (c != null) contacts.Add(c);
+                                if((element.hasRigidbody || _elements[i].hasRigidbody) && (Physics.ignoreMask[(int)element.collider.gameObject.layer] & (1 << (int)_elements[i].collider.gameObject.layer)) == 0)
+                                {                        
+                                    Contact c = CollisionSystem.ResolveCollision(element.collider, _elements[i].collider);
+                                    if (c != null)
+                                    {
+                                        if(!element.collider.isTrigger && !_elements[i].collider.isTrigger)
+                                            contacts.Add(c);
+                                        contactPairs.Add(Tuple.Create(element.collider, _elements[i].collider));
+                                    }
+                                }
                             }                                
                         }
                         pointer--;
@@ -167,7 +178,102 @@ namespace HorizonEngine
             }
 
             foreach (var x in contacts) x.ResolveContact();
-            return contacts.Count;
+            return contactPairs;
+        }
+
+
+        public List<Tuple<Collider, Collider>> GetPossibleContacts()
+        {
+            List<Tuple<Collider, Collider>> possibleContacts = new List<Tuple<Collider, Collider>>();
+            int k = -1;
+            foreach (LeafElement element in _elements)
+            {
+                k++;
+                AABB aabb = element.aabb;
+                int[] stack = new int[32];
+                int pointer = 0;
+                stack[0] = 0;
+
+                while (pointer >= 0)
+                {
+                    BVHNode node = _nodes[stack[pointer]];
+
+                    if (node.child[0] == 0)
+                    {
+                        for (int i = node.start; i < node.end; i++)
+                        {
+                            if (k > i)
+                            {
+                                if ((element.hasRigidbody || _elements[i].hasRigidbody) && (Physics.ignoreMask[(int)element.collider.gameObject.layer] & (1 << (int)_elements[i].collider.gameObject.layer)) == 0)
+                                {
+                                    possibleContacts.Add(Tuple.Create(element.collider, _elements[i].collider));
+                                }
+                            }
+                        }
+                        pointer--;
+                    }
+                    else
+                    {
+                        if (AABB.Intersect(node.aabb, aabb))
+                        {
+                            stack[pointer] = node.child[0];
+                            pointer++;
+                            stack[pointer] = node.child[1];
+                        }
+                        else
+                        {
+                            pointer--;
+                        }
+                    }
+                }
+            }
+
+            return possibleContacts;
+        }
+
+        public HashSet<Collider> MouseCollision()
+        {
+            Vector2 mouseWorldPos = Camera.ScreenToWorldPoint(Input.mousePosition);
+
+            HashSet<Collider> touchingColliders = new HashSet<Collider>();
+
+            if(_nodes.Count <= 0) return touchingColliders;
+
+            int[] stack = new int[32];
+            int pointer = 0;
+            stack[0] = 0;
+
+            while (pointer >= 0)
+            {
+                BVHNode node = _nodes[stack[pointer]];
+
+                if (node.child[0] == 0)
+                {
+                    for (int i = node.start; i < node.end; i++)
+                    {
+                        if (CollisionSystem.Intersect(_elements[i].collider, mouseWorldPos))
+                        {
+                            touchingColliders.Add(_elements[i].collider);
+                        }
+                    }
+                    pointer--;
+                }
+                else
+                {
+                    if (AABB.Intersect(node.aabb, mouseWorldPos))
+                    {
+                        stack[pointer] = node.child[0];
+                        pointer++;
+                        stack[pointer] = node.child[1];
+                    }
+                    else
+                    {
+                        pointer--;
+                    }
+                }
+            }
+
+            return touchingColliders;
         }
 
     }

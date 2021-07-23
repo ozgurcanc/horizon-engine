@@ -53,6 +53,7 @@
     <Compile Include="Camera.cs" />
     <Compile Include="CircleCollider.cs" />
     <Compile Include="Collider.cs" />
+    <Compile Include="Collision.cs" />
     <Compile Include="CollisionSystem.cs" />
     <Compile Include="Component.cs" />
     <Compile Include="Contact.cs" />

@@ -16,8 +16,9 @@ namespace HorizonEngine
         internal TransformMatrix(Vector2 position, float rotation)
         {
             _columns = new Vector2[3];
-            float cosa = (float)Math.Cos(rotation);
-            float sina = (float)Math.Sin(rotation);
+            float rad = MathHelper.ToRadians(rotation);
+            float cosa = (float)Math.Cos(rad);
+            float sina = (float)Math.Sin(rad);
 
             _columns[0].X = cosa;
             _columns[0].Y = sina;

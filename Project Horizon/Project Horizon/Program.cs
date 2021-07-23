@@ -18,17 +18,88 @@ namespace Project_Horizon
                     gameObject.GetComponent<Sprite>().color = Color.Red;
                     this.enabled = false;
                 }
+                if(Input.GetKeyDown(Keys.S))
+                {
+                    Physics.IgnoreLayerCollision(Layer.Default, Layer.Default);
+                }
+                if (Input.GetKeyDown(Keys.D))
+                {
+                    Physics.IgnoreLayerCollision(Layer.Default, Layer.Default, false);
+                }
+                if (Input.GetKeyDown(Keys.W))
+                {
+                    //gameObject.layer = Layer.Layer1;               
+                    gameObject.GetComponent<BoxCollider>().isTrigger = !gameObject.GetComponent<BoxCollider>().isTrigger;
+                }
+            }
+
+            public override void OnMouseDown()
+            {
+                //Debug.WriteLine(gameObject.name + " down");
+            }
+
+            public override void OnMouseDrag()
+            {
+                //Debug.WriteLine(gameObject.name + " drag");
+                gameObject.position = Camera.ScreenToWorldPoint(Input.mousePosition);
+            }
+
+            public override void OnMouseUp()
+            {
+                //Debug.WriteLine(gameObject.name + " up");
+            }
+
+            public override void OnMouseEnter()
+            {
+                //Debug.WriteLine("enter" + " " + gameObject.name);
+            }
+
+            public override void OnMouseExit()
+            {
+                //Debug.WriteLine("exit" + " " + gameObject.name);
+            }
+
+            public override void OnMouseOver()
+            {
+                //Debug.WriteLine("over" + " " + gameObject.name);
+            }
+
+            public override void OnTriggerEnter(Collider collider)
+            {
+                Debug.WriteLine("trigger-enter");
+            }
+
+            public override void OnTriggerExit(Collider collider)
+            {
+                Debug.WriteLine("trigger-exit");
+            }
+
+            public override void OnCollisionEnter(Collision collision)
+            {
+                Debug.WriteLine("collision-enter");
+            }
+
+            public override void OnCollisionStay(Collision collision)
+            {
+                //Debug.WriteLine("collision-stay");
+            }
+
+            public override void OnCollisionExit(Collider collider)
+            {
+                Debug.WriteLine("collision-exit");
+            }
+
+            public override void OnTriggerStay(Collider collider)
+            {
+               //Debug.WriteLine("stay");
             }
 
             public override void OnEnable()
             {
                 Debug.WriteLine("Enabled");
-                Random r = new Random();
-                if(r.NextDouble() < 0.5f)
-                    gameObject.GetComponent<Sprite>().color = Color.Green;
-                else
-                    gameObject.GetComponent<Sprite>().color = Color.Blue;
             }
+
+            
 
             public override void OnDisable()
             {
@@ -46,11 +117,23 @@ namespace Project_Horizon
             Camera.height = 20;
 
             GameObject g = Scene.CreateGameObject("1");
+            GameObject g1 = Scene.CreateGameObject("2");
             g.AddComponent<Sprite>().texture = Scene.GetTexture("Box");
-            g.size = new Vector2(1,1);
+            g1.AddComponent<Sprite>().texture = Scene.GetTexture("Box");
+            g.size = new Vector2(5,5);
             g.position = Vector2.Zero;
+            g.AddComponent<BoxCollider>();
+
+            
+            g1.size = new Vector2(2, 2);
+            g1.position = new Vector2(5, 0);
+            //g1.AddComponent<Rigidbody>().velocity = new Vector2(-3f, 0);
+            //g1.GetComponent<Rigidbody>().inertia = 0;
+            g1.AddComponent<BoxCollider>();
+            //g1.AddComponent<T>();
 
             g.AddComponent<T>();
+            g.AddComponent<Rigidbody>();
 
         }
     }

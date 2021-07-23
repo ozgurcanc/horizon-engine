@@ -12,8 +12,21 @@ namespace HorizonEngine
     public abstract class Collider : Component
     {
         private TransformMatrix _transform;
-        private Rigidbody _rigidbody;
+        private Rigidbody _attachedRigidbody;
         private AABB _aabb;
+        private bool _isTrigger = false;
+
+        public bool isTrigger
+        {
+            get
+            {
+                return _isTrigger;
+            }
+            set
+            {
+                _isTrigger = value;
+            }
+        }
         
         internal TransformMatrix transformMatrix
         {
@@ -27,15 +40,15 @@ namespace HorizonEngine
             }
         }
 
-        internal Rigidbody rigidbody
+        public Rigidbody attachedRigidbody
         {
             get
             {
-                return _rigidbody;
+                return _attachedRigidbody;
             }
-            set
+            internal set
             {
-                _rigidbody = value;
+                _attachedRigidbody = value;
             }
         }
 

@@ -20,11 +20,13 @@ namespace HorizonEngine
         private Vector2 _size;
         private Dictionary<Type, Component> _components;
         private Layer _layer;
+        private List<Behaviour> _behaviours;
 
         internal GameObject(string name = "GameObject")
         {
             _childs = new List<GameObject>();
             _components = new Dictionary<Type, Component>();
+            _behaviours = new List<Behaviour>();
             _parent = null;
             _name = name;
             _activeSelf = _activeInHierarchy = true;
@@ -132,12 +134,21 @@ namespace HorizonEngine
             }
         }
 
+        internal IList<Behaviour> behaviours
+        {
+            get
+            {
+                return _behaviours.AsReadOnly();
+            }
+        }
+
         public T AddComponent<T>() where T : Component, new()
         {
             Debug.Assert(_components.ContainsKey(typeof(T)) == false);
             Component component = new T();
             component.gameObject = this;
             _components.Add(typeof(T), component);
+            if (component is Behaviour) _behaviours.Add((Behaviour)component);
 
             Scene.EnableComponent(component);
 

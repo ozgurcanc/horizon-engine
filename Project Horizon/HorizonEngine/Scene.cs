@@ -25,7 +25,9 @@ namespace HorizonEngine
         private List<Behaviour> _behaviours;
         private List<Rigidbody> _rigidbodies;
         private List<Collider> _colliders;
-
+        private HashSet<Tuple<Collider, Collider>> _contactPairs;
+        private HashSet<Collider> _mouseOverColliders;
+        private Collider[] _mouseClickedColliders;
         internal static Scene main
         {
             get
@@ -112,6 +114,8 @@ namespace HorizonEngine
             _behaviours = new List<Behaviour>();
             _rigidbodies = new List<Rigidbody>();
             _colliders = new List<Collider>();
+            _contactPairs = new HashSet<Tuple<Collider, Collider>>();
+            _mouseOverColliders = new HashSet<Collider>();
             _main = this;
         }     
 
@@ -176,8 +180,8 @@ namespace HorizonEngine
             watch.Start();
             Collider[] colliders = _colliders.ToArray();
 
-            List<Contact> contacts = new List<Contact>();
-            
+
+
             /*
             foreach (var x in colliders) x.UpdateCollider();
             for (int i = 0; i < colliders.Length; i++)
@@ -189,12 +193,136 @@ namespace HorizonEngine
             
             foreach (var x in contacts) x.ResolveContact();
             */
-            
-            if(colliders.Length > 0)
+
+            List<Contact> contacts = new List<Contact>();
+            BVH bvh = new BVH(colliders);
+            var possibleContacts = bvh.GetPossibleContacts();
+            var contactPairs = new HashSet<Tuple<Collider, Collider>>();
+
+            foreach (var x in possibleContacts)
             {
-                BVH bvh = new BVH(colliders);
-                bvh.ReselveCollision();
-            }        
+                Contact contact = CollisionSystem.ResolveCollision(x.Item1, x.Item2);
+                if (contact != null) contacts.Add(contact);
+            }
+
+            contacts.ForEach(x => x.ResolveContact());
+
+            foreach (var c in contacts)
+            {
+                bool isTrigger = c.isTrigger;
+                var x = c.GetContactPair();
+                contactPairs.Add(x);
+                if (_contactPairs.Remove(x) || _contactPairs.Remove(Tuple.Create(x.Item2, x.Item1)))
+                {
+                    // Stay
+                    var colliderOneBehaviours = x.Item1.gameObject.behaviours;
+                    var cooliderTwoBehaviours = x.Item2.gameObject.behaviours;
+                    if(isTrigger)
+                    {
+                        foreach (var y in colliderOneBehaviours) y.OnTriggerStay(x.Item2);
+                        foreach (var y in cooliderTwoBehaviours) y.OnTriggerStay(x.Item1);
+                    }
+                    else
+                    {
+                        foreach (var y in colliderOneBehaviours) y.OnCollisionStay(c.GetCollisionData(0));
+                        foreach (var y in cooliderTwoBehaviours) y.OnCollisionStay(c.GetCollisionData(1));
+                    }
+                    
+                }
+                else
+                {
+                    // Enter
+                    var colliderOneBehaviours = x.Item1.gameObject.behaviours;
+                    var cooliderTwoBehaviours = x.Item2.gameObject.behaviours;
+                    if(isTrigger)
+                    {
+                        foreach (var y in colliderOneBehaviours) y.OnTriggerEnter(x.Item2);
+                        foreach (var y in cooliderTwoBehaviours) y.OnTriggerEnter(x.Item1);
+                    } 
+                    else
+                    {
+                        foreach (var y in colliderOneBehaviours) y.OnCollisionEnter(c.GetCollisionData(0));
+                        foreach (var y in cooliderTwoBehaviours) y.OnCollisionEnter(c.GetCollisionData(1));
+                    }
+                }
+            }
+
+            foreach(var x in _contactPairs)
+            {
+                // Exit
+                bool isTrigger = x.Item1.isTrigger || x.Item2.isTrigger;
+                var colliderOneBehaviours = x.Item1.gameObject.behaviours;
+                var cooliderTwoBehaviours = x.Item2.gameObject.behaviours;
+                if(isTrigger)
+                {
+                    foreach (var y in colliderOneBehaviours) y.OnTriggerExit(x.Item2);
+                    foreach (var y in cooliderTwoBehaviours) y.OnTriggerExit(x.Item1);
+                }
+                else
+                {
+                    foreach (var y in colliderOneBehaviours) y.OnCollisionExit(x.Item2);
+                    foreach (var y in cooliderTwoBehaviours) y.OnCollisionExit(x.Item1);
+                }
+            }
+
+            _contactPairs = contactPairs;
+
+
+            var mouseOverColliders = bvh.MouseCollision();
+
+            foreach(var x in mouseOverColliders)
+            {
+                if(_mouseOverColliders.Remove(x))
+                {
+                    //Stay
+                    var behaviours = x.gameObject.behaviours;
+                    foreach (var y in behaviours) y.OnMouseOver();
+                }
+                else
+                {
+                    //enter
+                    var behaviours = x.gameObject.behaviours;
+                    foreach (var y in behaviours) y.OnMouseEnter();
+                }
+            }
+
+            foreach(var x in _mouseOverColliders)
+            {
+                var behaviours = x.gameObject.behaviours;
+                foreach (var y in behaviours) y.OnMouseExit();
+            }
+
+            _mouseOverColliders = mouseOverColliders;
+
+            if(Input.GetMouseButtonDown(0))
+            {
+                _mouseClickedColliders = new Collider[mouseOverColliders.Count];
+                mouseOverColliders.CopyTo(_mouseClickedColliders);
+                foreach(var x in _mouseClickedColliders)
+                {
+                    var behaviours = x.gameObject.behaviours;
+                    foreach (var y in behaviours) y.OnMouseDown();
+                }
+                   
+            }
+            else if(Input.GetMouseButton(0))
+            {
+                foreach (var x in _mouseClickedColliders)
+                {
+                    var behaviours = x.gameObject.behaviours;
+                    foreach (var y in behaviours) y.OnMouseDrag();
+                }
+            }
+            else if(Input.GetMouseButtonUp(0))
+            {
+                foreach (var x in _mouseClickedColliders)
+                {
+                    var behaviours = x.gameObject.behaviours;
+                    foreach (var y in behaviours) y.OnMouseUp();
+                }
+                _mouseClickedColliders = null;
+            }
+    
             //Debug.WriteLine(contacts.Count);
             //Debug.WriteLine(bvh.ReselveCollision());
             //Debug.WriteLine("---");
