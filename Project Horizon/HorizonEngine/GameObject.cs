@@ -10,6 +10,7 @@ namespace HorizonEngine
 {
     public class GameObject
     {
+        private int _gameObjectID;
         private bool _activeSelf;
         private bool _activeInHierarchy;
         private string _name;
@@ -31,6 +32,19 @@ namespace HorizonEngine
             _name = name;
             _activeSelf = _activeInHierarchy = true;
             _layer = 0;
+            _size = new Vector2(1, 1);
+        }
+
+        internal int gameObjectID
+        {
+            get
+            {
+                return _gameObjectID;
+            }
+            set
+            {
+                _gameObjectID = value;
+            }
         }
 
         public bool activeSelf
@@ -142,6 +156,16 @@ namespace HorizonEngine
             }
         }
 
+        internal void Destroy()
+        {
+            _behaviours.Clear();
+            foreach (Component component in _components.Values) component.enabled = false;
+            _components.Clear();
+            foreach (GameObject child in _childs.ToArray()) Scene.Destroy(child);
+            _childs.Clear();
+            parent = null;
+        }
+
         public T AddComponent<T>() where T : Component, new()
         {
             Debug.Assert(_components.ContainsKey(typeof(T)) == false);
@@ -153,6 +177,18 @@ namespace HorizonEngine
             Scene.EnableComponent(component);
 
             return (T)component;
+        }
+
+        public void RemoveComponent<T>() where T : Component, new()
+        {
+            Type type = typeof(T);
+            if(_components.ContainsKey(type))
+            {
+                Component component = _components[type];
+                if (component is Behaviour) _behaviours.Remove((Behaviour)component);
+                _components.Remove(type);
+                component.enabled = false;
+            }
         }
 
         public T GetComponent<T>() where T : Component

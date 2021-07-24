@@ -122,8 +122,19 @@ namespace HorizonEngine
         public static GameObject CreateGameObject(string name = "GameObject")
         {
             GameObject gameObject = new GameObject(name);
+            gameObject.gameObjectID = Scene.main._gameObjects.Count;
             Scene.main._gameObjects.Add(gameObject);
             return gameObject;
+        }
+
+        public static void Destroy(GameObject gameObject)
+        {
+            int lastIndex = Scene.main._gameObjects.Count - 1;
+            GameObject temp = Scene.main._gameObjects[lastIndex];
+            temp.gameObjectID = gameObject.gameObjectID;
+            Scene.main._gameObjects[gameObject.gameObjectID] = temp;
+            Scene.main._gameObjects.RemoveAt(lastIndex);
+            gameObject.Destroy();
         }
 
         public static Texture2D GetTexture(string name)
@@ -162,6 +173,16 @@ namespace HorizonEngine
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
+            /*
+            if(Input.GetKeyDown(Keys.H))
+            {
+                Debug.WriteLine("gameobjects : " + _gameObjects.Count);
+                Debug.WriteLine("behaviours : " + _behaviours.Count);
+                Debug.WriteLine("sprites : " + _renderers.Count);
+                Debug.WriteLine("");
+            }
+            */
 
             // TODO: Add your update logic here
             _fps++;

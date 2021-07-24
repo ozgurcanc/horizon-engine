@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace Project_Horizon
 {
@@ -11,25 +12,58 @@ namespace Project_Horizon
     {
         class T : Behaviour
         {
+            private List<GameObject> gameObjects = new List<GameObject>();
+            private Random r = new Random();
+
             public override void Update(float deltaTime)
             {
+                //Debug.WriteLine("Update");
+
                 if(Input.GetKeyDown(Keys.A))
                 {
                     gameObject.GetComponent<Sprite>().color = Color.Red;
-                    this.enabled = false;
+                    //this.enabled = false;
+
+                    var g = Scene.CreateGameObject("2");
+                    var s = g.AddComponent<Sprite>();
+                    s.texture = Scene.GetTexture("Box");
+                    s.color = Color.Blue;
+                    g.position = new Vector2(r.Next(5,10), r.Next(5, 10));
+
+
+                    if (gameObjects.Count > 0)
+                    {
+                        g.parent = gameObjects[gameObjects.Count - 1];
+                    }
+
+                    gameObjects.Add(g);
+
+                    
+                }
+                if(Input.GetKeyDown(Keys.R))
+                {
+                    if(gameObjects.Count > 0)
+                    {
+                        Scene.Destroy(gameObjects[0]);
+                        gameObjects.Clear();
+                    }
                 }
                 if(Input.GetKeyDown(Keys.S))
                 {
-                    Physics.IgnoreLayerCollision(Layer.Default, Layer.Default);
+                    //Physics.IgnoreLayerCollision(Layer.Default, Layer.Default);
+                    gameObject.AddComponent<Rigidbody>().gravityScale = 0;
                 }
                 if (Input.GetKeyDown(Keys.D))
                 {
-                    Physics.IgnoreLayerCollision(Layer.Default, Layer.Default, false);
+                    //Physics.IgnoreLayerCollision(Layer.Default, Layer.Default, false);
+                    gameObject.RemoveComponent<Rigidbody>();
                 }
                 if (Input.GetKeyDown(Keys.W))
                 {
                     //gameObject.layer = Layer.Layer1;               
-                    gameObject.GetComponent<BoxCollider>().isTrigger = !gameObject.GetComponent<BoxCollider>().isTrigger;
+                    //gameObject.GetComponent<BoxCollider>().isTrigger = !gameObject.GetComponent<BoxCollider>().isTrigger;
+                    //Debug.WriteLine(gameObject.GetComponent<T>() == null);
+                    gameObject.RemoveComponent<T>();
                 }
             }
 
@@ -105,7 +139,7 @@ namespace Project_Horizon
             {
                 Debug.WriteLine("Disabled");
                 Debug.WriteLine("----");
-                this.enabled = true;
+                //this.enabled = true;
             }
         }
 
