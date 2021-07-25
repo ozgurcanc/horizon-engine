@@ -166,6 +166,27 @@ namespace HorizonEngine
             parent = null;
         }
 
+        internal GameObject Clone()
+        {
+            GameObject clone = (GameObject)this.MemberwiseClone();
+            clone._behaviours = new List<Behaviour>();
+            clone._components = new Dictionary<Type, Component>();
+            clone._childs = new List<GameObject>();           
+            
+            foreach (Component component in _components.Values)
+            {
+                Component temp = component.Clone();
+                temp.gameObject = clone;
+                clone._components.Add(temp.GetType(), temp);
+                if (temp is Behaviour) clone._behaviours.Add((Behaviour)temp);
+                if (temp.enabled && clone.activeInHierarchy) Scene.EnableComponent(temp);
+            }
+
+            foreach (GameObject child in _childs) Scene.Clone(child).parent = clone;
+
+            return clone;
+        }
+
         public T AddComponent<T>() where T : Component, new()
         {
             Debug.Assert(_components.ContainsKey(typeof(T)) == false);

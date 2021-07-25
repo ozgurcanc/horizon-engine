@@ -28,6 +28,7 @@ namespace HorizonEngine
         private HashSet<Tuple<Collider, Collider>> _contactPairs;
         private HashSet<Collider> _mouseOverColliders;
         private Collider[] _mouseClickedColliders;
+        private List<Behaviour> _startBehaviours;
         internal static Scene main
         {
             get
@@ -49,6 +50,11 @@ namespace HorizonEngine
                 component.componetID = scene._behaviours.Count;
                 scene._behaviours.Add((Behaviour)component);
                 ((Behaviour)component).OnEnable();
+                if(component.startFlag)
+                {
+                    scene._startBehaviours.Add((Behaviour)component);
+                    component.startFlag = false;
+                }
             }
             else if(component is Rigidbody)
             {
@@ -116,6 +122,7 @@ namespace HorizonEngine
             _colliders = new List<Collider>();
             _contactPairs = new HashSet<Tuple<Collider, Collider>>();
             _mouseOverColliders = new HashSet<Collider>();
+            _startBehaviours = new List<Behaviour>();
             _main = this;
         }     
 
@@ -125,6 +132,25 @@ namespace HorizonEngine
             gameObject.gameObjectID = Scene.main._gameObjects.Count;
             Scene.main._gameObjects.Add(gameObject);
             return gameObject;
+        }
+
+        public static GameObject Find(string name)
+        {
+            foreach(GameObject gameObject in Scene.main._gameObjects)
+            {
+                if (gameObject.name == name)
+                    return gameObject;
+            }
+
+            return null;
+        }
+
+        public static GameObject Clone(GameObject gameObject)
+        {
+            GameObject clone = gameObject.Clone();
+            clone.gameObjectID = Scene.main._gameObjects.Count;
+            Scene.main._gameObjects.Add(clone);
+            return clone;
         }
 
         public static void Destroy(GameObject gameObject)
@@ -174,7 +200,7 @@ namespace HorizonEngine
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            /*
+            
             if(Input.GetKeyDown(Keys.H))
             {
                 Debug.WriteLine("gameobjects : " + _gameObjects.Count);
@@ -182,7 +208,7 @@ namespace HorizonEngine
                 Debug.WriteLine("sprites : " + _renderers.Count);
                 Debug.WriteLine("");
             }
-            */
+            
 
             // TODO: Add your update logic here
             _fps++;
@@ -353,6 +379,8 @@ namespace HorizonEngine
             //Debug.WriteLine(watch.ElapsedMilliseconds);
 
             foreach (var x in _rigidbodies.ToArray()) x.UpdatePhysics(deltaTime);
+            foreach (var x in _startBehaviours.ToArray()) x.Start();
+            _startBehaviours.Clear();
             foreach (var x in _behaviours.ToArray()) x.Update(deltaTime);
             //_updatables.ForEach(x => x.Update(gameTime));
             base.Update(gameTime);

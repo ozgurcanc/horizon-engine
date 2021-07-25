@@ -12,6 +12,7 @@ namespace HorizonEngine
 {
     public abstract class Component
     {
+        private bool _startFlag = true;
         private GameObject _gameObject;
         private bool _enabled = true;
         private int _componentID;
@@ -56,6 +57,25 @@ namespace HorizonEngine
             {
                 _componentID = value;
             }
+        }
+
+        internal bool startFlag
+        {
+            get
+            {
+                return _startFlag;
+            }
+            set
+            {
+                _startFlag = value;
+            }
+        }
+
+        internal Component Clone()
+        {
+            Component component = (Component)this.MemberwiseClone();
+            component._startFlag = true;
+            return component;
         }
     }
 

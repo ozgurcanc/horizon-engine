@@ -13,6 +13,8 @@ namespace HorizonEngine
     {
         public abstract void Update(float deltaTime);
 
+        public virtual void Start() { }
+
         public virtual void OnEnable() { }
 
         public virtual void OnDisable() { }

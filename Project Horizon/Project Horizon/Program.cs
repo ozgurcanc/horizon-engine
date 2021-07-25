@@ -14,16 +14,34 @@ namespace Project_Horizon
         {
             private List<GameObject> gameObjects = new List<GameObject>();
             private Random r = new Random();
+            private GameObject clone = null;
+
+            public override void Start()
+            {
+                Debug.WriteLine("start");
+            }
 
             public override void Update(float deltaTime)
             {
                 //Debug.WriteLine("Update");
 
-                if(Input.GetKeyDown(Keys.A))
+                if(Input.GetKeyDown(Keys.T))
+                {
+                    clone = Scene.Clone(gameObject);
+                    clone.GetComponent<Sprite>().color = Color.White;
+                    clone.position = new Vector2(6, 0);
+                }
+                if (Input.GetKeyDown(Keys.Y))
+                {
+                    if(clone != null)
+                    Scene.Destroy(clone);
+                    clone = null;
+                }
+                if (Input.GetKeyDown(Keys.A))
                 {
                     gameObject.GetComponent<Sprite>().color = Color.Red;
                     //this.enabled = false;
-
+                    /*
                     var g = Scene.CreateGameObject("2");
                     var s = g.AddComponent<Sprite>();
                     s.texture = Scene.GetTexture("Box");
@@ -37,7 +55,7 @@ namespace Project_Horizon
                     }
 
                     gameObjects.Add(g);
-
+                    */
                     
                 }
                 if(Input.GetKeyDown(Keys.R))
@@ -131,6 +149,7 @@ namespace Project_Horizon
             public override void OnEnable()
             {
                 Debug.WriteLine("Enabled");
+                clone = null;
             }
 
             
@@ -151,19 +170,19 @@ namespace Project_Horizon
             Camera.height = 20;
 
             GameObject g = Scene.CreateGameObject("1");
-            GameObject g1 = Scene.CreateGameObject("2");
+            //GameObject g1 = Scene.CreateGameObject("2");
             g.AddComponent<Sprite>().texture = Scene.GetTexture("Box");
-            g1.AddComponent<Sprite>().texture = Scene.GetTexture("Box");
+            //g1.AddComponent<Sprite>().texture = Scene.GetTexture("Box");
             g.size = new Vector2(5,5);
             g.position = Vector2.Zero;
             g.AddComponent<BoxCollider>();
 
             
-            g1.size = new Vector2(2, 2);
-            g1.position = new Vector2(5, 0);
+            //g1.size = new Vector2(2, 2);
+            //g1.position = new Vector2(5, 0);
             //g1.AddComponent<Rigidbody>().velocity = new Vector2(-3f, 0);
             //g1.GetComponent<Rigidbody>().inertia = 0;
-            g1.AddComponent<BoxCollider>();
+            //g1.AddComponent<BoxCollider>();
             //g1.AddComponent<T>();
 
             g.AddComponent<T>();
