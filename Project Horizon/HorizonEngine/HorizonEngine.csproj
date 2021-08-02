@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AABB.cs" />
+    <Compile Include="Assets.cs" />
     <Compile Include="Behaviour.cs" />
     <Compile Include="BoxCollider.cs" />
     <Compile Include="BVH.cs" />
@@ -66,6 +67,7 @@
     <Compile Include="Rigidbody.cs" />
     <Compile Include="Scene.cs" />
     <Compile Include="Sprite.cs" />
+    <Compile Include="Texture.cs" />
     <Compile Include="TransformMatrix.cs" />
   </ItemGroup>
   <ItemGroup>

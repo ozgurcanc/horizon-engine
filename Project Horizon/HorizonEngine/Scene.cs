@@ -19,7 +19,6 @@ namespace HorizonEngine
 
         private static Scene _main;
         private List<GameObject> _gameObjects;
-        private Dictionary<string, Texture2D> _textures;
         private ISceneStarter _sceneStarter;
         private List<Renderer> _renderers;
         private List<Behaviour> _behaviours;
@@ -110,12 +109,12 @@ namespace HorizonEngine
         {
             //_graphics = new GraphicsDeviceManager(this);
             Camera.InitCamera(new GraphicsDeviceManager(this));
+            Assets.InitAssets(this.Content);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
             _gameObjects = new List<GameObject>();
             _sceneStarter = sceneStarter;
-            _textures = new Dictionary<string, Texture2D>();
             _renderers = new List<Renderer>();
             _behaviours = new List<Behaviour>();
             _rigidbodies = new List<Rigidbody>();
@@ -161,19 +160,6 @@ namespace HorizonEngine
             Scene.main._gameObjects[gameObject.gameObjectID] = temp;
             Scene.main._gameObjects.RemoveAt(lastIndex);
             gameObject.Destroy();
-        }
-
-        public static Texture2D GetTexture(string name)
-        {
-            Scene scene = Scene.main;
-            if(scene._textures.ContainsKey(name))
-            {
-                return scene._textures[name];
-            }
-
-            Texture2D texture = main.Content.Load<Texture2D>(name);
-            scene._textures.Add(name, texture);
-            return texture;
         }
 
         protected override void Initialize()

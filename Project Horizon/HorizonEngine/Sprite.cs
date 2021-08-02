@@ -11,7 +11,7 @@ namespace HorizonEngine
 {
     public class Sprite : Renderer
     {
-        private Texture2D _texture;
+        private HorizonEngine.Texture _texture;
         private Color _color;
         private int _flipState;
 
@@ -48,7 +48,7 @@ namespace HorizonEngine
             }
         }
 
-        public Texture2D texture
+        public HorizonEngine.Texture texture
         {
             get
             {
@@ -76,7 +76,7 @@ namespace HorizonEngine
         {
             if (texture == null) return;
 
-            spriteBatch.Draw(_texture, rect, null, _color, MathHelper.ToRadians(gameObject.rotation), new Vector2(texture.Width / 2, texture.Height / 2), (SpriteEffects)_flipState, 0f);
+            spriteBatch.Draw(_texture.texture, rect, _texture.sourceRectangle, _color, MathHelper.ToRadians(gameObject.rotation), new Vector2(_texture.sourceRectangle.Width / 2, texture.sourceRectangle.Height / 2), (SpriteEffects)_flipState, 0f);
         }
     }
 }

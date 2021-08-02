@@ -24,6 +24,19 @@ namespace Project_Horizon
             public override void Update(float deltaTime)
             {
                 //Debug.WriteLine("Update");
+                if (Input.GetKey(Keys.L))
+                {
+                    Scene.Find("2").rotation += 60f * deltaTime;
+                }
+                if (Input.GetKey(Keys.P))
+                {
+                    Scene.Find("2").position += new Vector2(2f * deltaTime);
+                }
+
+                if (Input.GetKeyDown(Keys.G))
+                {
+                    Scene.Find("2").activeSelf = !Scene.Find("2").activeSelf;
+                }
 
                 if(Input.GetKeyDown(Keys.T))
                 {
@@ -171,8 +184,13 @@ namespace Project_Horizon
 
             GameObject g = Scene.CreateGameObject("1");
             //GameObject g1 = Scene.CreateGameObject("2");
-            g.AddComponent<Sprite>().texture = Scene.GetTexture("Box");
+            Assets.LoadTexture("Box", "ColorBox", null);
+            Assets.LoadTexture("Box1", "ColorBox", new Vector4(0.5f * 0,0.5f * 1 ,0.5f * 1, 0.5f * 1));
+            g.AddComponent<Sprite>().texture = Assets.GetTexture("Box");
+            GameObject g1 = Scene.CreateGameObject("2");
+            g1.AddComponent<Sprite>().texture = Assets.GetTexture("Box1");
             //g1.AddComponent<Sprite>().texture = Scene.GetTexture("Box");
+            g1.size = new Vector2(5, 5);
             g.size = new Vector2(5,5);
             g.position = Vector2.Zero;
             g.AddComponent<BoxCollider>();
@@ -392,13 +410,15 @@ namespace Project_Horizon
 
             Scene.CreateGameObject("1").AddComponent<LayerTest>();
 
+            Assets.LoadTexture("Box", "Box");
+
             for (int i=0; i<count; i++)
             {
                 GameObject temp = Scene.CreateGameObject("1");
                 temp.position = new Vector2(r.Next(100, 600), r.Next(100, 600));
                 temp.size = new Vector2(10, 10);
                 temp.AddComponent<BenchmarkScript>();
-                temp.AddComponent<Sprite>().texture = Scene.GetTexture("Box");
+                temp.AddComponent<Sprite>().texture = Assets.GetTexture("Box");
                 Rigidbody rb = temp.AddComponent<Rigidbody>();
                 rb.velocity = new Vector2(r.Next(100, 150), r.Next(100, 150));
                 if (i % 2 == 0) rb.velocity *= new Vector2(-1, -1);
@@ -503,10 +523,11 @@ namespace Project_Horizon
             Camera.height = 500;
             Camera.resolution = new Vector2(800, 800);
 
-            
-            a.AddComponent<Sprite>().texture = Scene.GetTexture("Box");
+            Assets.LoadTexture("Box", "Box");
+            Assets.LoadTexture("Circle", "Circle");
+            a.AddComponent<Sprite>().texture = Assets.GetTexture("Box");
             //a.GetComponent<Sprite>().color = Color.Red;
-            b.AddComponent<Sprite>().texture = Scene.GetTexture("Box");
+            b.AddComponent<Sprite>().texture = Assets.GetTexture("Box");
 
             a.position = new Vector2(0f, -40f);
             b.position = new Vector2(0f, 40f);
@@ -545,13 +566,13 @@ namespace Project_Horizon
                     if (i % 2 == 0)
                     {
                         temp.AddComponent<CircleCollider>().radius = 2;
-                        temp.AddComponent<Sprite>().texture = Scene.GetTexture("Circle");
+                        temp.AddComponent<Sprite>().texture = Assets.GetTexture("Circle");
                         temp.GetComponent<Sprite>().color = Color.Red;
                     }
                     else
                     {
                         temp.AddComponent<BoxCollider>();
-                        temp.AddComponent<Sprite>().texture = Scene.GetTexture("Box");
+                        temp.AddComponent<Sprite>().texture = Assets.GetTexture("Box");
                         temp.GetComponent<Sprite>().color = Color.Green;
                         //temp.GetComponent<Rigidbody>().angularDrag = 40f;
                     }
