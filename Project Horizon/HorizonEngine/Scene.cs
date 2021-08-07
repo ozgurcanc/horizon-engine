@@ -383,7 +383,7 @@ namespace HorizonEngine
             foreach (var x in _startBehaviours.ToArray()) x.Start();
             _startBehaviours.Clear();
             foreach (var x in _behaviours.ToArray()) x.Update(deltaTime);
-            foreach (var x in _animators.ToArray()) x.Play(deltaTime);
+            foreach (var x in _animators.ToArray()) x.AnimationUpdate(deltaTime);
             //_updatables.ForEach(x => x.Update(gameTime));
             base.Update(gameTime);
         }

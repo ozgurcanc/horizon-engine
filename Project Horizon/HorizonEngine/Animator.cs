@@ -52,7 +52,7 @@ namespace HorizonEngine
             _parameters[name].value = value;
         }
 
-        internal void Play(float deltaTime)
+        internal void AnimationUpdate(float deltaTime)
         {
             _totalDuration += deltaTime;
             _currentDuration += deltaTime;
@@ -93,8 +93,7 @@ namespace HorizonEngine
                 _transitionDuration -= deltaTime;
                 if(_transitionDuration <= 0.0f)
                 {
-                    SetCurrentAnimation(_nextAnimation.name);
-                    _nextAnimation = null;
+                    Play(_nextAnimation.name);
                 }
             }
                                 
@@ -108,7 +107,7 @@ namespace HorizonEngine
                 _transitions.Add(animation, new List<Tuple<string, bool, float, float, AnimatorCondition[]>>());
             }
 
-            SetCurrentAnimation(animations[0]);
+            Play(animations[0]);
         }
 
         public void SetParameters(params AnimatorParameter[] parameters)
@@ -124,7 +123,7 @@ namespace HorizonEngine
             _transitions[from].Add(Tuple.Create(to, hasExitTime, MathHelper.Clamp(exitTime, 0f, 1f), duration, conditions));
         }
 
-        private void SetCurrentAnimation(string name)
+        public void Play(string name)
         {
             _currentAnimation = _animations[name];
             _currentFrame = 0;
@@ -132,6 +131,7 @@ namespace HorizonEngine
             _totalDuration = 0f;
             _frameDuration = _currentAnimation.duration / _currentAnimation.length;
             gameObject.GetComponent<Sprite>().texture = _currentAnimation[0];
+            _nextAnimation = null;
         }
         private bool CheckCondition(AnimatorCondition[] conditions)
         {
