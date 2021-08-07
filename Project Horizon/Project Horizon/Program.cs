@@ -8,6 +8,63 @@ using System.Collections.Generic;
 
 namespace Project_Horizon
 {
+    class AnimationTest : ISceneStarter
+    {
+        class AnimController : Behaviour
+        {
+            Animator anim;
+            public override void Start()
+            {
+                anim = gameObject.GetComponent<Animator>();
+            }
+
+            public override void Update(float deltaTime)
+            {
+                if(Input.GetKey(Keys.A))
+                {
+                    anim.SetBool("run", true);
+                }
+                else
+                {
+                    anim.SetBool("run", false);
+                }
+
+                if(Input.GetKeyDown(Keys.D))
+                {
+                    anim.SetTrigger("trigger");
+                }
+            }
+        }
+
+        public void Start()
+        {
+            Camera.resolution = new Vector2(800, 800);
+            Camera.position = Vector2.Zero;
+            Camera.width = 5;
+            Camera.height = 5;
+
+            GameObject g = Scene.CreateGameObject("1");
+            //GameObject g1 = Scene.CreateGameObject("2");
+            for(int i=0; i<4; i++) Assets.LoadTexture("Idle" + i, "Idle", new Vector4(i * 0.25f, 0, 0.25f, 1));
+            for (int i = 0; i < 8; i++) Assets.LoadTexture("Run" + i, "Run", new Vector4(i * (1f/8f), 0, (1f / 8f), 1));
+
+            Assets.LoadAnimation("Idle", 2f, true, "Idle0", "Idle1", "Idle2", "Idle3");
+            Assets.LoadAnimation("Run", 0.2f, true, "Run0", "Run1", "Run2", "Run3", "Run4", "Run5", "Run6", "Run7");
+
+            g.AddComponent<Sprite>().texture = Assets.GetTexture("Run0");
+            g.size = new Vector2(2.5f, 2.5f);
+            g.AddComponent<AnimController>();
+
+            var animator = g.AddComponent<Animator>();
+            animator.SetAnimations("Idle", "Run");
+            animator.SetParameters(new BoolParameter("run", false), new TriggerParameter("trigger"));
+            //animator.SetTransition("Idle", "Run", true, 0f, new BoolCondition("run", true));
+            //animator.SetTransition("Run", "Idle", true, 0f, new BoolCondition("run", false));
+
+            animator.SetTransition("Idle", "Run", false, 0f, 0f, new TriggerCondition("trigger"));
+            animator.SetTransition("Run", "Idle", true, 1f, 0f, new TriggerCondition("trigger"));
+        }
+    }
     class Testing : ISceneStarter
     {
         class T : Behaviour
@@ -640,7 +697,7 @@ namespace Project_Horizon
             //using (var game = new Scene())
             //  game.Run();
 
-            var game = new Scene(new Testing());
+            var game = new Scene(new AnimationTest());
             game.Run();
         }
     }

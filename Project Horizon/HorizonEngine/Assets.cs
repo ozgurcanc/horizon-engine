@@ -16,13 +16,14 @@ namespace HorizonEngine
         private static ContentManager _contentManager;
         private static Dictionary<string, Texture2D> _sourceTextures;
         private static Dictionary<string, HorizonEngine.Texture> _textures;
-
+        private static Dictionary<string, Animation> _animations;
 
         static internal void InitAssets(ContentManager contentManager)
         {
             _contentManager = contentManager;
             _sourceTextures = new Dictionary<string, Texture2D>();
             _textures = new Dictionary<string, Texture>();
+            _animations = new Dictionary<string, Animation>();
         }
 
         public static void LoadTexture(string name, string sourceTexture, Vector4? sourceRectangle = null)
@@ -54,10 +55,29 @@ namespace HorizonEngine
             _textures.Add(name, new HorizonEngine.Texture(texture, source));
         }
 
+        public static void LoadAnimation(string name, float duration, bool loop, params string[] frameTextures)
+        {
+            int length = frameTextures.Length;
+            HorizonEngine.Texture[] frames = new HorizonEngine.Texture[length];
+
+            for (int i = 0; i < length; i++)
+                frames[i] = GetTexture(frameTextures[i]);
+
+            _animations.Add(name, new Animation(name, duration, loop, frames));
+        }
+
         public static HorizonEngine.Texture GetTexture(string name)
         {
             if(_textures.ContainsKey(name))
                 return _textures[name];
+
+            return null;
+        }
+
+        internal static Animation GetAnimation(string name)
+        {
+            if (_animations.ContainsKey(name))
+                return _animations[name];
 
             return null;
         }

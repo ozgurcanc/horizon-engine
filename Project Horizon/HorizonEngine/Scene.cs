@@ -28,6 +28,7 @@ namespace HorizonEngine
         private HashSet<Collider> _mouseOverColliders;
         private Collider[] _mouseClickedColliders;
         private List<Behaviour> _startBehaviours;
+        private List<Animator> _animators;
         internal static Scene main
         {
             get
@@ -64,6 +65,11 @@ namespace HorizonEngine
             {
                 component.componetID = scene._colliders.Count;
                 scene._colliders.Add((Collider)component);
+            }
+            else if (component is Animator)
+            {
+                component.componetID = scene._animators.Count;
+                scene._animators.Add((Animator)component);
             }
         }
 
@@ -103,6 +109,14 @@ namespace HorizonEngine
                 scene._colliders[component.componetID] = temp;
                 scene._colliders.RemoveAt(lastIndex);
             }
+            else if(component is Animator)
+            {
+                int lastIndex = scene._animators.Count - 1;
+                Animator temp = scene._animators[lastIndex];
+                temp.componetID = component.componetID;
+                scene._animators[component.componetID] = temp;
+                scene._animators.RemoveAt(lastIndex);
+            }
         }
 
         public Scene(ISceneStarter sceneStarter)
@@ -122,6 +136,7 @@ namespace HorizonEngine
             _contactPairs = new HashSet<Tuple<Collider, Collider>>();
             _mouseOverColliders = new HashSet<Collider>();
             _startBehaviours = new List<Behaviour>();
+            _animators = new List<Animator>();
             _main = this;
         }     
 
@@ -368,6 +383,7 @@ namespace HorizonEngine
             foreach (var x in _startBehaviours.ToArray()) x.Start();
             _startBehaviours.Clear();
             foreach (var x in _behaviours.ToArray()) x.Update(deltaTime);
+            foreach (var x in _animators.ToArray()) x.Play(deltaTime);
             //_updatables.ForEach(x => x.Update(gameTime));
             base.Update(gameTime);
         }
