@@ -21,7 +21,7 @@ namespace HorizonEngine
         private static Matrix _worldToScreen;
         private static Matrix _screenToWorld;
         private static int _cullingMask;
-        
+        private static int _maxSortOrder;
 
         internal static void InitCamera(GraphicsDeviceManager graphics)
         {
@@ -30,6 +30,7 @@ namespace HorizonEngine
             _width = _height = 10;
             _resolution = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             _cullingMask = 0;
+            _maxSortOrder = 1000;
         }
 
         internal static float scale
@@ -37,6 +38,14 @@ namespace HorizonEngine
             get
             {
                 return 1000f;
+            }
+        }
+
+        internal static int maxSortOrder
+        {
+            get
+            {
+                return _maxSortOrder;
             }
         }
 

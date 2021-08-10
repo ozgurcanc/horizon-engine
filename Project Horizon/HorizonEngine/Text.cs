@@ -58,7 +58,7 @@ namespace HorizonEngine
         {
             if (_font == null) return;
 
-            spriteBatch.DrawString(_font, _text, new Vector2(rect.X, rect.Y), color, MathHelper.ToRadians(gameObject.rotation), _halfSizeOfText, new Vector2(gameObject.size.X, -gameObject.size.Y) * 10f, (SpriteEffects)flipState, 1f); ;
+            spriteBatch.DrawString(_font, _text, new Vector2(rect.X, rect.Y), color, MathHelper.ToRadians(gameObject.rotation), _halfSizeOfText, new Vector2(gameObject.size.X, -gameObject.size.Y) * 10f, (SpriteEffects)flipState, layerDepth);
         }
     }
 }

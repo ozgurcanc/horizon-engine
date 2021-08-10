@@ -11,7 +11,7 @@ namespace HorizonEngine
 {
     public abstract class Behaviour : Component
     {
-        public abstract void Update(float deltaTime);
+        public virtual void Update(float deltaTime) { }
 
         public virtual void Start() { }
 

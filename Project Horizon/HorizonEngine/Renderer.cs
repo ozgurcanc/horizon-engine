@@ -14,11 +14,12 @@ namespace HorizonEngine
     {
         private Color _color;
         private int _flipState;
-
+        private float _sortingOrder;
         public Renderer()
         {
             _color = Color.White;
             _flipState = 0;
+            _sortingOrder = 0f;
         }
 
         public bool flipX
@@ -56,6 +57,26 @@ namespace HorizonEngine
             set
             {
                 _color = value;
+            }
+        }
+
+        public int sortingOrder
+        {
+            get
+            {
+                return (int)(_sortingOrder * Camera.maxSortOrder);
+            }
+            set
+            {
+                _sortingOrder = value / (float)Camera.maxSortOrder;
+            }
+        }
+
+        internal float layerDepth
+        {
+            get
+            {
+                return _sortingOrder;
             }
         }
         
