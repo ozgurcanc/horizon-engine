@@ -70,6 +70,14 @@ namespace HorizonEngine
             }
         }
 
+        public int childCount
+        {
+            get
+            {
+                return _childs.Count;
+            }
+        }
+
         public Vector2 position
         {
             get
@@ -238,6 +246,45 @@ namespace HorizonEngine
                 }
                 gameObject._childs.ForEach(x => UpdateHierarchy(x));
             }
+        }
+
+        public GameObject GetChild(int index)
+        {
+            if (index < childCount)
+                return _childs[index];
+
+            return null;
+        }
+
+        public GameObject GetChild(string name)
+        {
+            foreach(GameObject child in _childs)
+            {
+                if(child.name == name)
+                {
+                    return child;
+                }
+            }
+
+            return null;
+        }
+
+        public void DetachChildren()
+        {
+            foreach (GameObject child in _childs.ToArray())
+                child.parent = null;
+        }
+
+        public bool IsChildOf(GameObject parent)
+        {
+            GameObject child = this;
+            while(child != null)
+            {
+                if (child == parent) return true;
+                child = child.parent;
+            }
+
+            return false;
         }
     }
 }
