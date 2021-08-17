@@ -129,6 +129,7 @@ namespace HorizonEngine
                 if (_parent != null) _parent._childs.Remove(this);
                 _parent = value;
                 if(value != null ) _parent._childs.Add(this);
+                UpdateHierarchy(this);
             }
         }
 
@@ -203,7 +204,7 @@ namespace HorizonEngine
             _components.Add(typeof(T), component);
             if (component is Behaviour) _behaviours.Add((Behaviour)component);
 
-            Scene.EnableComponent(component);
+            if(_activeInHierarchy) Scene.EnableComponent(component);
 
             return (T)component;
         }
