@@ -71,7 +71,7 @@ namespace HorizonEngine
             }
         }
 
-        internal Component Clone()
+        internal virtual Component Clone()
         {
             Component component = (Component)this.MemberwiseClone();
             component._startFlag = true;

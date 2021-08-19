@@ -32,6 +32,36 @@ namespace HorizonEngine
             _currentAnimation = _nextAnimation = null;
         }
 
+        internal override Component Clone()
+        {
+            Animator clone = (Animator)base.Clone();
+            Dictionary<string, AnimatorParameter> parameters = clone._parameters;
+            clone._parameters = new Dictionary<string, AnimatorParameter>();
+          
+            foreach(string key in parameters.Keys)
+            {
+                AnimatorParameter parameter = parameters[key];
+                if(parameter is IntParameter)
+                {
+                    clone._parameters.Add(key, new IntParameter(parameter.name, (int)parameter.value));
+                }
+                else if (parameter is BoolParameter)
+                {
+                    clone._parameters.Add(key, new BoolParameter(parameter.name, (bool)parameter.value));
+                }
+                else if (parameter is TriggerParameter)
+                {
+                    clone._parameters.Add(key, new TriggerParameter(parameter.name));
+                }
+                else if (parameter is FloatParameter)
+                {
+                    clone._parameters.Add(key, new FloatParameter(parameter.name, (float)parameter.value));
+                }
+            }           
+
+            return clone;
+        }
+
         public void SetBool(string name, bool value)
         {
             _parameters[name].value = value;
