@@ -19,7 +19,7 @@ namespace HorizonEngine
 
         private static Scene _main;
         private List<GameObject> _gameObjects;
-        private ISceneStarter _sceneStarter;
+        private IScene _nextScene;
         private List<Renderer> _renderers;
         private List<Behaviour> _behaviours;
         private List<Rigidbody> _rigidbodies;
@@ -35,6 +35,12 @@ namespace HorizonEngine
             {
                 return _main;
             }
+        }
+
+        internal static void Register(GameObject gameObject)
+        {
+            gameObject.gameObjectID = Scene.main._gameObjects.Count;
+            Scene.main._gameObjects.Add(gameObject);
         }
 
         internal static void EnableComponent(Component component)
@@ -119,7 +125,7 @@ namespace HorizonEngine
             }
         }
 
-        public Scene(ISceneStarter sceneStarter)
+        public Scene()
         {
             //_graphics = new GraphicsDeviceManager(this);
             Camera.InitCamera(new GraphicsDeviceManager(this));
@@ -128,7 +134,7 @@ namespace HorizonEngine
             IsMouseVisible = true;
 
             _gameObjects = new List<GameObject>();
-            _sceneStarter = sceneStarter;
+            _nextScene = null;
             _renderers = new List<Renderer>();
             _behaviours = new List<Behaviour>();
             _rigidbodies = new List<Rigidbody>();
@@ -138,7 +144,12 @@ namespace HorizonEngine
             _startBehaviours = new List<Behaviour>();
             _animators = new List<Animator>();
             _main = this;
-        }     
+        }
+        
+        public static void Load<T>() where T : IScene, new()
+        {
+            Scene.main._nextScene = new T();
+        }
 
         public static GameObject CreateGameObject(string name = "GameObject")
         {
@@ -185,7 +196,7 @@ namespace HorizonEngine
             Camera.resolution = new Vector2(1280, 720);
 
             _timeCounter = _fps = 0;
-            _sceneStarter.Start();
+            //_sceneStarter.Load();
             base.Initialize();
         }
 
@@ -208,6 +219,31 @@ namespace HorizonEngine
                 Debug.WriteLine("behaviours : " + _behaviours.Count);
                 Debug.WriteLine("sprites : " + _renderers.Count);
                 Debug.WriteLine("");
+            }
+
+            if(_nextScene != null)
+            {
+                var w = new System.Diagnostics.Stopwatch();
+                w.Start();
+
+                List<GameObject> dontDestroyOnLoad = _gameObjects.FindAll(x => x.dontDestroyOnLoad && x.parent == null);
+                _gameObjects.Clear();
+                _renderers.Clear();
+                _behaviours.Clear();
+                _rigidbodies.Clear();
+                _colliders.Clear();
+                _contactPairs.Clear();
+                _mouseOverColliders.Clear();
+                _mouseClickedColliders = null;
+                _startBehaviours.Clear();
+                _animators.Clear();
+
+                dontDestroyOnLoad.ForEach(x => x.OnLoad());
+                _nextScene.Load();
+                _nextScene = null;
+
+                w.Stop();
+                Debug.WriteLine($"Execution Time: {w.ElapsedMilliseconds} ms");
             }
             
 

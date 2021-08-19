@@ -11,6 +11,7 @@ namespace HorizonEngine
     public class GameObject
     {
         private int _gameObjectID;
+        private bool _dontDestroyOnLoad;
         private bool _activeSelf;
         private bool _activeInHierarchy;
         private string _name;
@@ -33,6 +34,7 @@ namespace HorizonEngine
             _activeSelf = _activeInHierarchy = true;
             _layer = 0;
             _size = new Vector2(1, 1);
+            _dontDestroyOnLoad = false;
         }
 
         internal int gameObjectID
@@ -157,6 +159,14 @@ namespace HorizonEngine
             }
         }
 
+        internal bool dontDestroyOnLoad
+        {
+            get
+            {
+                return _dontDestroyOnLoad;
+            }
+        }
+
         internal IList<Behaviour> behaviours
         {
             get
@@ -173,6 +183,19 @@ namespace HorizonEngine
             foreach (GameObject child in _childs.ToArray()) Scene.Destroy(child);
             _childs.Clear();
             parent = null;
+        }
+
+        internal void OnLoad()
+        {
+            Scene.Register(this);
+
+            if(activeInHierarchy)
+            {
+                foreach (Component component in _components.Values)
+                    if (component.enabled) Scene.EnableComponent(component);
+            }
+
+            foreach (GameObject child in _childs) child.OnLoad();
         }
 
         internal GameObject Clone()
@@ -286,6 +309,11 @@ namespace HorizonEngine
             }
 
             return false;
+        }
+
+        public void DontDestroyOnLoad()
+        {
+            _dontDestroyOnLoad = true;
         }
     }
 }

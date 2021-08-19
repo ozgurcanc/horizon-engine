@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Project_Horizon
 {
-    class AnimationTest : ISceneStarter
+    class AnimationTest : IScene
     {
         class AnimController : Behaviour
         {
@@ -51,7 +51,7 @@ namespace Project_Horizon
             }
         }
 
-        public void Start()
+        public void Load()
         {
             Camera.resolution = new Vector2(800, 800);
             Camera.position = Vector2.Zero;
@@ -88,7 +88,7 @@ namespace Project_Horizon
             g.AddComponent<AnimController>();
         }
     }
-    class Testing : ISceneStarter
+    class Testing : IScene
     {
         class T : Behaviour
         {
@@ -255,7 +255,7 @@ namespace Project_Horizon
             }
         }
 
-        public void Start()
+        public void Load()
         {
             Camera.resolution = new Vector2(800, 800);
             Camera.position = Vector2.Zero;
@@ -363,7 +363,7 @@ namespace Project_Horizon
         }
     }
 
-    class Benchmark : ISceneStarter
+    class Benchmark : IScene
     {
         class LayerTest : Behaviour
         {
@@ -478,7 +478,7 @@ namespace Project_Horizon
                 //Debug.WriteLine(gameObject.GetComponent<Rigidbody>().velocity);
             }
         }
-        public void Start()
+        public void Load()
         {
             int count = 1000;
             Random r = new Random();
@@ -528,9 +528,9 @@ namespace Project_Horizon
         }
     }
 
-    class NewGame : ISceneStarter
+    class NewGame : IScene
     {
-        public void Start()
+        public void Load()
         {
             /*
             GameObject a = Scene.CreateGameObject("1");

@@ -79,9 +79,9 @@ namespace HorizonEngine
         }
     }
 
-    public interface ISceneStarter
+    public interface IScene
     {
-        void Start();
+        void Load();
     }
 
 
