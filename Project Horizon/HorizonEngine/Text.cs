@@ -25,6 +25,8 @@ namespace HorizonEngine
         
         private void UpdateSizeOfText()
         {
+            if (_font == null) return;
+
             _halfSizeOfText = _font.MeasureString(_text) / 2f;
         }
 
