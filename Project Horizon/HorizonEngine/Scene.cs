@@ -245,9 +245,10 @@ namespace HorizonEngine
                 w.Stop();
                 Debug.WriteLine($"Execution Time: {w.ElapsedMilliseconds} ms");
             }
-            
+
 
             // TODO: Add your update logic here
+            /*
             _fps++;
             _timeCounter += gameTime.ElapsedGameTime.TotalSeconds;
             if (_timeCounter > 1.0)
@@ -255,8 +256,10 @@ namespace HorizonEngine
                 //Debug.WriteLine(_fps);
                 _timeCounter = _fps = 0;
             }
+            */
 
-            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            Time.Update(gameTime);
+            float deltaTime = Time.deltaTime;
 
             Camera.Update();
             Input.Update();
@@ -418,7 +421,7 @@ namespace HorizonEngine
             foreach (var x in _rigidbodies.ToArray()) x.UpdatePhysics(deltaTime);
             foreach (var x in _startBehaviours.ToArray()) x.Start();
             _startBehaviours.Clear();
-            foreach (var x in _behaviours.ToArray()) x.Update(deltaTime);
+            foreach (var x in _behaviours.ToArray()) x.Update();
             foreach (var x in _animators.ToArray()) x.AnimationUpdate(deltaTime);
             //_updatables.ForEach(x => x.Update(gameTime));
             base.Update(gameTime);

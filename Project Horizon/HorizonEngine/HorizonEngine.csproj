@@ -74,6 +74,7 @@
     <Compile Include="Sprite.cs" />
     <Compile Include="Text.cs" />
     <Compile Include="Texture.cs" />
+    <Compile Include="Time.cs" />
     <Compile Include="TransformMatrix.cs" />
   </ItemGroup>
   <ItemGroup>
