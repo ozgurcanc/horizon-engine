@@ -32,6 +32,14 @@ namespace HorizonEngine
             }
         }
 
+        public static float mouseScrollDelta
+        {
+            get
+            {
+                return _currentMouseState.ScrollWheelValue - _previousMouseState.ScrollWheelValue;
+            }
+        }
+
         public static bool GetKeyDown(Keys key)
         {
             return _previousKeyboardState.IsKeyUp(key) && _currentKeyboardState.IsKeyDown(key);
