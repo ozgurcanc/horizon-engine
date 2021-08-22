@@ -22,6 +22,7 @@ namespace HorizonEngine
         private static Matrix _screenToWorld;
         private static int _cullingMask;
         private static int _maxSortOrder;
+        private static Color _clearColor;
 
         internal static void InitCamera(GraphicsDeviceManager graphics)
         {
@@ -31,6 +32,7 @@ namespace HorizonEngine
             _resolution = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             _cullingMask = 0;
             _maxSortOrder = 1000;
+            _clearColor = Color.CornflowerBlue;
         }
 
         internal static float scale
@@ -66,11 +68,28 @@ namespace HorizonEngine
             _screenToWorld = Matrix.Invert(m);
         }
 
+        internal static void Clear()
+        {
+            _graphics.GraphicsDevice.Clear(_clearColor);
+        }
+
         internal static Matrix renderTransform
         {
             get
             {
                 return _renderTransform;
+            }
+        }
+
+        public static Color clearColor
+        {
+            get
+            {
+                return _clearColor;
+            }
+            set
+            {
+                _clearColor = value;
             }
         }
 

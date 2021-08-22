@@ -62,6 +62,7 @@
     <Compile Include="CollisionSystem.cs" />
     <Compile Include="Component.cs" />
     <Compile Include="Contact.cs" />
+    <Compile Include="Engine.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Layer.cs" />

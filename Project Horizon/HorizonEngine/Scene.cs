@@ -1,21 +1,17 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Content;
 using System;
 using System.Diagnostics;
 using System.Collections.Generic;
 
 namespace HorizonEngine
 {
-    public class Scene : Game
+    public class Scene
     {
         //private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
-        private int _fps;
-        private double _timeCounter;
-        private SpriteFont _spriteFont;
-        private Texture2D _texture;
-        private Texture2D box;
+        //private SpriteBatch _spriteBatch;
 
         private static Scene _main;
         private List<GameObject> _gameObjects;
@@ -29,6 +25,7 @@ namespace HorizonEngine
         private Collider[] _mouseClickedColliders;
         private List<Behaviour> _startBehaviours;
         private List<Animator> _animators;
+
         internal static Scene main
         {
             get
@@ -125,13 +122,13 @@ namespace HorizonEngine
             }
         }
 
-        public Scene()
+        internal Scene(ContentManager contentManager, GraphicsDeviceManager graphicsDeviceManager)
         {
             //_graphics = new GraphicsDeviceManager(this);
-            Camera.InitCamera(new GraphicsDeviceManager(this));
-            Assets.InitAssets(this.Content);
-            Content.RootDirectory = "Content";
-            IsMouseVisible = true;
+            Camera.InitCamera(graphicsDeviceManager);
+            Assets.InitAssets(contentManager);
+            //Content.RootDirectory = "Content";
+            //IsMouseVisible = true;
 
             _gameObjects = new List<GameObject>();
             _nextScene = null;
@@ -188,29 +185,10 @@ namespace HorizonEngine
             gameObject.Destroy();
         }
 
-        protected override void Initialize()
+        internal void Update(GameTime gameTime)
         {
-            // TODO: Add your initialization logic here
-            IsFixedTimeStep = false;
-            //TargetElapsedTime = TimeSpan.FromTicks((long)(TimeSpan.TicksPerSecond / 30f));
-            Camera.resolution = new Vector2(1280, 720);
-
-            _timeCounter = _fps = 0;
-            //_sceneStarter.Load();
-            base.Initialize();
-        }
-
-        protected override void LoadContent()
-        {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here           
-        }
-
-        protected override void Update(GameTime gameTime)
-        {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            //    Exit();
 
             
             if(Input.GetKeyDown(Keys.H))
@@ -424,21 +402,18 @@ namespace HorizonEngine
             foreach (var x in _behaviours.ToArray()) x.Update();
             foreach (var x in _animators.ToArray()) x.AnimationUpdate(deltaTime);
             //_updatables.ForEach(x => x.Update(gameTime));
-            base.Update(gameTime);
         }
 
-        protected override void Draw(GameTime gameTime)
+        internal void Draw(SpriteBatch spriteBatch)
         {
             //Debug.WriteLine(Vector2.Transform(new Vector2(-5 * Camera.scale, +5 * Camera.scale), _camera.renderTransform));
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            Camera.Clear();
             // TODO: Add your drawing code here
             //Debug.WriteLine(Vector2.Transform(new Vector2(0, 0), _camera.worldToScreen));
-            _spriteBatch.Begin(transformMatrix: Camera.renderTransform, sortMode: SpriteSortMode.FrontToBack);
+            spriteBatch.Begin(transformMatrix: Camera.renderTransform, sortMode: SpriteSortMode.FrontToBack);
             //_drawables.ForEach(x => x.Draw(_spriteBatch));
-            foreach (var x in _renderers.ToArray()) if ((Camera.cullingMask & (1 << (int)x.gameObject.layer)) == 0) x.Draw(_spriteBatch);
-            _spriteBatch.End();
-
-            base.Draw(gameTime);
+            foreach (var x in _renderers.ToArray()) if ((Camera.cullingMask & (1 << (int)x.gameObject.layer)) == 0) x.Draw(spriteBatch);
+            spriteBatch.End();
         }
     }
 }
