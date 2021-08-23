@@ -34,6 +34,14 @@ namespace HorizonEngine
             }
         }
 
+        internal static IList<GameObject> gameObjects
+        {
+            get
+            {
+                return main._gameObjects.AsReadOnly();
+            }
+        }
+
         internal static void Register(GameObject gameObject)
         {
             gameObject.gameObjectID = Scene.main._gameObjects.Count;

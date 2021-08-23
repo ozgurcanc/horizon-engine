@@ -128,6 +128,12 @@ namespace HorizonEngine
             }
             set
             {
+                var temp = value;
+                while(temp != null) 
+                {
+                    if (temp == this) return;
+                    temp = temp.parent;
+                }
                 if (_parent != null) _parent._childs.Remove(this);
                 _parent = value;
                 if(value != null ) _parent._childs.Add(this);

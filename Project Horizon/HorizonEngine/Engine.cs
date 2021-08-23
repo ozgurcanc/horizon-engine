@@ -31,6 +31,7 @@ namespace HorizonEngine
             Camera.resolution = new Vector2(1280, 720);
 
             _guiRenderer = new ImGUIRenderer(this).Initialize().RebuildFontAtlas();
+            ImGui.GetIO().ConfigFlags |= ImGuiConfigFlags.DockingEnable;
 
             base.Initialize();
         }
@@ -62,7 +63,13 @@ namespace HorizonEngine
             _scene.Draw(_spriteBatch);
 
             _guiRenderer.BeginLayout(gameTime);
+            ImGui.DockSpaceOverViewport();
+                      
             ImGui.ShowDemoWindow();
+            
+            MainMenuBar.Draw();
+            HierarchyWindow.Draw();
+
             _guiRenderer.EndLayout();
 
             base.Draw(gameTime);

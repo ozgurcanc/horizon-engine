@@ -42,6 +42,19 @@ namespace Project_Horizon_DX
             g.AddComponent<Text>().font = Assets.GetSpriteFont("font");
             g.GetComponent<Text>().text = "testing testing testing";
 
+
+            g = Scene.CreateGameObject("test");
+
+            Scene.CreateGameObject("testchild1").parent = g;
+            Scene.CreateGameObject("testchild2").parent = g;
+            Scene.CreateGameObject("testchild3").parent = g;
+
+            g = Scene.CreateGameObject("parent");
+            var k = Scene.CreateGameObject("child");
+            k.parent = g;
+
+            g = Scene.CreateGameObject("grandchild");
+            g.parent = k;
         }
     }
 

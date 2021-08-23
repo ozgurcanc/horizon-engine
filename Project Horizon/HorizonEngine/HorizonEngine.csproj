@@ -78,9 +78,11 @@
     <Compile Include="Contact.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="GameObject.cs" />
+    <Compile Include="HierarchyWindow.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Layer.cs" />
     <Compile Include="LocalText.cs" />
+    <Compile Include="MainMenuBar.cs" />
     <Compile Include="MonoGame.ImGui\Data\IndexData.cs" />
     <Compile Include="MonoGame.ImGui\Data\InputData.cs" />
     <Compile Include="MonoGame.ImGui\Data\TextureData.cs" />
