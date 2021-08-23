@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Diagnostics;
 using System.Collections.Generic;
+using MonoGame.ImGui;
+using ImGuiNET;
 
 namespace HorizonEngine
 {
@@ -12,6 +14,7 @@ namespace HorizonEngine
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private Scene _scene;
+        private ImGUIRenderer _guiRenderer;
 
         public Engine()
         {
@@ -26,6 +29,8 @@ namespace HorizonEngine
             // TODO: Add your initialization logic here
             IsFixedTimeStep = false;
             Camera.resolution = new Vector2(1280, 720);
+
+            _guiRenderer = new ImGUIRenderer(this).Initialize().RebuildFontAtlas();
 
             base.Initialize();
         }
@@ -55,6 +60,10 @@ namespace HorizonEngine
 
             // TODO: Add your drawing code here
             _scene.Draw(_spriteBatch);
+
+            _guiRenderer.BeginLayout(gameTime);
+            ImGui.ShowDemoWindow();
+            _guiRenderer.EndLayout();
 
             base.Draw(gameTime);
         }
