@@ -20,6 +20,7 @@ namespace HorizonEngine
         private static int _selectedGameObjectId;
         private static GameObject _selectedGameObject;
         private static bool _dropped;
+        private static bool _clicked;
 
         static HierarchyWindow()
         {
@@ -45,6 +46,7 @@ namespace HorizonEngine
             if (!enabled) return;
 
             _dropped = false;
+            _clicked = false;
 
             ImGui.SetNextWindowSize(new System.Numerics.Vector2(450, 450), ImGuiCond.FirstUseEver);
             if(!ImGui.Begin("Hierarchy", ref _enabled))
@@ -63,6 +65,8 @@ namespace HorizonEngine
             if(ImGui.BeginPopupContextWindow())
             {
                 if (ImGui.MenuItem("New GameObject")) { Scene.CreateGameObject(); }
+                if (ImGui.MenuItem("Delete", _selectedGameObject != null)) { Scene.Destroy(_selectedGameObject); }
+                if (ImGui.MenuItem("Duplicate", _selectedGameObject != null)) { Scene.Clone(_selectedGameObject); }
                 ImGui.EndPopup();
             }
 
@@ -77,7 +81,7 @@ namespace HorizonEngine
                 ImGui.EndDragDropTarget();
             }
 
-            if (ImGui.IsItemClicked())
+            if (!_clicked && (ImGui.IsItemClicked(ImGuiMouseButton.Left) || ImGui.IsItemClicked(ImGuiMouseButton.Right)))
             {
                 _selectedGameObjectId = -1;
                 _selectedGameObject = null;
@@ -97,10 +101,11 @@ namespace HorizonEngine
 
             bool nodeOpen = ImGui.TreeNodeEx(gameObject.name, flags);
 
-            if(ImGui.IsItemClicked())
+            if(ImGui.IsItemClicked(ImGuiMouseButton.Left) || ImGui.IsItemClicked(ImGuiMouseButton.Right))
             {
                 _selectedGameObjectId = gameObject.gameObjectID;
                 _selectedGameObject = gameObject;
+                _clicked = true;
             }
 
             if(ImGui.BeginDragDropSource())

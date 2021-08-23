@@ -178,6 +178,7 @@ namespace HorizonEngine
         public static GameObject Clone(GameObject gameObject)
         {
             GameObject clone = gameObject.Clone();
+            clone.parent = null;
             clone.gameObjectID = Scene.main._gameObjects.Count;
             Scene.main._gameObjects.Add(clone);
             return clone;
