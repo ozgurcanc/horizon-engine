@@ -23,6 +23,7 @@ namespace HorizonEngine
         private static int _cullingMask;
         private static int _maxSortOrder;
         private static Color _clearColor;
+        private static RenderTarget2D _renderTarget;
 
         internal static void InitCamera(GraphicsDeviceManager graphics)
         {
@@ -33,6 +34,7 @@ namespace HorizonEngine
             _cullingMask = 0;
             _maxSortOrder = 1000;
             _clearColor = Color.CornflowerBlue;
+            _renderTarget = null;
         }
 
         internal static float scale
@@ -53,24 +55,31 @@ namespace HorizonEngine
 
         internal static void Update()
         {
+            Vector2 resolution = _renderTarget == null ? _resolution : new Vector2(_renderTarget.Width, _renderTarget.Height);
             Matrix m = Matrix.CreateTranslation(-_position.X * scale, -_position.Y * scale, 0);
             m *= Matrix.CreateRotationZ(MathHelper.ToRadians(-_rotation));
-            m *= Matrix.CreateScale(_resolution.X / (_width * scale), -_resolution.Y / (_height * scale), 1);
-            m *= Matrix.CreateTranslation(_resolution.X / 2, _resolution.Y / 2, 0);
+            m *= Matrix.CreateScale(resolution.X / (_width * scale), -resolution.Y / (_height * scale), 1);
+            m *= Matrix.CreateTranslation(resolution.X / 2, resolution.Y / 2, 0);
             _renderTransform = m;
 
             m = Matrix.CreateTranslation(-_position.X, -_position.Y, 0);
             m *= Matrix.CreateRotationZ(MathHelper.ToRadians(-_rotation));
-            m *= Matrix.CreateScale(_resolution.X / _width, -_resolution.Y / _height, 1);
-            m *= Matrix.CreateTranslation(_resolution.X / 2, _resolution.Y / 2, 0);
+            m *= Matrix.CreateScale(resolution.X / _width, -resolution.Y / _height, 1);
+            m *= Matrix.CreateTranslation(resolution.X / 2, resolution.Y / 2, 0);
             _worldToScreen = m;
 
             _screenToWorld = Matrix.Invert(m);
         }
 
-        internal static void Clear()
+        internal static void Begin()
         {
+            _graphics.GraphicsDevice.SetRenderTarget(_renderTarget);
             _graphics.GraphicsDevice.Clear(_clearColor);
+        }
+
+        internal static void End()
+        {
+            _graphics.GraphicsDevice.SetRenderTarget(null);
         }
 
         internal static Matrix renderTransform
@@ -162,6 +171,18 @@ namespace HorizonEngine
             get
             {
                 return _cullingMask;
+            }
+        }
+
+        internal static RenderTarget2D renderTarget
+        {
+            get
+            {
+                return _renderTarget;
+            }
+            set
+            {
+                _renderTarget = value;
             }
         }
 

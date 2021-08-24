@@ -78,6 +78,7 @@
     <Compile Include="Contact.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="GameObject.cs" />
+    <Compile Include="GameWindow.cs" />
     <Compile Include="HierarchyWindow.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Layer.cs" />

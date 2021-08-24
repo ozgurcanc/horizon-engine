@@ -37,6 +37,8 @@ namespace HorizonEngine
                 if(ImGui.BeginMenu("Window"))
                 {
                     if (ImGui.MenuItem("Hierarchy", null, HierarchyWindow.enabled)) { HierarchyWindow.enabled = !HierarchyWindow.enabled; }
+                    if (ImGui.MenuItem("Game", null, GameWindow.enabled)) { GameWindow.enabled = !GameWindow.enabled; }
+
                     ImGui.EndMenu();
                 }
 

@@ -416,13 +416,15 @@ namespace HorizonEngine
         internal void Draw(SpriteBatch spriteBatch)
         {
             //Debug.WriteLine(Vector2.Transform(new Vector2(-5 * Camera.scale, +5 * Camera.scale), _camera.renderTransform));
-            Camera.Clear();
+            Camera.Begin();
             // TODO: Add your drawing code here
             //Debug.WriteLine(Vector2.Transform(new Vector2(0, 0), _camera.worldToScreen));
             spriteBatch.Begin(transformMatrix: Camera.renderTransform, sortMode: SpriteSortMode.FrontToBack);
             //_drawables.ForEach(x => x.Draw(_spriteBatch));
             foreach (var x in _renderers.ToArray()) if ((Camera.cullingMask & (1 << (int)x.gameObject.layer)) == 0) x.Draw(spriteBatch);
             spriteBatch.End();
+
+            Camera.End();
         }
     }
 }

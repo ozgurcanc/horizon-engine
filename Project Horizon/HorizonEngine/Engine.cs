@@ -33,6 +33,8 @@ namespace HorizonEngine
             _guiRenderer = new ImGUIRenderer(this).Initialize().RebuildFontAtlas();
             ImGui.GetIO().ConfigFlags |= ImGuiConfigFlags.DockingEnable;
 
+            GameWindow.Init(_guiRenderer, _graphics.GraphicsDevice);
+
             base.Initialize();
         }
 
@@ -57,7 +59,7 @@ namespace HorizonEngine
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
             _scene.Draw(_spriteBatch);
@@ -69,6 +71,7 @@ namespace HorizonEngine
             
             MainMenuBar.Draw();
             HierarchyWindow.Draw();
+            GameWindow.Draw();
 
             _guiRenderer.EndLayout();
 
