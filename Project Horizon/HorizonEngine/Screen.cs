@@ -25,6 +25,7 @@ namespace HorizonEngine
         {
             set
             {
+                if(_defaultRenderTarget != null) _defaultRenderTarget.Dispose();
                 _defaultRenderTarget = value;
             }
         }
@@ -38,6 +39,7 @@ namespace HorizonEngine
             set
             {
                 _resolution = value;
+                if (Application.isEditor) return;
                 _graphics.PreferredBackBufferWidth = (int)value.X;
                 _graphics.PreferredBackBufferHeight = (int)value.Y;
                 _graphics.ApplyChanges();
@@ -65,6 +67,11 @@ namespace HorizonEngine
         internal static void End()
         {
             _graphics.GraphicsDevice.SetRenderTarget(null);
+        }
+
+        internal static RenderTarget2D CreateRenderTarget(int width, int height)
+        {
+            return new RenderTarget2D(_graphics.GraphicsDevice, width, height);
         }
     }
 }

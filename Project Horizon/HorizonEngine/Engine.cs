@@ -23,6 +23,7 @@ namespace HorizonEngine
             IsMouseVisible = true;
 
             Screen.Init(_graphics);
+            Application.isEditor = true;
             _scene = new Scene(this.Content, _graphics);
         }
 
@@ -30,12 +31,14 @@ namespace HorizonEngine
         {
             // TODO: Add your initialization logic here
             IsFixedTimeStep = false;
-            Screen.resolution = new Vector2(1600, 900);
+            _graphics.PreferredBackBufferWidth = 1600;
+            _graphics.PreferredBackBufferHeight = 900;
+            _graphics.ApplyChanges();
 
             _guiRenderer = new ImGUIRenderer(this).Initialize().RebuildFontAtlas();
             ImGui.GetIO().ConfigFlags |= ImGuiConfigFlags.DockingEnable;
 
-            GameWindow.Init(_guiRenderer, _graphics.GraphicsDevice);
+            GameWindow.Init(_guiRenderer);
 
             base.Initialize();
         }

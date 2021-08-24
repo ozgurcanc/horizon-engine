@@ -65,6 +65,7 @@
     <Compile Include="Animator.cs" />
     <Compile Include="AnimatorCondition.cs" />
     <Compile Include="AnimatorParameter.cs" />
+    <Compile Include="Application.cs" />
     <Compile Include="Assets.cs" />
     <Compile Include="Behaviour.cs" />
     <Compile Include="BoxCollider.cs" />

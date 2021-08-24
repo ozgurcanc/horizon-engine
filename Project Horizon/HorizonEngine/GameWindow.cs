@@ -16,6 +16,9 @@ namespace HorizonEngine
     {
         private static IntPtr _sceneImage;
         private static bool _enabled;
+        private static int _resolutionX;
+        private static int _resolutionY;
+        private static ImGUIRenderer _guiRenderer;
 
         internal static bool enabled
         {
@@ -29,11 +32,10 @@ namespace HorizonEngine
             }
         }
 
-        internal static void Init(ImGUIRenderer guiRenderer, GraphicsDevice graphicsDevice)
+        internal static void Init(ImGUIRenderer guiRenderer)
         {
-            RenderTarget2D renderTarget = new RenderTarget2D(graphicsDevice, (int)Screen.resolution.X, (int)Screen.resolution.Y);
-            _sceneImage = guiRenderer.BindTexture(renderTarget);
-            Screen.defaultRenderTarget = renderTarget;
+            _guiRenderer = guiRenderer;
+            CreateRenderTarget();
         }
 
         internal static void Draw()
@@ -42,11 +44,33 @@ namespace HorizonEngine
 
             ImGui.Begin("Game", ref _enabled, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse);
 
+            Vector2 resolution = Screen.resolution;
+            ImGui.SameLine();
+            if (ImGui.Button(resolution.X.ToString() + "x" + resolution.Y.ToString()))
+            {
+                _resolutionX = (int)resolution.X;
+                _resolutionY = (int)resolution.Y;
+                ImGui.OpenPopup("resolution");
+            }
+            if (ImGui.BeginPopup("resolution"))
+            {
+                ImGui.DragInt("Width", ref _resolutionX);
+                ImGui.DragInt("Height", ref _resolutionY);
+                if (ImGui.Button("Apply")) 
+                {
+                    Screen.resolution = new Vector2(_resolutionX, _resolutionY);
+                    CreateRenderTarget();
+                    ImGui.CloseCurrentPopup();
+                }
+                ImGui.EndPopup();
+            }
+
+            ImGui.BeginChild("Image");
             System.Numerics.Vector2 windowSize = ImGui.GetWindowSize();
             //windowSize.X -= ImGui.GetScrollX();
             //windowSize.Y -= ImGui.GetScrollY();
 
-            float aspectRatio = Screen.resolution.X / Screen.resolution.Y;
+            float aspectRatio = resolution.X / resolution.Y;
 
             float imageWidth = windowSize.X;
             float imageHeight = imageWidth / aspectRatio;           
@@ -59,9 +83,21 @@ namespace HorizonEngine
             
             System.Numerics.Vector2 imageSize = new System.Numerics.Vector2(imageWidth, imageHeight);
             ImGui.SetCursorPos((windowSize - imageSize) / 2f);
-
             ImGui.Image(_sceneImage, imageSize);
+
+            ImGui.EndChild();
             ImGui.End();
+        }
+
+        private static void CreateRenderTarget()
+        {
+            if(_sceneImage != IntPtr.Zero)
+            {
+                _guiRenderer.UnbindTexture(_sceneImage);
+            }
+            RenderTarget2D renderTarget = Screen.CreateRenderTarget((int)Screen.resolution.X, (int)Screen.resolution.Y);
+            _sceneImage = _guiRenderer.BindTexture(renderTarget);
+            Screen.defaultRenderTarget = renderTarget;
         }
     }
 }
