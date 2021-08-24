@@ -13,7 +13,7 @@ namespace Project_Horizon_DX
 
         public void Load()
         {
-            Screen.resolution = new Vector2(1600, 900);
+            //Screen.resolution = new Vector2(1600, 900);
             //Camera.main.position = new Vector2(0, 0) ;
             Camera.main.width = 10;
             Camera.main.height = 10;

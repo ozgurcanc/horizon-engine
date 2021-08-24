@@ -438,7 +438,7 @@ namespace HorizonEngine
             //Debug.WriteLine(Vector2.Transform(new Vector2(-5 * Camera.scale, +5 * Camera.scale), _camera.renderTransform));
             foreach(Camera camera in _cameras)
             {
-                camera.Begin();
+                camera.PreRender();
                 // TODO: Add your drawing code here
                 //Debug.WriteLine(Vector2.Transform(new Vector2(0, 0), _camera.worldToScreen));
                 spriteBatch.Begin(transformMatrix: camera.renderTransform, sortMode: SpriteSortMode.FrontToBack);
@@ -446,7 +446,7 @@ namespace HorizonEngine
                 foreach (var x in _renderers.ToArray()) if ((camera.cullingMask & (1 << (int)x.gameObject.layer)) == 0) x.Draw(spriteBatch);
                 spriteBatch.End();
 
-                camera.End();
+
             }
             
         }

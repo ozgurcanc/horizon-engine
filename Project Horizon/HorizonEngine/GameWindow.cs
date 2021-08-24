@@ -33,7 +33,7 @@ namespace HorizonEngine
         {
             RenderTarget2D renderTarget = new RenderTarget2D(graphicsDevice, (int)Screen.resolution.X, (int)Screen.resolution.Y);
             _sceneImage = guiRenderer.BindTexture(renderTarget);
-            Camera.main.renderTarget = renderTarget;
+            Screen.defaultRenderTarget = renderTarget;
         }
 
         internal static void Draw()

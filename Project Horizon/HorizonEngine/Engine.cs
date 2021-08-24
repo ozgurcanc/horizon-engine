@@ -30,7 +30,7 @@ namespace HorizonEngine
         {
             // TODO: Add your initialization logic here
             IsFixedTimeStep = false;
-            Screen.resolution = new Vector2(1280, 720);
+            Screen.resolution = new Vector2(1600, 900);
 
             _guiRenderer = new ImGUIRenderer(this).Initialize().RebuildFontAtlas();
             ImGui.GetIO().ConfigFlags |= ImGuiConfigFlags.DockingEnable;
@@ -64,7 +64,12 @@ namespace HorizonEngine
             GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
+            Screen.Begin();
+            Screen.Clear(Color.DarkBlue);
+
             _scene.Draw(_spriteBatch);
+
+            Screen.End();
 
             _guiRenderer.BeginLayout(gameTime);
             ImGui.DockSpaceOverViewport();

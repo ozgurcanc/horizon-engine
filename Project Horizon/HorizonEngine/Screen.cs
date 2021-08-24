@@ -12,18 +12,20 @@ namespace HorizonEngine
     {
         private static GraphicsDeviceManager _graphics;
         private static Vector2 _resolution;
+        private static RenderTarget2D _defaultRenderTarget;
 
         internal static void Init(GraphicsDeviceManager graphics)
         {
+            _defaultRenderTarget = null;
             _graphics = graphics;
             _resolution = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
         }
 
-        internal static GraphicsDeviceManager graphics
+        internal static RenderTarget2D defaultRenderTarget
         {
-            get
+            set
             {
-                return _graphics;
+                _defaultRenderTarget = value;
             }
         }
 
@@ -40,6 +42,29 @@ namespace HorizonEngine
                 _graphics.PreferredBackBufferHeight = (int)value.Y;
                 _graphics.ApplyChanges();
             }
+        }
+
+        internal static void SetRenderTarget(RenderTarget2D renderTarget)
+        {
+            if(renderTarget == null)
+                _graphics.GraphicsDevice.SetRenderTarget(_defaultRenderTarget);
+            else
+                _graphics.GraphicsDevice.SetRenderTarget(renderTarget);
+        }
+
+        internal static void Clear(Color color)
+        {
+            _graphics.GraphicsDevice.Clear(color);
+        }
+
+        internal static void Begin()
+        {
+            _graphics.GraphicsDevice.SetRenderTarget(_defaultRenderTarget);
+        }
+
+        internal static void End()
+        {
+            _graphics.GraphicsDevice.SetRenderTarget(null);
         }
     }
 }

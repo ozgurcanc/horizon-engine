@@ -74,16 +74,10 @@ namespace HorizonEngine
             _screenToWorld = Matrix.Invert(m);
         }
 
-        internal void Begin()
+        internal void PreRender()
         {
-            GraphicsDevice graphicsDevice = Screen.graphics.GraphicsDevice;
-            graphicsDevice.SetRenderTarget(_renderTarget);
-            graphicsDevice.Clear(_clearColor);
-        }
-
-        internal void End()
-        {
-            Screen.graphics.GraphicsDevice.SetRenderTarget(null);
+            Screen.SetRenderTarget(_renderTarget);
+            Screen.Clear(_clearColor);
         }
 
         internal Matrix renderTransform
