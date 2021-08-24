@@ -169,6 +169,14 @@ namespace HorizonEngine
             mainCamera.DontDestroyOnLoad();
             mainCamera.AddComponent<Camera>();
         }
+
+        public static Camera mainCamera
+        {
+            get
+            {
+                return Scene.main._cameras.Find(x => x.renderTarget == null);
+            }
+        }
         
         public static void Load<T>() where T : IScene, new()
         {

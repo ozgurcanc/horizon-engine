@@ -11,7 +11,6 @@ namespace HorizonEngine
 {
     public class Camera : Component
     {
-        private static Camera _main;
         private float _width;
         private float _height;
         //private Vector2 _resolution;
@@ -29,15 +28,6 @@ namespace HorizonEngine
             _cullingMask = 0;
             _clearColor = Color.CornflowerBlue;
             _renderTarget = null;
-            if (_main == null) _main = this;
-        }
-
-        public static Camera main
-        {
-            get
-            {
-                return _main;
-            }
         }
 
         internal static float scale

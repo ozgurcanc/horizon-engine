@@ -233,11 +233,14 @@ namespace HorizonEngine
 
         public HashSet<Collider> MouseCollision()
         {
-            Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
             HashSet<Collider> touchingColliders = new HashSet<Collider>();
 
-            if(_nodes.Count <= 0) return touchingColliders;
+            Camera mainCamera = Scene.mainCamera;
+            if (mainCamera == null) return touchingColliders;
+
+            Vector2 mouseWorldPos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+
+            if (_nodes.Count <= 0) return touchingColliders;
 
             int[] stack = new int[32];
             int pointer = 0;

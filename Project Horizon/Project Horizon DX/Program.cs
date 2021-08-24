@@ -15,8 +15,8 @@ namespace Project_Horizon_DX
         {
             //Screen.resolution = new Vector2(1600, 900);
             //Camera.main.position = new Vector2(0, 0) ;
-            Camera.main.width = 10;
-            Camera.main.height = 10;
+            Scene.mainCamera.width = 10;
+            Scene.mainCamera.height = 10;
 
 
             GameObject g = Scene.CreateGameObject("1");
