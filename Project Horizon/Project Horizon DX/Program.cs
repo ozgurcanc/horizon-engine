@@ -13,10 +13,10 @@ namespace Project_Horizon_DX
 
         public void Load()
         {
-            Camera.resolution = new Vector2(1600, 900);
-            Camera.position = Vector2.Zero;
-            Camera.width = 10;
-            Camera.height = 10;
+            Screen.resolution = new Vector2(1600, 900);
+            //Camera.main.position = new Vector2(0, 0) ;
+            Camera.main.width = 10;
+            Camera.main.height = 10;
 
 
             GameObject g = Scene.CreateGameObject("1");

@@ -31,9 +31,9 @@ namespace HorizonEngine
 
         internal static void Init(ImGUIRenderer guiRenderer, GraphicsDevice graphicsDevice)
         {
-            RenderTarget2D renderTarget = new RenderTarget2D(graphicsDevice, (int)Camera.resolution.X, (int)Camera.resolution.Y);
+            RenderTarget2D renderTarget = new RenderTarget2D(graphicsDevice, (int)Screen.resolution.X, (int)Screen.resolution.Y);
             _sceneImage = guiRenderer.BindTexture(renderTarget);
-            Camera.renderTarget = renderTarget;
+            Camera.main.renderTarget = renderTarget;
         }
 
         internal static void Draw()
@@ -46,7 +46,7 @@ namespace HorizonEngine
             //windowSize.X -= ImGui.GetScrollX();
             //windowSize.Y -= ImGui.GetScrollY();
 
-            float aspectRatio = Camera.resolution.X / Camera.resolution.Y;
+            float aspectRatio = Screen.resolution.X / Screen.resolution.Y;
 
             float imageWidth = windowSize.X;
             float imageHeight = imageWidth / aspectRatio;           

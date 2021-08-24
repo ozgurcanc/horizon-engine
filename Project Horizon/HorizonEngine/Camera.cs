@@ -9,32 +9,35 @@ using Microsoft.Xna.Framework.Input;
 
 namespace HorizonEngine
 {
-    public static class Camera
+    public class Camera : Component
     {
-        private static GraphicsDeviceManager _graphics;
-        private static Vector2 _position;
-        private static float _rotation;
-        private static float _width;
-        private static float _height;
-        private static Vector2 _resolution;
-        private static Matrix _renderTransform;
-        private static Matrix _worldToScreen;
-        private static Matrix _screenToWorld;
-        private static int _cullingMask;
-        private static int _maxSortOrder;
-        private static Color _clearColor;
-        private static RenderTarget2D _renderTarget;
+        private static Camera _main;
+        private float _width;
+        private float _height;
+        //private Vector2 _resolution;
+        private Matrix _renderTransform;
+        private Matrix _worldToScreen;
+        private Matrix _screenToWorld;
+        private int _cullingMask;      
+        private Color _clearColor;
+        private RenderTarget2D _renderTarget;
 
-        internal static void InitCamera(GraphicsDeviceManager graphics)
+        public Camera()
         {
-            _graphics = graphics;
-            _rotation = 0;
             _width = _height = 10;
-            _resolution = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+            //_resolution = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             _cullingMask = 0;
-            _maxSortOrder = 1000;
             _clearColor = Color.CornflowerBlue;
             _renderTarget = null;
+            if (_main == null) _main = this;
+        }
+
+        public static Camera main
+        {
+            get
+            {
+                return _main;
+            }
         }
 
         internal static float scale
@@ -49,21 +52,21 @@ namespace HorizonEngine
         {
             get
             {
-                return _maxSortOrder;
+                return 1000;
             }
         }
 
-        internal static void Update()
+        internal void Update()
         {
-            Vector2 resolution = _renderTarget == null ? _resolution : new Vector2(_renderTarget.Width, _renderTarget.Height);
-            Matrix m = Matrix.CreateTranslation(-_position.X * scale, -_position.Y * scale, 0);
-            m *= Matrix.CreateRotationZ(MathHelper.ToRadians(-_rotation));
+            Vector2 resolution = this.resolution;
+            Matrix m = Matrix.CreateTranslation(-gameObject.position.X * scale, -gameObject.position.Y * scale, 0);
+            m *= Matrix.CreateRotationZ(MathHelper.ToRadians(-gameObject.rotation));
             m *= Matrix.CreateScale(resolution.X / (_width * scale), -resolution.Y / (_height * scale), 1);
             m *= Matrix.CreateTranslation(resolution.X / 2, resolution.Y / 2, 0);
             _renderTransform = m;
 
-            m = Matrix.CreateTranslation(-_position.X, -_position.Y, 0);
-            m *= Matrix.CreateRotationZ(MathHelper.ToRadians(-_rotation));
+            m = Matrix.CreateTranslation(-gameObject.position.X, -gameObject.position.Y, 0);
+            m *= Matrix.CreateRotationZ(MathHelper.ToRadians(-gameObject.rotation));
             m *= Matrix.CreateScale(resolution.X / _width, -resolution.Y / _height, 1);
             m *= Matrix.CreateTranslation(resolution.X / 2, resolution.Y / 2, 0);
             _worldToScreen = m;
@@ -71,18 +74,19 @@ namespace HorizonEngine
             _screenToWorld = Matrix.Invert(m);
         }
 
-        internal static void Begin()
+        internal void Begin()
         {
-            _graphics.GraphicsDevice.SetRenderTarget(_renderTarget);
-            _graphics.GraphicsDevice.Clear(_clearColor);
+            GraphicsDevice graphicsDevice = Screen.graphics.GraphicsDevice;
+            graphicsDevice.SetRenderTarget(_renderTarget);
+            graphicsDevice.Clear(_clearColor);
         }
 
-        internal static void End()
+        internal void End()
         {
-            _graphics.GraphicsDevice.SetRenderTarget(null);
+            Screen.graphics.GraphicsDevice.SetRenderTarget(null);
         }
 
-        internal static Matrix renderTransform
+        internal Matrix renderTransform
         {
             get
             {
@@ -90,7 +94,7 @@ namespace HorizonEngine
             }
         }
 
-        public static Color clearColor
+        public Color clearColor
         {
             get
             {
@@ -102,31 +106,31 @@ namespace HorizonEngine
             }
         }
 
-        public static Vector2 position
+        public Vector2 position
         {
             get
             {
-                return _position;
+                return gameObject.position;
             }
             set
             {
-                _position = value;
+                gameObject.position = value;
             }
         }
 
-        public static float rotation
+        public float rotation
         {
             get
             {
-                return _rotation;
+                return gameObject.rotation;
             }
             set
             {
-                _rotation = value % 360f;
+                gameObject.rotation = value % 360f;
             }
         }
 
-        public static float width
+        public float width
         {
             get
             {
@@ -138,7 +142,7 @@ namespace HorizonEngine
             }
         }
 
-        public static float height
+        public float height
         {
             get
             {
@@ -150,23 +154,15 @@ namespace HorizonEngine
             }
         }
 
-        public static Vector2 resolution
+        public Vector2 resolution
         {
             get
             {
-                return _resolution;
-            }
-            set
-            {
-                _resolution = value;
-                _graphics.PreferredBackBufferWidth = (int)value.X;
-                _graphics.PreferredBackBufferHeight = (int)value.Y;
-                _graphics.ApplyChanges();
-
+                return _renderTarget == null ? Screen.resolution : new Vector2(_renderTarget.Width, _renderTarget.Height);
             }
         }
 
-        internal static int cullingMask
+        internal int cullingMask
         {
             get
             {
@@ -174,7 +170,7 @@ namespace HorizonEngine
             }
         }
 
-        internal static RenderTarget2D renderTarget
+        internal RenderTarget2D renderTarget
         {
             get
             {
@@ -186,17 +182,17 @@ namespace HorizonEngine
             }
         }
 
-        public static Vector2 WorldToScreenPoint(Vector2 position)
+        public Vector2 WorldToScreenPoint(Vector2 position)
         {
             return Vector2.Transform(position, _worldToScreen);
         }
 
-        public static Vector2 ScreenToWorldPoint(Vector2 position)
+        public Vector2 ScreenToWorldPoint(Vector2 position)
         {
             return Vector2.Transform(position, _screenToWorld);
         }
 
-        public static void CullLayer(Layer layer, bool cull = true)
+        public void CullLayer(Layer layer, bool cull = true)
         {
             if (cull) _cullingMask |= 1 << (int)layer;
             else _cullingMask &= ~(1 << (int)layer);

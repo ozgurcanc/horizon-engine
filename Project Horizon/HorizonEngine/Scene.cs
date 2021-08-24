@@ -25,6 +25,7 @@ namespace HorizonEngine
         private Collider[] _mouseClickedColliders;
         private List<Behaviour> _startBehaviours;
         private List<Animator> _animators;
+        private List<Camera> _cameras;
 
         internal static Scene main
         {
@@ -82,6 +83,11 @@ namespace HorizonEngine
                 component.componetID = scene._animators.Count;
                 scene._animators.Add((Animator)component);
             }
+            else if (component is Camera)
+            {
+                component.componetID = scene._cameras.Count;
+                scene._cameras.Add((Camera)component);
+            }
         }
 
         internal static void DisableComponent(Component component)
@@ -128,12 +134,20 @@ namespace HorizonEngine
                 scene._animators[component.componetID] = temp;
                 scene._animators.RemoveAt(lastIndex);
             }
+            else if (component is Camera)
+            {
+                int lastIndex = scene._cameras.Count - 1;
+                Camera temp = scene._cameras[lastIndex];
+                temp.componetID = component.componetID;
+                scene._cameras[component.componetID] = temp;
+                scene._cameras.RemoveAt(lastIndex);
+            }
         }
 
         internal Scene(ContentManager contentManager, GraphicsDeviceManager graphicsDeviceManager)
         {
             //_graphics = new GraphicsDeviceManager(this);
-            Camera.InitCamera(graphicsDeviceManager);
+            //Camera.InitCamera(graphicsDeviceManager);
             Assets.InitAssets(contentManager);
             //Content.RootDirectory = "Content";
             //IsMouseVisible = true;
@@ -148,7 +162,12 @@ namespace HorizonEngine
             _mouseOverColliders = new HashSet<Collider>();
             _startBehaviours = new List<Behaviour>();
             _animators = new List<Animator>();
+            _cameras = new List<Camera>();
             _main = this;
+
+            GameObject mainCamera = Scene.CreateGameObject("Main Camera");
+            mainCamera.DontDestroyOnLoad();
+            mainCamera.AddComponent<Camera>();
         }
         
         public static void Load<T>() where T : IScene, new()
@@ -224,6 +243,7 @@ namespace HorizonEngine
                 _mouseClickedColliders = null;
                 _startBehaviours.Clear();
                 _animators.Clear();
+                _cameras.Clear();
 
                 dontDestroyOnLoad.ForEach(x => x.OnLoad());
                 _nextScene.Load();
@@ -248,7 +268,7 @@ namespace HorizonEngine
             Time.Update(gameTime);
             float deltaTime = Time.deltaTime;
 
-            Camera.Update();
+            foreach (Camera camera in _cameras) camera.Update();
             Input.Update();
             var watch = new Stopwatch();
             watch.Start();
@@ -416,15 +436,19 @@ namespace HorizonEngine
         internal void Draw(SpriteBatch spriteBatch)
         {
             //Debug.WriteLine(Vector2.Transform(new Vector2(-5 * Camera.scale, +5 * Camera.scale), _camera.renderTransform));
-            Camera.Begin();
-            // TODO: Add your drawing code here
-            //Debug.WriteLine(Vector2.Transform(new Vector2(0, 0), _camera.worldToScreen));
-            spriteBatch.Begin(transformMatrix: Camera.renderTransform, sortMode: SpriteSortMode.FrontToBack);
-            //_drawables.ForEach(x => x.Draw(_spriteBatch));
-            foreach (var x in _renderers.ToArray()) if ((Camera.cullingMask & (1 << (int)x.gameObject.layer)) == 0) x.Draw(spriteBatch);
-            spriteBatch.End();
+            foreach(Camera camera in _cameras)
+            {
+                camera.Begin();
+                // TODO: Add your drawing code here
+                //Debug.WriteLine(Vector2.Transform(new Vector2(0, 0), _camera.worldToScreen));
+                spriteBatch.Begin(transformMatrix: camera.renderTransform, sortMode: SpriteSortMode.FrontToBack);
+                //_drawables.ForEach(x => x.Draw(_spriteBatch));
+                foreach (var x in _renderers.ToArray()) if ((camera.cullingMask & (1 << (int)x.gameObject.layer)) == 0) x.Draw(spriteBatch);
+                spriteBatch.End();
 
-            Camera.End();
+                camera.End();
+            }
+            
         }
     }
 }

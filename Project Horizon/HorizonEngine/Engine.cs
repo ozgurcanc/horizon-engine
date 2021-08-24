@@ -21,6 +21,8 @@ namespace HorizonEngine
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+
+            Screen.Init(_graphics);
             _scene = new Scene(this.Content, _graphics);
         }
 
@@ -28,7 +30,7 @@ namespace HorizonEngine
         {
             // TODO: Add your initialization logic here
             IsFixedTimeStep = false;
-            Camera.resolution = new Vector2(1280, 720);
+            Screen.resolution = new Vector2(1280, 720);
 
             _guiRenderer = new ImGUIRenderer(this).Initialize().RebuildFontAtlas();
             ImGui.GetIO().ConfigFlags |= ImGuiConfigFlags.DockingEnable;

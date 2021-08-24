@@ -233,7 +233,7 @@ namespace HorizonEngine
 
         public HashSet<Collider> MouseCollision()
         {
-            Vector2 mouseWorldPos = Camera.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
             HashSet<Collider> touchingColliders = new HashSet<Collider>();
 
