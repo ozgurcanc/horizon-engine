@@ -82,6 +82,7 @@ namespace HorizonEngine
             MainMenuBar.Draw();
             HierarchyWindow.Draw();
             GameWindow.Draw();
+            InspectorWindow.Draw();
 
             _guiRenderer.EndLayout();
 

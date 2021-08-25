@@ -106,6 +106,7 @@ namespace HorizonEngine
                 _selectedGameObjectId = gameObject.gameObjectID;
                 _selectedGameObject = gameObject;
                 _clicked = true;
+                InspectorWindow.Inspect(gameObject);
             }
 
             if(ImGui.BeginDragDropSource())
