@@ -19,7 +19,7 @@ namespace HorizonEngine
         private Matrix _screenToWorld;
         private int _cullingMask;      
         private Color _clearColor;
-        private RenderTarget2D _renderTarget;
+        private RenderTexture _renderTexture;
 
         public Camera()
         {
@@ -27,7 +27,7 @@ namespace HorizonEngine
             //_resolution = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             _cullingMask = 0;
             _clearColor = Color.CornflowerBlue;
-            _renderTarget = null;
+            _renderTexture = null;
         }
 
         internal static float scale
@@ -66,7 +66,7 @@ namespace HorizonEngine
 
         internal void PreRender()
         {
-            Screen.SetRenderTarget(_renderTarget);
+            Screen.SetRenderTarget(_renderTexture);
             Screen.Clear(_clearColor);
         }
 
@@ -142,7 +142,7 @@ namespace HorizonEngine
         {
             get
             {
-                return _renderTarget == null ? Screen.resolution : new Vector2(_renderTarget.Width, _renderTarget.Height);
+                return _renderTexture == null ? Screen.resolution : new Vector2(_renderTexture.width, _renderTexture.height);
             }
         }
 
@@ -154,15 +154,15 @@ namespace HorizonEngine
             }
         }
 
-        internal RenderTarget2D renderTarget
+        public RenderTexture renderTarget
         {
             get
             {
-                return _renderTarget;
+                return _renderTexture;
             }
             set
             {
-                _renderTarget = value;
+                _renderTexture = value;
             }
         }
 

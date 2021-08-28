@@ -46,12 +46,12 @@ namespace HorizonEngine
             }
         }
 
-        internal static void SetRenderTarget(RenderTarget2D renderTarget)
+        internal static void SetRenderTarget(RenderTexture renderTexture)
         {
-            if(renderTarget == null)
+            if(renderTexture == null)
                 _graphics.GraphicsDevice.SetRenderTarget(_defaultRenderTarget);
             else
-                _graphics.GraphicsDevice.SetRenderTarget(renderTarget);
+                _graphics.GraphicsDevice.SetRenderTarget(renderTexture.renderTexture);
         }
 
         internal static void Clear(Color color)

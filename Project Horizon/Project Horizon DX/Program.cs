@@ -56,6 +56,23 @@ namespace Project_Horizon_DX
 
             g = Scene.CreateGameObject("grandchild");
             g.parent = k;
+
+            /*
+            Assets.LoadRenderTexture("rt", 1000, 1000);
+
+            Debug.WriteLine("here");
+            var n = Scene.CreateGameObject("new");
+            n.size = new Vector2(3, 3);
+            n.layer = Layer.Layer1;
+            n.AddComponent<Camera>().CullLayer(Layer.Default);
+            n.AddComponent<Sprite>().texture = Assets.GetRenderTexture("rt");
+            Scene.mainCamera.CullLayer(Layer.Layer1);
+
+            
+            Scene.mainCamera.renderTarget = Assets.GetRenderTexture("rt");
+            Scene.mainCamera.clearColor = Color.Black;
+            //Scene.mainCamera.enabled = false;
+            */
         }
     }
 
