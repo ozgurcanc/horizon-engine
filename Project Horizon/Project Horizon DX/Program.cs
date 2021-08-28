@@ -36,11 +36,11 @@ namespace Project_Horizon_DX
             animator.SetTransition("Idle", "Run", false, 0f, 0f, new TriggerCondition("trigger"));
             animator.SetTransition("Run", "Idle", true, 1f, 0f, new TriggerCondition("trigger"));
 
-            Assets.LoadSpriteFont("font", "File");
+            Assets.LoadFont("font", "File");
 
             g = Scene.CreateGameObject("2");
             g.position = new Vector2(0, 3);
-            g.AddComponent<Text>().font = Assets.GetSpriteFont("font");
+            g.AddComponent<Text>().font = Assets.GetFont("font");
             g.GetComponent<Text>().text = "testing testing testing";
 
 

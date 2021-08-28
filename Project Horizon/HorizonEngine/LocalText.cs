@@ -13,7 +13,7 @@ namespace HorizonEngine
     public class LocalText : Renderer
     {
         private string[] _texts;
-        private SpriteFont _font;
+        private Font _font;
         private Vector2[] _halfSizeOfTexts;
         private static int _local;
 
@@ -42,10 +42,10 @@ namespace HorizonEngine
             int length = _texts.Length;
             _halfSizeOfTexts = new Vector2[length];
             for(int i=0; i<length; i++)
-                _halfSizeOfTexts[i] = _font.MeasureString(_texts[i]) / 2f;
+                _halfSizeOfTexts[i] = _font.font.MeasureString(_texts[i]) / 2f;
         }
 
-        public SpriteFont font
+        public Font font
         {
             get
             {
@@ -79,7 +79,7 @@ namespace HorizonEngine
         {
             if (_font == null || _texts == null) return;
 
-            spriteBatch.DrawString(_font, _texts[_local], new Vector2(rect.X, rect.Y), color, MathHelper.ToRadians(gameObject.rotation), _halfSizeOfTexts[_local], new Vector2(gameObject.size.X, -gameObject.size.Y) * 10f, (SpriteEffects)flipState, layerDepth);
+            spriteBatch.DrawString(_font.font, _texts[_local], new Vector2(rect.X, rect.Y), color, MathHelper.ToRadians(gameObject.rotation), _halfSizeOfTexts[_local], new Vector2(gameObject.size.X, -gameObject.size.Y) * 10f, (SpriteEffects)flipState, layerDepth);
         }
     }
 }

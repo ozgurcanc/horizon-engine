@@ -14,7 +14,7 @@ namespace HorizonEngine
     public class Text : Renderer
     {
         private string _text;
-        private SpriteFont _font;
+        private Font _font;
         private Vector2 _halfSizeOfText;
 
         public Text()
@@ -27,10 +27,10 @@ namespace HorizonEngine
         {
             if (_font == null) return;
 
-            _halfSizeOfText = _font.MeasureString(_text) / 2f;
+            _halfSizeOfText = _font.font.MeasureString(_text) / 2f;
         }
 
-        public SpriteFont font
+        public Font font
         {
             get
             {
@@ -60,7 +60,7 @@ namespace HorizonEngine
         {
             if (_font == null) return;
 
-            spriteBatch.DrawString(_font, _text, new Vector2(rect.X, rect.Y), color, MathHelper.ToRadians(gameObject.rotation), _halfSizeOfText, new Vector2(gameObject.size.X, -gameObject.size.Y) * 10f, (SpriteEffects)flipState, layerDepth);
+            spriteBatch.DrawString(_font.font, _text, new Vector2(rect.X, rect.Y), color, MathHelper.ToRadians(gameObject.rotation), _halfSizeOfText, new Vector2(gameObject.size.X, -gameObject.size.Y) * 10f, (SpriteEffects)flipState, layerDepth);
         }
     }
 }

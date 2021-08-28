@@ -17,7 +17,7 @@ namespace HorizonEngine
         private static Dictionary<string, Texture2D> _sourceTextures;
         private static Dictionary<string, HorizonEngine.Texture> _textures;
         private static Dictionary<string, Animation> _animations;
-        private static Dictionary<string, SpriteFont> _spriteFonts;
+        private static Dictionary<string, Font> _fonts;
         private static Dictionary<string, RenderTexture> _renderTextures;
 
         static internal void InitAssets(ContentManager contentManager)
@@ -26,7 +26,7 @@ namespace HorizonEngine
             _sourceTextures = new Dictionary<string, Texture2D>();
             _textures = new Dictionary<string, Texture>();
             _animations = new Dictionary<string, Animation>();
-            _spriteFonts = new Dictionary<string, SpriteFont>();
+            _fonts = new Dictionary<string, Font>();
             _renderTextures = new Dictionary<string, RenderTexture>();
         }
 
@@ -70,9 +70,9 @@ namespace HorizonEngine
             _animations.Add(name, new Animation(name, duration, loop, frames));
         }
 
-        public static void LoadSpriteFont(string name, string source)
+        public static void LoadFont(string name, string source)
         {
-            _spriteFonts.Add(name, _contentManager.Load<SpriteFont>(source));
+            _fonts.Add(name, new Font(_contentManager.Load<SpriteFont>(source)));
         }
 
         public static void LoadRenderTexture(string name, int width, int height)
@@ -88,10 +88,10 @@ namespace HorizonEngine
             return null;
         }
 
-        public static SpriteFont GetSpriteFont(string name)
+        public static Font GetFont(string name)
         {
-            if (_spriteFonts.ContainsKey(name))
-                return _spriteFonts[name];
+            if (_fonts.ContainsKey(name))
+                return _fonts[name];
 
             return null;
         }
