@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
+using Newtonsoft.Json;
 
 
 namespace HorizonEngine
@@ -14,13 +15,16 @@ namespace HorizonEngine
     public class Text : Renderer
     {
         private string _text;
+        [JsonIgnore]
         private Font _font;
+        private string _fontAssetID;
         private Vector2 _halfSizeOfText;
 
         public Text()
         {
             _text = "Text";
             _font = null;
+            _fontAssetID = null;
         }
         
         private void UpdateSizeOfText()
@@ -39,6 +43,7 @@ namespace HorizonEngine
             set
             {
                 _font = value;
+                _fontAssetID = value == null ? null : _font.name;
                 UpdateSizeOfText();
             }
         }
@@ -61,6 +66,11 @@ namespace HorizonEngine
             if (_font == null) return;
 
             spriteBatch.DrawString(_font.font, _text, new Vector2(rect.X, rect.Y), color, MathHelper.ToRadians(gameObject.rotation), _halfSizeOfText, new Vector2(gameObject.size.X, -gameObject.size.Y) * 10f, (SpriteEffects)flipState, layerDepth);
+        }
+
+        public override void OnLoad()
+        {
+            font = Assets.GetFont(_fontAssetID);
         }
     }
 }

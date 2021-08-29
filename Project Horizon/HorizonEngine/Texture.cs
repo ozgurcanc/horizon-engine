@@ -11,11 +11,13 @@ namespace HorizonEngine
 {
     public class Texture
     {
+        private string _name;
         private Texture2D _texture;
         private Rectangle _sourceRectangle;
 
-        internal Texture(Texture2D texture, Rectangle sourceRectangle)
+        internal Texture(string name, Texture2D texture, Rectangle sourceRectangle)
         {
+            _name = name;
             _texture = texture;
             _sourceRectangle = sourceRectangle;
         }
@@ -49,6 +51,14 @@ namespace HorizonEngine
             get
             {
                 return _texture.Height;
+            }
+        }
+
+        internal string name
+        {
+            get
+            {
+                return _name;
             }
         }
     }

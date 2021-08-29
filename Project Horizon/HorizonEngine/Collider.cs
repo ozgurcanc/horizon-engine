@@ -6,13 +6,17 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Newtonsoft.Json;
 
 namespace HorizonEngine
 {
     public abstract class Collider : Component
     {
+        [JsonIgnore]
         private TransformMatrix _transform;
+        [JsonIgnore]
         private Rigidbody _attachedRigidbody;
+        [JsonIgnore]
         private AABB _aabb;
         private bool _isTrigger = false;
 

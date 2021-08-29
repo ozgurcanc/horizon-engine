@@ -8,15 +8,20 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using System.Diagnostics;
+using Newtonsoft.Json;
 
 namespace HorizonEngine
 {
     public class Animator : Component
     {
+        private string _animatorControllerAssetID;
+        [JsonIgnore]
+        AnimatorController _animatorController;
+        [JsonIgnore]
         private Dictionary<string, AnimatorParameter> _parameters;
-        private Dictionary<string, Animation> _animations;
-        private Dictionary<string, List<Tuple<string, bool, float, float, AnimatorCondition[]>>> _transitions;
+        [JsonIgnore]
         private Animation _currentAnimation;
+        [JsonIgnore]
         private Animation _nextAnimation;
         private int _currentFrame;
         private float _frameDuration;
@@ -26,39 +31,54 @@ namespace HorizonEngine
 
         public Animator()
         {
-            _parameters = new Dictionary<string, AnimatorParameter>();
-            _animations = new Dictionary<string, Animation>();
-            _transitions = new Dictionary<string, List<Tuple<string, bool, float, float, AnimatorCondition[]>>>();
             _currentAnimation = _nextAnimation = null;
+            _parameters = new Dictionary<string, AnimatorParameter>();
+            _animatorControllerAssetID = null;
+        }
+
+        public AnimatorController animatorController
+        {
+            get
+            {
+                return _animatorController;
+            }
+            set
+            {
+                _animatorController = value;
+                _animatorControllerAssetID = value == null ? null : _animatorController.name;
+                if (value != null)
+                {
+                    _parameters = new Dictionary<string, AnimatorParameter>();
+                    foreach (string key in _animatorController.parameters.Keys)
+                    {
+                        AnimatorParameter parameter = _animatorController.parameters[key];
+                        if (parameter is IntParameter)
+                        {
+                            _parameters.Add(key, new IntParameter(parameter.name, (int)parameter.value));
+                        }
+                        else if (parameter is BoolParameter)
+                        {
+                            _parameters.Add(key, new BoolParameter(parameter.name, (bool)parameter.value));
+                        }
+                        else if (parameter is TriggerParameter)
+                        {
+                            _parameters.Add(key, new TriggerParameter(parameter.name));
+                        }
+                        else if (parameter is FloatParameter)
+                        {
+                            _parameters.Add(key, new FloatParameter(parameter.name, (float)parameter.value));
+                        }
+                    }
+
+                    this.Play(value.defaultAnimation);
+                }
+            }
         }
 
         internal override Component Clone()
         {
             Animator clone = (Animator)base.Clone();
-            Dictionary<string, AnimatorParameter> parameters = clone._parameters;
-            clone._parameters = new Dictionary<string, AnimatorParameter>();
-          
-            foreach(string key in parameters.Keys)
-            {
-                AnimatorParameter parameter = parameters[key];
-                if(parameter is IntParameter)
-                {
-                    clone._parameters.Add(key, new IntParameter(parameter.name, (int)parameter.value));
-                }
-                else if (parameter is BoolParameter)
-                {
-                    clone._parameters.Add(key, new BoolParameter(parameter.name, (bool)parameter.value));
-                }
-                else if (parameter is TriggerParameter)
-                {
-                    clone._parameters.Add(key, new TriggerParameter(parameter.name));
-                }
-                else if (parameter is FloatParameter)
-                {
-                    clone._parameters.Add(key, new FloatParameter(parameter.name, (float)parameter.value));
-                }
-            }           
-
+            clone.animatorController = clone.animatorController;
             return clone;
         }
 
@@ -84,6 +104,8 @@ namespace HorizonEngine
 
         internal void AnimationUpdate(float deltaTime)
         {
+            if (_currentAnimation == null) return;
+
             _totalDuration += deltaTime;
             _currentDuration += deltaTime;
 
@@ -106,13 +128,13 @@ namespace HorizonEngine
 
             if (_nextAnimation == null)
             {
-                foreach (var x in _transitions[_currentAnimation.name])
+                foreach (var x in animatorController.transitions[_currentAnimation.name])
                 {
                     float item3 = previousExitTime < 0f ? x.Item3 % 1f : x.Item3;
                     if ((!x.Item2 || (previousExitTime <= item3 && item3 <= currentExitTime)) && CheckCondition(x.Item5))
                     {
                         //SetCurrentAnimation(x.Item1);
-                        _nextAnimation = _animations[x.Item1];
+                        _nextAnimation = animatorController.animations[x.Item1];
                         _transitionDuration = x.Item4;
                         return;
                     }
@@ -127,35 +149,11 @@ namespace HorizonEngine
                 }
             }
                                 
-        }
-
-        public void SetAnimations(params string[] animations)
-        {
-            foreach(string animation in animations)
-            {
-                _animations.Add(animation, Assets.GetAnimation(animation));
-                _transitions.Add(animation, new List<Tuple<string, bool, float, float, AnimatorCondition[]>>());
-            }
-
-            Play(animations[0]);
-        }
-
-        public void SetParameters(params AnimatorParameter[] parameters)
-        {
-            foreach(AnimatorParameter parameter in parameters)
-            {
-                _parameters.Add(parameter.name, parameter);
-            }
-        }
-
-        public void SetTransition(string from, string to, bool hasExitTime, float exitTime,float duration, params AnimatorCondition[] conditions)
-        {
-            _transitions[from].Add(Tuple.Create(to, hasExitTime, MathHelper.Clamp(exitTime, 0f, 1f), duration, conditions));
-        }
+        }                 
 
         public void Play(string name)
         {
-            _currentAnimation = _animations[name];
+            _currentAnimation = animatorController.animations[name];
             _currentFrame = 0;
             _currentDuration = 0f;
             _totalDuration = 0f;
@@ -204,6 +202,11 @@ namespace HorizonEngine
             }
 
             return result;
+        }
+
+        public override void OnLoad()
+        {
+            this.animatorController = Assets.GetAnimatorController(_animatorControllerAssetID);
         }
     }
 }

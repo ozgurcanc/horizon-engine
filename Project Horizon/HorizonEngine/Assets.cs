@@ -19,6 +19,7 @@ namespace HorizonEngine
         private static Dictionary<string, Animation> _animations;
         private static Dictionary<string, Font> _fonts;
         private static Dictionary<string, RenderTexture> _renderTextures;
+        private static Dictionary<string, AnimatorController> _animatorControllers;
 
         static internal void InitAssets(ContentManager contentManager)
         {
@@ -28,6 +29,7 @@ namespace HorizonEngine
             _animations = new Dictionary<string, Animation>();
             _fonts = new Dictionary<string, Font>();
             _renderTextures = new Dictionary<string, RenderTexture>();
+            _animatorControllers = new Dictionary<string, AnimatorController>();
         }
 
         public static void LoadTexture(string name, string sourceTexture, Vector4? sourceRectangle = null)
@@ -56,7 +58,7 @@ namespace HorizonEngine
                 source = new Rectangle((int)(width * value.X), (int)(height * value.Y), (int)(width * value.Z), (int)(height * value.W));
             }
             //Rectangle source = sourceRectangle == null ? new Rectangle(0, 0, texture.Width, texture.Height) : sourceRectangle;
-            _textures.Add(name, new HorizonEngine.Texture(texture, source));
+            _textures.Add(name, new HorizonEngine.Texture(name, texture, source));
         }
 
         public static void LoadAnimation(string name, float duration, bool loop, params string[] frameTextures)
@@ -72,18 +74,26 @@ namespace HorizonEngine
 
         public static void LoadFont(string name, string source)
         {
-            _fonts.Add(name, new Font(_contentManager.Load<SpriteFont>(source)));
+            _fonts.Add(name, new Font(_contentManager.Load<SpriteFont>(source), name));
         }
 
         public static void LoadRenderTexture(string name, int width, int height)
         {
-            _renderTextures.Add(name, new RenderTexture(width, height));
+            _renderTextures.Add(name, new RenderTexture(name, width, height));
+        }
+
+        public static void LoadAnimatorController(string name)
+        {
+            _animatorControllers.Add(name, new AnimatorController(name));
         }
 
         public static HorizonEngine.Texture GetTexture(string name)
         {
             if(_textures.ContainsKey(name))
                 return _textures[name];
+
+            if (_renderTextures.ContainsKey(name))
+                return _renderTextures[name];
 
             return null;
         }
@@ -100,6 +110,14 @@ namespace HorizonEngine
         {
             if (_renderTextures.ContainsKey(name))
                 return _renderTextures[name];
+
+            return null;
+        }
+
+        public static AnimatorController GetAnimatorController(string name)
+        {
+            if (_animatorControllers.ContainsKey(name))
+                return _animatorControllers[name];
 
             return null;
         }

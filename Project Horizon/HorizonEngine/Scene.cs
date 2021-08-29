@@ -5,6 +5,8 @@ using Microsoft.Xna.Framework.Content;
 using System;
 using System.Diagnostics;
 using System.Collections.Generic;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace HorizonEngine
 {
@@ -144,6 +146,40 @@ namespace HorizonEngine
             }
         }
 
+        internal void Save()
+        {
+            List<GameObject> rootGameObjects = _gameObjects.FindAll(x => x.parent == null);
+
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented,
+                PreserveReferencesHandling = PreserveReferencesHandling.All,
+                TypeNameHandling = TypeNameHandling.All,
+            };
+            File.WriteAllText("scene.json", JsonConvert.SerializeObject(rootGameObjects));
+        }
+
+        internal void Load()
+        {
+            //List<GameObject> dontDestroyOnLoad = _gameObjects.FindAll(x => x.dontDestroyOnLoad && x.parent == null);
+            _gameObjects.Clear();
+            _renderers.Clear();
+            _behaviours.Clear();
+            _rigidbodies.Clear();
+            _colliders.Clear();
+            _contactPairs.Clear();
+            _mouseOverColliders.Clear();
+            _mouseClickedColliders = null;
+            _startBehaviours.Clear();
+            _animators.Clear();
+            _cameras.Clear();
+
+            List<GameObject> rootGameObjects = JsonConvert.DeserializeObject<List<GameObject>>(File.ReadAllText("scene.json"));
+            rootGameObjects.ForEach(x => x.OnLoad());
+
+            //dontDestroyOnLoad.ForEach(x => x.OnLoad());
+        }
+
         internal Scene(ContentManager contentManager, GraphicsDeviceManager graphicsDeviceManager)
         {
             //_graphics = new GraphicsDeviceManager(this);
@@ -230,9 +266,23 @@ namespace HorizonEngine
             if(Input.GetKeyDown(Keys.H))
             {
                 Debug.WriteLine("gameobjects : " + _gameObjects.Count);
+                Debug.WriteLine("renderers : " + _renderers.Count);
                 Debug.WriteLine("behaviours : " + _behaviours.Count);
-                Debug.WriteLine("sprites : " + _renderers.Count);
-                Debug.WriteLine("");
+                Debug.WriteLine("rigidbodies : " + _rigidbodies.Count);
+                Debug.WriteLine("colliders : " + _colliders.Count);
+                Debug.WriteLine("animators : " + _animators.Count);
+                Debug.WriteLine("camera : " + _cameras.Count);
+                Debug.WriteLine("");               
+            }
+
+            if (Input.GetKeyDown(Keys.S))
+            {
+                Save();
+            }
+
+            if (Input.GetKeyDown(Keys.R))
+            {
+                Load();
             }
 
             if(_nextScene != null)

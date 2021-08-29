@@ -11,11 +11,13 @@ namespace HorizonEngine
 {
     public class Font
     {
+        private string _name;
         private SpriteFont _font;
 
-        internal Font(SpriteFont font)
+        internal Font(SpriteFont font, string name)
         {
             _font = font;
+            _name = name;
         }
 
         internal SpriteFont font
@@ -23,6 +25,14 @@ namespace HorizonEngine
             get
             {
                 return _font;
+            }
+        }
+
+        internal string name
+        {
+            get
+            {
+                return _name;
             }
         }
     }

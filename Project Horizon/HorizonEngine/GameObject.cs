@@ -5,9 +5,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
+using Newtonsoft.Json;
 
 namespace HorizonEngine
 {
+    [JsonObject(MemberSerialization.Fields)]
     public class GameObject
     {
         private int _gameObjectID;
@@ -195,11 +197,11 @@ namespace HorizonEngine
         {
             Scene.Register(this);
 
-            if(activeInHierarchy)
+            foreach (Component component in _components.Values)
             {
-                foreach (Component component in _components.Values)
-                    if (component.enabled) Scene.EnableComponent(component);
-            }
+                component.OnLoad();
+                if (activeInHierarchy && component.enabled) Scene.EnableComponent(component);
+            }                    
 
             foreach (GameObject child in _childs) child.OnLoad();
         }

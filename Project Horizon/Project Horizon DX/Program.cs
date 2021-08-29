@@ -11,6 +11,39 @@ namespace Project_Horizon_DX
 {
     class TestScene : IScene
     {
+        class A
+        {
+            public int value;
+        }
+        class Test2 : Behaviour
+        {
+            public A a;
+            public override void Update()
+            {
+                if (Input.GetKeyDown(Keys.E))
+                {
+                    Debug.WriteLine(a.value);
+                    a.value -= 1;
+                }
+            }
+        }
+
+        class Test : Behaviour
+        {
+            public A a;
+            public override void Update()
+            {
+                if(Input.GetKeyDown(Keys.Q))
+                {
+                    gameObject.GetComponent<Animator>().SetTrigger("trigger");
+                }
+                if(Input.GetKeyDown(Keys.W))
+                {
+                    Debug.WriteLine(a.value);
+                    a.value += 1;
+                }
+            }
+        }
 
         public void Load()
         {
@@ -27,14 +60,24 @@ namespace Project_Horizon_DX
             Assets.LoadAnimation("Idle", 2f, true, "Idle0", "Idle1", "Idle2", "Idle3");
             Assets.LoadAnimation("Run", 0.5f, true, "Run0", "Run1", "Run2", "Run3", "Run4", "Run5", "Run6", "Run7");
 
+            A a = new A();
+
             g.AddComponent<Sprite>().texture = Assets.GetTexture("Run0");
             g.size = new Vector2(5, 5);
+            g.AddComponent<Test>().a = a ;
+
+            Scene.CreateGameObject().AddComponent<Test2>().a = a;
 
             var animator = g.AddComponent<Animator>();
-            animator.SetAnimations("Run", "Idle");
-            animator.SetParameters(new BoolParameter("run", false), new TriggerParameter("trigger"));
-            animator.SetTransition("Idle", "Run", false, 0f, 0f, new TriggerCondition("trigger"));
-            animator.SetTransition("Run", "Idle", true, 1f, 0f, new TriggerCondition("trigger"));
+
+            Assets.LoadAnimatorController("anim");
+            var anim = Assets.GetAnimatorController("anim");
+            anim.SetAnimations("Run", "Idle");
+            anim.SetParameters(new BoolParameter("run", false), new TriggerParameter("trigger"));
+            anim.SetTransition("Idle", "Run", false, 0f, 0f, new TriggerCondition("trigger"));
+            anim.SetTransition("Run", "Idle", true, 1f, 0f, new TriggerCondition("trigger"));
+
+            animator.animatorController = anim;
 
             Assets.LoadFont("font", "File");
 
@@ -57,12 +100,18 @@ namespace Project_Horizon_DX
             g = Scene.CreateGameObject("grandchild");
             g.parent = k;
 
-            /*
+            var j = Scene.CreateGameObject("test");
+            j.AddComponent<Rigidbody>().velocity = new Vector2(0.1f, 0);
+            j.AddComponent<BoxCollider>();
+            j.AddComponent<Sprite>().texture = Assets.GetTexture("Run0");
+
+
+            
             Assets.LoadRenderTexture("rt", 1000, 1000);
 
             Debug.WriteLine("here");
             var n = Scene.CreateGameObject("new");
-            n.size = new Vector2(3, 3);
+            n.size = new Vector2(6, 6);
             n.layer = Layer.Layer1;
             n.AddComponent<Camera>().CullLayer(Layer.Default);
             n.AddComponent<Sprite>().texture = Assets.GetRenderTexture("rt");
@@ -72,7 +121,7 @@ namespace Project_Horizon_DX
             Scene.mainCamera.renderTarget = Assets.GetRenderTexture("rt");
             Scene.mainCamera.clearColor = Color.Black;
             //Scene.mainCamera.enabled = false;
-            */
+            
         }
     }
 

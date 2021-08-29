@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Newtonsoft.Json;
 
 
 namespace HorizonEngine
 {
+    [JsonObject(MemberSerialization.Fields)]
     public abstract class Component
     {
         private bool _startFlag = true;
@@ -76,6 +78,11 @@ namespace HorizonEngine
             Component component = (Component)this.MemberwiseClone();
             component._startFlag = true;
             return component;
+        }
+
+        public virtual void OnLoad()
+        {
+
         }
     }
 

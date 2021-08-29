@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Newtonsoft.Json;
 
 namespace HorizonEngine
 {
@@ -19,7 +20,9 @@ namespace HorizonEngine
         private Matrix _screenToWorld;
         private int _cullingMask;      
         private Color _clearColor;
+        [JsonIgnore]
         private RenderTexture _renderTexture;
+        private string _renderTextureAssetID;
 
         public Camera()
         {
@@ -163,6 +166,7 @@ namespace HorizonEngine
             set
             {
                 _renderTexture = value;
+                _renderTextureAssetID = value == null ? null : _renderTexture.name;
             }
         }
 
@@ -180,6 +184,12 @@ namespace HorizonEngine
         {
             if (cull) _cullingMask |= 1 << (int)layer;
             else _cullingMask &= ~(1 << (int)layer);
+        }
+
+        public override void OnLoad()
+        {
+            if (_renderTextureAssetID == null) return;
+            _renderTexture = Assets.GetRenderTexture(_renderTextureAssetID);
         }
     }
 }
