@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
+using ImGuiNET;
 
 namespace HorizonEngine
 {
@@ -209,6 +210,91 @@ namespace HorizonEngine
                 _angularVelocity += torque * _inverseInertia;
             }
            
+        }
+
+        public override void OnInspectorGUI()
+        {
+            if (!ImGui.CollapsingHeader("Rigidbody")) return;
+
+            string id = this.GetType().Name + componetID.ToString();
+
+            bool enabled = this.enabled;
+            ImGui.Text("Enabled");
+            ImGui.SameLine();
+            if (ImGui.Checkbox("##enabled" + id, ref enabled))
+            {
+                this.enabled = enabled;
+            }
+
+            ImGui.PushItemWidth(ImGui.GetWindowWidth() * 0.25f);
+
+            Vector2 velocity = this.velocity;
+            ImGui.Text("Velocity");
+            ImGui.SameLine();
+            ImGui.Text("X");
+            ImGui.SameLine();
+            if (ImGui.DragFloat("##velocityX" + id, ref velocity.X))
+            {
+                this.velocity = velocity;
+            }
+            ImGui.SameLine();
+            ImGui.Text("Y");
+            ImGui.SameLine();
+            if (ImGui.DragFloat("##velocityY" + id, ref velocity.Y))
+            {
+                this.velocity = velocity;
+            }
+
+            float angularVelocity = this.angularVelocity;
+            ImGui.Text("Angular Velocity");
+            ImGui.SameLine();
+            if (ImGui.DragFloat("##angularVel" + id, ref angularVelocity))
+            {
+                this.angularVelocity = angularVelocity;
+            }
+
+            float linearDrag = this.linearDrag;
+            ImGui.Text("Linear Drag");
+            ImGui.SameLine();
+            if(ImGui.DragFloat("##linearDrag" + id, ref linearDrag))
+            {
+                this.linearDrag = linearDrag;
+            }
+
+            float angularDrag = this.angularDrag;
+            ImGui.Text("Angular Drag");
+            ImGui.SameLine();
+            if (ImGui.DragFloat("##angularDrag" + id, ref angularDrag))
+            {
+                this.angularDrag = angularDrag;
+            }
+
+            float mass = this.mass;
+            ImGui.Text("Mass");
+            ImGui.SameLine();
+            if(ImGui.DragFloat("##mass" + id, ref mass))
+            {
+                this.mass = mass;
+            }
+
+            float inertia = this.inertia;
+            ImGui.Text("Inertia");
+            ImGui.SameLine();
+            if (ImGui.DragFloat("##inertia" + id, ref inertia))
+            {
+                this.inertia = inertia;
+            }
+
+            float gravityScale = this.gravityScale;
+            ImGui.Text("Gravity Scale");
+            ImGui.SameLine();
+            if (ImGui.DragFloat("##gravityScale" + id, ref gravityScale))
+            {
+                this.gravityScale = gravityScale;
+            }
+
+            ImGui.PopItemWidth();
+
         }
 
     }

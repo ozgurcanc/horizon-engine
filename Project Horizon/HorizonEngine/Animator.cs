@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using System.Diagnostics;
 using Newtonsoft.Json;
+using ImGuiNET;
 
 namespace HorizonEngine
 {
@@ -207,6 +208,26 @@ namespace HorizonEngine
         public override void OnLoad()
         {
             this.animatorController = Assets.GetAnimatorController(_animatorControllerAssetID);
+        }
+
+        public override void OnInspectorGUI()
+        {
+            if (!ImGui.CollapsingHeader("Animator")) return;
+
+            string id = this.GetType().Name + componetID.ToString();
+
+            bool enabled = this.enabled;
+            ImGui.Text("Enabled");
+            ImGui.SameLine();
+            if (ImGui.Checkbox("##enabled" + id, ref enabled))
+            {
+                this.enabled = enabled;
+            }
+
+            string controller = _animatorController == null ? "None" : _animatorController.name;
+            ImGui.Text("Controller");
+            ImGui.SameLine();
+            ImGui.Text(controller);
         }
     }
 }
