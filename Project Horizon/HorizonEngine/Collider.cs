@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Newtonsoft.Json;
+using ImGuiNET;
 
 namespace HorizonEngine
 {
@@ -69,6 +70,19 @@ namespace HorizonEngine
         }
 
         internal abstract void UpdateCollider();
+
+        public override void OnInspectorGUI()
+        {
+            string id = this.GetType().Name + componetID.ToString();
+
+            bool isTrigger = this.isTrigger;
+            ImGui.Text("Is Trigger");
+            ImGui.SameLine();
+            if (ImGui.Checkbox("##isTrigger" + id, ref isTrigger))
+            {
+                this.isTrigger = isTrigger;
+            }
+        }
 
     }
 }

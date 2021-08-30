@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using ImGuiNET;
 
 namespace HorizonEngine
 {
@@ -36,6 +37,31 @@ namespace HorizonEngine
             attachedRigidbody = gameObject.GetComponent<Rigidbody>();
             Vector2 r = new Vector2(radius, radius);
             aabb = new AABB(gameObject.position + r, gameObject.position - r);
+        }
+
+        public override void OnInspectorGUI()
+        {
+            if (!ImGui.CollapsingHeader("Circle Collider")) return;
+
+            string id = this.GetType().Name + componetID.ToString();
+
+            bool enabled = this.enabled;
+            ImGui.Text("Enabled");
+            ImGui.SameLine();
+            if (ImGui.Checkbox("##enabled" + id, ref enabled))
+            {
+                this.enabled = enabled;
+            }
+
+            base.OnInspectorGUI();
+
+            float radius = this.radius;
+            ImGui.Text("Radius");
+            ImGui.SameLine();
+            if(ImGui.DragFloat("##radius" + id, ref radius))
+            {
+                this.radius = radius;
+            }
         }
     }
 }

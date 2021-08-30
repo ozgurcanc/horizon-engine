@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using ImGuiNET;
 
 namespace HorizonEngine
 {
@@ -29,6 +30,23 @@ namespace HorizonEngine
             //aabb = new AABB(gameObject.position + halfSize, gameObject.position - halfSize);
             aabb = new AABB(transformMatrix.TransformPoint(halfSize), transformMatrix.TransformPoint(new Vector2(halfSize.X, -halfSize.Y)),
                 transformMatrix.TransformPoint(new Vector2(-halfSize.X, halfSize.Y)), transformMatrix.TransformPoint(new Vector2(-halfSize.X, -halfSize.Y)));
+        }
+
+        public override void OnInspectorGUI()
+        {
+            if (!ImGui.CollapsingHeader("Box Collider")) return;
+
+            string id = this.GetType().Name + componetID.ToString();
+
+            bool enabled = this.enabled;
+            ImGui.Text("Enabled");
+            ImGui.SameLine();
+            if (ImGui.Checkbox("##enabled" + id, ref enabled))
+            {
+                this.enabled = enabled;
+            }
+
+            base.OnInspectorGUI();
         }
     }
 }

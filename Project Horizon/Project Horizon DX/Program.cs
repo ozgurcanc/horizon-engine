@@ -103,6 +103,7 @@ namespace Project_Horizon_DX
             var j = Scene.CreateGameObject("test");
             j.AddComponent<Rigidbody>().velocity = new Vector2(0.1f, 0);
             j.AddComponent<BoxCollider>();
+            j.AddComponent<CircleCollider>();
             j.AddComponent<Sprite>().texture = Assets.GetTexture("Run0");
 
 
