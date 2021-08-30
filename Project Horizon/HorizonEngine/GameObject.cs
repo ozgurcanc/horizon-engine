@@ -6,11 +6,12 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
 using Newtonsoft.Json;
+using ImGuiNET;
 
 namespace HorizonEngine
 {
     [JsonObject(MemberSerialization.Fields)]
-    public class GameObject
+    public class GameObject : IEditor
     {
         private int _gameObjectID;
         private bool _dontDestroyOnLoad;
@@ -322,6 +323,85 @@ namespace HorizonEngine
         public void DontDestroyOnLoad()
         {
             _dontDestroyOnLoad = true;
+        }
+
+        public void OnInspectorGUI()
+        {
+            if (!ImGui.CollapsingHeader("Game Object")) return;
+
+            string name = this.name;
+            ImGui.Text("Name");
+            ImGui.SameLine();
+            if (ImGui.InputText("##name", ref name, 100))
+            {
+                this.name = name;
+            }
+
+            bool activeSelf = this.activeSelf;
+            ImGui.Text("Active");
+            ImGui.SameLine();
+            if (ImGui.Checkbox("##active", ref activeSelf))
+            {
+                this.activeSelf = activeSelf;
+            }
+
+            int layer = (int)this.layer;
+            string[] layers = Enum.GetNames(typeof(Layer));
+            ImGui.Text("Layer");
+            ImGui.SameLine();
+            if (ImGui.Combo("##Layer", ref layer, layers, layers.Length))
+            {
+                this.layer = (Layer)layer;
+            }
+
+
+            ImGui.Separator();
+            ImGui.PushItemWidth(ImGui.GetWindowWidth() * 0.25f);
+
+            Vector2 position = this.position;
+            ImGui.Text("Position");
+            ImGui.SameLine();
+            ImGui.Text("X");
+            ImGui.SameLine();
+            if (ImGui.DragFloat("##PositionX", ref position.X))
+            {
+                this.position = position;
+            }
+            ImGui.SameLine();
+            ImGui.Text("Y");
+            ImGui.SameLine();
+            if (ImGui.DragFloat("##PositionY", ref position.Y))
+            {
+                this.position = position;
+            }
+
+            float rotation = this.rotation;
+            ImGui.Text("Rotation");
+            ImGui.SameLine();
+            if (ImGui.DragFloat("##Rotation", ref rotation))
+            {
+                this.rotation = rotation;
+            }
+
+            Vector2 size = this.size;
+            ImGui.Text("Size");
+            ImGui.SameLine();
+            ImGui.Text("X");
+            ImGui.SameLine();
+            if (ImGui.DragFloat("##SizeX", ref size.X))
+            {
+                this.size = size;
+            }
+            ImGui.SameLine();
+            ImGui.Text("Y");
+            ImGui.SameLine();
+            if (ImGui.DragFloat("##SizeY", ref size.Y))
+            {
+                this.size = size;
+            }
+
+            ImGui.PopItemWidth();
+            ImGui.Separator();
         }
     }
 }

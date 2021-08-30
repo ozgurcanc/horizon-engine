@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace HorizonEngine
 {
-    internal abstract class Inspector
+    public interface IEditor
     {
-        public abstract void Draw();
+        void OnInspectorGUI();
     }
 }

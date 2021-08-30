@@ -82,14 +82,13 @@
     <Compile Include="CollisionSystem.cs" />
     <Compile Include="Component.cs" />
     <Compile Include="Contact.cs" />
+    <Compile Include="Editor.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="Font.cs" />
     <Compile Include="GameObject.cs" />
-    <Compile Include="GameObjectInspector.cs" />
     <Compile Include="GameWindow.cs" />
     <Compile Include="HierarchyWindow.cs" />
     <Compile Include="Input.cs" />
-    <Compile Include="Inspector.cs" />
     <Compile Include="InspectorWindow.cs" />
     <Compile Include="Layer.cs" />
     <Compile Include="LocalText.cs" />

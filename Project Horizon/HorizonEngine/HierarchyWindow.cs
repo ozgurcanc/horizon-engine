@@ -65,7 +65,13 @@ namespace HorizonEngine
             if(ImGui.BeginPopupContextWindow())
             {
                 if (ImGui.MenuItem("New GameObject")) { Scene.CreateGameObject(); }
-                if (ImGui.MenuItem("Delete", _selectedGameObject != null)) { Scene.Destroy(_selectedGameObject); }
+                if (ImGui.MenuItem("Delete", _selectedGameObject != null)) 
+                { 
+                    Scene.Destroy(_selectedGameObject);
+                    _selectedGameObjectId = -1;
+                    _selectedGameObject = null;
+                    InspectorWindow.Inspect(null);
+                }
                 if (ImGui.MenuItem("Duplicate", _selectedGameObject != null)) { Scene.Clone(_selectedGameObject); }
                 ImGui.EndPopup();
             }
@@ -85,6 +91,7 @@ namespace HorizonEngine
             {
                 _selectedGameObjectId = -1;
                 _selectedGameObject = null;
+                InspectorWindow.Inspect(null);
             }
            
         }

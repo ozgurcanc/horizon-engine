@@ -15,11 +15,11 @@ namespace HorizonEngine
     internal static class InspectorWindow
     {
         private static bool _enabled;
-        private static List<Inspector> _inspectors;
+        private static IEditor _inspectorObject;
 
         static InspectorWindow()
         {
-            _inspectors = new List<Inspector>();
+            _inspectorObject = null;
         }
 
         internal static bool enabled
@@ -40,18 +40,15 @@ namespace HorizonEngine
 
             ImGui.Begin("Inspector", ref _enabled);
 
-            foreach(Inspector inspector in _inspectors)
-            {
-                inspector.Draw();
-            }
+            if (_inspectorObject != null)
+                _inspectorObject.OnInspectorGUI();
 
             ImGui.End();
         }
 
-        internal static void Inspect(GameObject gameObject)
+        internal static void Inspect(IEditor editorObject)
         {
-            _inspectors.Clear();
-            _inspectors.Add(new GameObjectInspector(gameObject));
+            _inspectorObject = editorObject;
         }
     }
 }
