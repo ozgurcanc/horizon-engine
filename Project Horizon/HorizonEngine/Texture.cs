@@ -9,15 +9,13 @@ using Microsoft.Xna.Framework.Input;
 
 namespace HorizonEngine
 {
-    public class Texture
+    public class Texture : Asset
     {
-        private string _name;
         private Texture2D _texture;
         private Rectangle _sourceRectangle;
 
-        internal Texture(string name, Texture2D texture, Rectangle sourceRectangle)
+        internal Texture(string name, Texture2D texture, Rectangle sourceRectangle) : base(name)
         {
-            _name = name;
             _texture = texture;
             _sourceRectangle = sourceRectangle;
         }
@@ -51,14 +49,6 @@ namespace HorizonEngine
             get
             {
                 return _texture.Height;
-            }
-        }
-
-        internal string name
-        {
-            get
-            {
-                return _name;
             }
         }
     }

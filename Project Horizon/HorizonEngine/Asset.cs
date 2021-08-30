@@ -9,20 +9,20 @@ using Microsoft.Xna.Framework.Input;
 
 namespace HorizonEngine
 {
-    public class Font : Asset
+    public abstract class Asset
     {
-        private SpriteFont _font;
+        private string _name;
 
-        internal Font(string name, SpriteFont font) : base(name)
+        public Asset(string name)
         {
-            _font = font;
+            _name = name;
         }
 
-        internal SpriteFont font
+        public string name
         {
             get
             {
-                return _font;
+                return _name;
             }
         }
     }

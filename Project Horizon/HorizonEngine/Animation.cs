@@ -11,27 +11,17 @@ using System.Diagnostics;
 
 namespace HorizonEngine
 {
-    internal class Animation
+    internal class Animation : Asset
     {
-        private string _name;
         private HorizonEngine.Texture[] _frames;
         private float _duration;
         private bool _loop;
 
-        internal Animation(string name, float duration, bool loop, HorizonEngine.Texture[] frames)
+        internal Animation(string name, float duration, bool loop, HorizonEngine.Texture[] frames) : base(name)
         {
-            _name = name;
             _duration = duration;
             _frames = frames;
             _loop = loop;
-        }
-
-        internal string name
-        {
-            get
-            {
-                return _name;
-            }
         }
 
         internal HorizonEngine.Texture this[int index]

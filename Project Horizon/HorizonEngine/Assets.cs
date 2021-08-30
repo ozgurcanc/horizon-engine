@@ -74,7 +74,7 @@ namespace HorizonEngine
 
         public static void LoadFont(string name, string source)
         {
-            _fonts.Add(name, new Font(_contentManager.Load<SpriteFont>(source), name));
+            _fonts.Add(name, new Font(name, _contentManager.Load<SpriteFont>(source)));
         }
 
         public static void LoadRenderTexture(string name, int width, int height)

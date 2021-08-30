@@ -12,28 +12,18 @@ using Newtonsoft.Json;
 
 namespace HorizonEngine
 {
-    public class AnimatorController
+    public class AnimatorController : Asset
     {
-        private string _name;
         private Dictionary<string, AnimatorParameter> _parameters;
         private Dictionary<string, Animation> _animations;
         private Dictionary<string, List<Tuple<string, bool, float, float, AnimatorCondition[]>>> _transitions;
         private string _defaultAnimation;
 
-        internal AnimatorController(string name)
+        internal AnimatorController(string name) : base(name)
         {
-            _name = name;
             _parameters = new Dictionary<string, AnimatorParameter>();
             _animations = new Dictionary<string, Animation>();
             _transitions = new Dictionary<string, List<Tuple<string, bool, float, float, AnimatorCondition[]>>>();
-        }
-
-        internal string name
-        {
-            get
-            {
-                return _name;
-            }
         }
 
         internal Dictionary<string, AnimatorParameter> parameters
