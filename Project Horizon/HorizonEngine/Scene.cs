@@ -269,12 +269,12 @@ namespace HorizonEngine
                 Debug.WriteLine("");               
             }
 
-            if (Input.GetKeyDown(Keys.NumPad1))
+            if (Input.GetKeyDown(Keys.NumPad8))
             {
                 Save();
             }
 
-            if (Input.GetKeyDown(Keys.NumPad2))
+            if (Input.GetKeyDown(Keys.NumPad9))
             {
                 Load();
             }

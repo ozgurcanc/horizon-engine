@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Newtonsoft.Json;
+using ImGuiNET;
 
 namespace HorizonEngine
 {
@@ -19,7 +20,7 @@ namespace HorizonEngine
         private Matrix _worldToScreen;
         private Matrix _screenToWorld;
         private int _cullingMask;      
-        private Color _clearColor;
+        private Color _backgroundColor;
         [JsonIgnore]
         private RenderTexture _renderTexture;
         private string _renderTextureAssetID;
@@ -29,7 +30,7 @@ namespace HorizonEngine
             _width = _height = 10;
             //_resolution = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             _cullingMask = 0;
-            _clearColor = Color.CornflowerBlue;
+            _backgroundColor = Color.CornflowerBlue;
             _renderTexture = null;
         }
 
@@ -70,7 +71,7 @@ namespace HorizonEngine
         internal void PreRender()
         {
             Screen.SetRenderTarget(_renderTexture);
-            Screen.Clear(_clearColor);
+            Screen.Clear(_backgroundColor);
         }
 
         internal Matrix renderTransform
@@ -81,15 +82,15 @@ namespace HorizonEngine
             }
         }
 
-        public Color clearColor
+        public Color backgroundColor
         {
             get
             {
-                return _clearColor;
+                return _backgroundColor;
             }
             set
             {
-                _clearColor = value;
+                _backgroundColor = value;
             }
         }
 
@@ -190,6 +191,52 @@ namespace HorizonEngine
         {
             if (_renderTextureAssetID == null) return;
             _renderTexture = Assets.GetRenderTexture(_renderTextureAssetID);
+        }
+
+        public override void OnInspectorGUI()
+        {
+            if (!ImGui.CollapsingHeader("Camera")) return;
+
+            string id = this.GetType().Name + componetID.ToString();
+
+            bool enabled = this.enabled;
+            ImGui.Text("Enabled");
+            ImGui.SameLine();
+            if (ImGui.Checkbox("##enabled" + id, ref enabled))
+            {
+                this.enabled = enabled;
+            }
+
+            float width = this.width;
+            ImGui.Text("Width");
+            ImGui.SameLine();
+            if(ImGui.DragFloat("##cameraWidth" + id, ref width))
+            {
+                this.width = width;
+            }
+
+            float height = this.height;
+            ImGui.Text("Height");
+            ImGui.SameLine();
+            if (ImGui.DragFloat("##cameraHeight" + id, ref height))
+            {
+                this.height = height;
+            }
+
+            Vector4 backgroundColor = this.backgroundColor.ToVector4();
+            System.Numerics.Vector4 numColor = new System.Numerics.Vector4(backgroundColor.X, backgroundColor.Y, backgroundColor.Z, backgroundColor.W);
+            ImGui.Text("Background Color");
+            //ImGui.SameLine();
+            if (ImGui.ColorPicker4("##backgroundColor" + id, ref numColor))
+            {
+                this.backgroundColor = new Color(numColor.X, numColor.Y, numColor.Z, numColor.W);
+            }
+
+            string renderTarget = this.renderTarget == null ? "None" : this.renderTarget.name;
+            ImGui.Text("Render Target");
+            ImGui.SameLine();
+            ImGui.Text(renderTarget);
+
         }
     }
 }

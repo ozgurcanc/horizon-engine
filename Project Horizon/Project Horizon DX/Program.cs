@@ -120,9 +120,10 @@ namespace Project_Horizon_DX
 
             
             Scene.mainCamera.renderTarget = Assets.GetRenderTexture("rt");
-            Scene.mainCamera.clearColor = Color.Black;
+            Scene.mainCamera.backgroundColor = Color.Black;
             //Scene.mainCamera.enabled = false;
             
+            //Scene.mainCamera.
         }
     }
 
