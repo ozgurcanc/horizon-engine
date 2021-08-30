@@ -7,6 +7,8 @@ using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
 using Newtonsoft.Json;
 using ImGuiNET;
+using System.Linq;
+using System.Reflection;
 
 namespace HorizonEngine
 {
@@ -407,6 +409,54 @@ namespace HorizonEngine
             foreach(Component component in _components.Values)
             {
                 component.OnInspectorGUI();
+            }
+
+            ImGui.Separator();
+
+            if(ImGui.Button("Add Component"))
+            {
+                ImGui.OpenPopup("add_component");
+            }
+
+            if(ImGui.BeginPopup("add_component"))
+            {
+                var components = AppDomain.CurrentDomain.GetAssemblies().SelectMany(assembly => assembly.GetTypes()).Where(type => type.IsSubclassOf(typeof(Component)) && !type.IsAbstract);
+                
+                foreach(Type component in components)
+                {
+                    if(ImGui.Selectable(component.Name))
+                    {
+                        MethodInfo method = typeof(GameObject).GetMethod(nameof(GameObject.AddComponent));
+                        MethodInfo generic = method.MakeGenericMethod(component);
+                        generic.Invoke(this, null);
+                    }
+                }
+
+                ImGui.EndPopup();
+            }
+
+            ImGui.Separator();
+
+            if(ImGui.Button("Remove Component"))
+            {
+                ImGui.OpenPopup("remove_component");
+            }
+
+            if(ImGui.BeginPopup("remove_component"))
+            {
+                var components = _components.Keys;
+
+                foreach(Type component in components)
+                {
+                    if(ImGui.Selectable(component.Name))
+                    {
+                        MethodInfo method = typeof(GameObject).GetMethod(nameof(GameObject.RemoveComponent));
+                        MethodInfo generic = method.MakeGenericMethod(component);
+                        generic.Invoke(this, null);
+                    }
+                }
+
+                ImGui.EndPopup();
             }
         }
     }
