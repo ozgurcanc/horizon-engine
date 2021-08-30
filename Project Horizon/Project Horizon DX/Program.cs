@@ -111,7 +111,7 @@ namespace Project_Horizon_DX
 
             Debug.WriteLine("here");
             var n = Scene.CreateGameObject("new");
-            n.size = new Vector2(6, 6);
+            n.size = new Vector2(8, 8);
             n.layer = Layer.Layer1;
             n.AddComponent<Camera>().CullLayer(Layer.Default);
             n.AddComponent<Sprite>().texture = Assets.GetRenderTexture("rt");

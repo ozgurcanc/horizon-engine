@@ -150,12 +150,6 @@ namespace HorizonEngine
         {
             List<GameObject> rootGameObjects = _gameObjects.FindAll(x => x.parent == null);
 
-            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
-            {
-                Formatting = Formatting.Indented,
-                PreserveReferencesHandling = PreserveReferencesHandling.All,
-                TypeNameHandling = TypeNameHandling.All,
-            };
             File.WriteAllText("scene.json", JsonConvert.SerializeObject(rootGameObjects));
         }
 
@@ -275,12 +269,12 @@ namespace HorizonEngine
                 Debug.WriteLine("");               
             }
 
-            if (Input.GetKeyDown(Keys.S))
+            if (Input.GetKeyDown(Keys.NumPad1))
             {
                 Save();
             }
 
-            if (Input.GetKeyDown(Keys.R))
+            if (Input.GetKeyDown(Keys.NumPad2))
             {
                 Load();
             }

@@ -327,7 +327,8 @@ namespace HorizonEngine
 
         public void OnInspectorGUI()
         {
-            if (!ImGui.CollapsingHeader("Game Object")) return;
+            //if (!ImGui.CollapsingHeader("Game Object")) return;
+            ImGui.Text("Game Object");
 
             string name = this.name;
             ImGui.Text("Name");
@@ -402,6 +403,11 @@ namespace HorizonEngine
 
             ImGui.PopItemWidth();
             ImGui.Separator();
+
+            foreach(Component component in _components.Values)
+            {
+                component.OnInspectorGUI();
+            }
         }
     }
 }

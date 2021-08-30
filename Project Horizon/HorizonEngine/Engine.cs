@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using MonoGame.ImGui;
 using ImGuiNET;
+using Newtonsoft.Json;
 
 namespace HorizonEngine
 {
@@ -25,6 +26,13 @@ namespace HorizonEngine
             Screen.Init(_graphics);
             Application.isEditor = true;
             _scene = new Scene(this.Content, _graphics);
+
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented,
+                PreserveReferencesHandling = PreserveReferencesHandling.All,
+                TypeNameHandling = TypeNameHandling.All,
+            };
         }
 
         protected override void Initialize()
@@ -39,6 +47,10 @@ namespace HorizonEngine
             ImGui.GetIO().ConfigFlags |= ImGuiConfigFlags.DockingEnable;
 
             GameWindow.Init(_guiRenderer);
+
+            GameWindow.enabled = true;
+            InspectorWindow.enabled = true;
+            HierarchyWindow.enabled = true;
 
             base.Initialize();
         }

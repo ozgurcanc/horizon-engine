@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
 using Newtonsoft.Json;
-
+using ImGuiNET;
 
 namespace HorizonEngine
 {
@@ -71,6 +71,37 @@ namespace HorizonEngine
         public override void OnLoad()
         {
             font = Assets.GetFont(_fontAssetID);
+        }
+
+        public override void OnInspectorGUI()
+        {
+            
+            if (!ImGui.CollapsingHeader("Text")) return;
+
+            string id = this.GetType().Name + componetID.ToString();
+
+            bool enabled = this.enabled;
+            ImGui.Text("Enabled");
+            ImGui.SameLine();
+            if (ImGui.Checkbox("##enabled" + id, ref enabled))
+            {
+                this.enabled = enabled;
+            }
+
+            string fontName = _font == null ? "None" : _font.name;
+            ImGui.Text("Font");
+            ImGui.SameLine();
+            ImGui.Text(fontName);
+
+            string text = this.text;
+            ImGui.Text("Text");
+            ImGui.SameLine();
+            if (ImGui.InputText("##text" + id, ref text, 400))
+            {
+                this.text = text;
+            }
+
+            base.OnInspectorGUI();          
         }
     }
 }

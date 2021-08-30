@@ -7,12 +7,12 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Newtonsoft.Json;
-
+using ImGuiNET;
 
 namespace HorizonEngine
 {
     [JsonObject(MemberSerialization.Fields)]
-    public abstract class Component
+    public abstract class Component : IEditor
     {
         private bool _startFlag = true;
         private GameObject _gameObject;
@@ -83,6 +83,11 @@ namespace HorizonEngine
         public virtual void OnLoad()
         {
 
+        }
+
+        public virtual void OnInspectorGUI()
+        {
+            if (!ImGui.CollapsingHeader(this.GetType().Name)) return;
         }
     }
 

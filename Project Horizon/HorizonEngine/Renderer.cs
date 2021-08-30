@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
+using ImGuiNET;
 
 namespace HorizonEngine
 {
@@ -99,6 +100,45 @@ namespace HorizonEngine
 
         internal abstract void Draw(SpriteBatch spriteBatch);
 
+        public override void OnInspectorGUI()
+        {
+            string id = this.GetType().Name + componetID.ToString();
+
+            bool flipX = this.flipX;
+            bool flipY = this.flipY;
+            ImGui.Text("Flip");
+            ImGui.SameLine();
+            if (ImGui.Checkbox("##flipx" + id, ref flipX))
+            {
+                this.flipX = flipX;
+            }
+            ImGui.SameLine();
+            ImGui.Text("X");
+            ImGui.SameLine();
+            if (ImGui.Checkbox("##flipy" + id, ref flipY))
+            {
+                this.flipY = flipY;
+            }
+            ImGui.SameLine();
+            ImGui.Text("Y");
+
+            int sortingOrder = this.sortingOrder;
+            ImGui.Text("Sorting Order");
+            ImGui.SameLine();
+            if (ImGui.DragInt("##order" + id, ref sortingOrder))
+            {
+                this.sortingOrder = sortingOrder;
+            }
+
+            Vector4 color = this.color.ToVector4();
+            System.Numerics.Vector4 numColor = new System.Numerics.Vector4(color.X, color.Y, color.Z, color.W);
+            ImGui.Text("Color");
+            ImGui.SameLine();
+            if (ImGui.ColorPicker4("##color" + id, ref numColor))
+            {
+                this.color = new Color(numColor.X, numColor.Y, numColor.Z, numColor.W);
+            }
+        }
 
     }
 }
