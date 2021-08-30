@@ -85,10 +85,7 @@ namespace HorizonEngine
 
         }
 
-        public virtual void OnInspectorGUI()
-        {
-            if (!ImGui.CollapsingHeader(this.GetType().Name)) return;
-        }
+        public abstract void OnInspectorGUI();
     }
 
     public interface IScene

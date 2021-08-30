@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using ImGuiNET;
 
 namespace HorizonEngine
 {
@@ -42,6 +43,21 @@ namespace HorizonEngine
         public virtual void OnMouseDrag() { }
 
         public virtual void OnMouseUp() { }
+
+        public override void OnInspectorGUI()
+        {
+            if (!ImGui.CollapsingHeader(this.GetType().Name)) return;
+
+            string id = this.GetType().Name + componetID.ToString();
+
+            bool enabled = this.enabled;
+            ImGui.Text("Enabled");
+            ImGui.SameLine();
+            if (ImGui.Checkbox("##enabled" + id, ref enabled))
+            {
+                this.enabled = enabled;
+            }
+        }
 
     }
 }
