@@ -72,6 +72,8 @@
     <Compile Include="Application.cs" />
     <Compile Include="Asset.cs" />
     <Compile Include="Assets.cs" />
+    <Compile Include="AssetsDirectory.cs" />
+    <Compile Include="AssetsWindow.cs" />
     <Compile Include="Behaviour.cs" />
     <Compile Include="BoxCollider.cs" />
     <Compile Include="BVH.cs" />

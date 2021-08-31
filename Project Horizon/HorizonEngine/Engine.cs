@@ -51,6 +51,7 @@ namespace HorizonEngine
             GameWindow.enabled = true;
             InspectorWindow.enabled = true;
             HierarchyWindow.enabled = true;
+            AssetsWindow.enabled = true;
 
             base.Initialize();
         }
@@ -95,6 +96,7 @@ namespace HorizonEngine
             HierarchyWindow.Draw();
             GameWindow.Draw();
             InspectorWindow.Draw();
+            AssetsWindow.Draw();
 
             _guiRenderer.EndLayout();
 
