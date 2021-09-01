@@ -17,7 +17,6 @@ namespace HorizonEngine
 
         private static Scene _main;
         private List<GameObject> _gameObjects;
-        private IScene _nextScene;
         private List<Renderer> _renderers;
         private List<Behaviour> _behaviours;
         private List<Rigidbody> _rigidbodies;
@@ -146,32 +145,33 @@ namespace HorizonEngine
             }
         }
 
-        internal void Save()
+        internal static void Save()
         {
-            List<GameObject> rootGameObjects = _gameObjects.FindAll(x => x.parent == null);
+            List<GameObject> rootGameObjects = Scene.main._gameObjects.FindAll(x => x.parent == null);
 
             File.WriteAllText("scene.json", JsonConvert.SerializeObject(rootGameObjects));
         }
 
-        internal void Load()
+        internal static void Load()
         {
-            //List<GameObject> dontDestroyOnLoad = _gameObjects.FindAll(x => x.dontDestroyOnLoad && x.parent == null);
-            _gameObjects.Clear();
-            _renderers.Clear();
-            _behaviours.Clear();
-            _rigidbodies.Clear();
-            _colliders.Clear();
-            _contactPairs.Clear();
-            _mouseOverColliders.Clear();
-            _mouseClickedColliders = null;
-            _startBehaviours.Clear();
-            _animators.Clear();
-            _cameras.Clear();
+            Scene scene = Scene.main;
+            List<GameObject> dontDestroyOnLoad = scene._gameObjects.FindAll(x => x.dontDestroyOnLoad && x.parent == null);
+            scene._gameObjects.Clear();
+            scene._renderers.Clear();
+            scene._behaviours.Clear();
+            scene._rigidbodies.Clear();
+            scene._colliders.Clear();
+            scene._contactPairs.Clear();
+            scene._mouseOverColliders.Clear();
+            scene._mouseClickedColliders = null;
+            scene._startBehaviours.Clear();
+            scene._animators.Clear();
+            scene._cameras.Clear();
 
             List<GameObject> rootGameObjects = JsonConvert.DeserializeObject<List<GameObject>>(File.ReadAllText("scene.json"));
             rootGameObjects.ForEach(x => x.OnLoad());
 
-            //dontDestroyOnLoad.ForEach(x => x.OnLoad());
+            dontDestroyOnLoad.ForEach(x => x.OnLoad());
         }
 
         internal Scene(ContentManager contentManager, GraphicsDeviceManager graphicsDeviceManager)
@@ -183,7 +183,6 @@ namespace HorizonEngine
             //IsMouseVisible = true;
 
             _gameObjects = new List<GameObject>();
-            _nextScene = null;
             _renderers = new List<Renderer>();
             _behaviours = new List<Behaviour>();
             _rigidbodies = new List<Rigidbody>();
@@ -194,10 +193,6 @@ namespace HorizonEngine
             _animators = new List<Animator>();
             _cameras = new List<Camera>();
             _main = this;
-
-            GameObject mainCamera = Scene.CreateGameObject("Main Camera");
-            mainCamera.DontDestroyOnLoad();
-            mainCamera.AddComponent<Camera>();
         }
 
         public static Camera mainCamera
@@ -206,12 +201,7 @@ namespace HorizonEngine
             {
                 return Scene.main._cameras.Find(x => x.renderTarget == null);
             }
-        }
-        
-        public static void Load<T>() where T : IScene, new()
-        {
-            Scene.main._nextScene = new T();
-        }
+        }       
 
         public static GameObject CreateGameObject(string name = "GameObject")
         {
@@ -268,43 +258,6 @@ namespace HorizonEngine
                 Debug.WriteLine("camera : " + _cameras.Count);
                 Debug.WriteLine("");               
             }
-
-            if (Input.GetKeyDown(Keys.NumPad8))
-            {
-                Save();
-            }
-
-            if (Input.GetKeyDown(Keys.NumPad9))
-            {
-                Load();
-            }
-
-            if(_nextScene != null)
-            {
-                var w = new System.Diagnostics.Stopwatch();
-                w.Start();
-
-                List<GameObject> dontDestroyOnLoad = _gameObjects.FindAll(x => x.dontDestroyOnLoad && x.parent == null);
-                _gameObjects.Clear();
-                _renderers.Clear();
-                _behaviours.Clear();
-                _rigidbodies.Clear();
-                _colliders.Clear();
-                _contactPairs.Clear();
-                _mouseOverColliders.Clear();
-                _mouseClickedColliders = null;
-                _startBehaviours.Clear();
-                _animators.Clear();
-                _cameras.Clear();
-
-                dontDestroyOnLoad.ForEach(x => x.OnLoad());
-                _nextScene.Load();
-                _nextScene = null;
-
-                w.Stop();
-                Debug.WriteLine($"Execution Time: {w.ElapsedMilliseconds} ms");
-            }
-
 
             // TODO: Add your update logic here
             /*

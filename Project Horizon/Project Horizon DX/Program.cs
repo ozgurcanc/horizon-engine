@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace Project_Horizon_DX
 {
-    class TestScene : IScene
+    class TestScene
     {
         class A
         {
@@ -44,6 +44,7 @@ namespace Project_Horizon_DX
                 }
             }
         }
+
 
         public void Load()
         {
@@ -137,7 +138,6 @@ namespace Project_Horizon_DX
             //  game.Run();
 
             var game = new Engine();
-            Scene.Load<TestScene>();
             game.Run();
         }
     }

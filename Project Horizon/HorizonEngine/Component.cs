@@ -88,10 +88,4 @@ namespace HorizonEngine
         public abstract void OnInspectorGUI();
     }
 
-    public interface IScene
-    {
-        void Load();
-    }
-
-
 }
