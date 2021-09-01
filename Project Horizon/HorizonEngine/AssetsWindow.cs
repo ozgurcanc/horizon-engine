@@ -113,6 +113,10 @@ namespace HorizonEngine
                 {
                     ImportFont();
                 }
+                if (ImGui.MenuItem("Import New Texture"))
+                {
+                    ImportTexture();
+                }
                 ImGui.EndPopup();               
             }
 
@@ -195,6 +199,34 @@ namespace HorizonEngine
                 File.Copy(openFileDialog.FileName, Path.Combine(Assets.path, openFileDialog.SafeFileName), true);
                 Font font = Assets.CreateFont(openFileDialog.SafeFileName, openFileDialog.SafeFileName);
                 _selectedDirectory.AddAsset(font);
+            }
+        }
+
+        private static void ImportTexture()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                InitialDirectory = Assets.path,
+                Title = "Import New Texture",
+
+                CheckFileExists = true,
+                CheckPathExists = true,
+
+                //DefaultExt = "txt",
+                Filter = "Image files (*.png, *jpg)|*.png; *.jpg",
+                //FilterIndex = 2,
+                RestoreDirectory = true,
+
+                ReadOnlyChecked = true,
+                ShowReadOnly = true
+            };
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                //openFileDialog.FileName;
+                File.Copy(openFileDialog.FileName, Path.Combine(Assets.path, openFileDialog.SafeFileName), true);
+                HorizonEngine.Texture texture = Assets.CreateTexture(openFileDialog.SafeFileName, openFileDialog.SafeFileName);
+                _selectedDirectory.AddAsset(texture);
             }
         }
     }

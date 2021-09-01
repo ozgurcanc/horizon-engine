@@ -47,7 +47,8 @@ namespace HorizonEngine
         {
             get
             {
-                return _assetID++;
+                _assetID++;
+                return _assetID;
             }
         }
 
@@ -79,11 +80,48 @@ namespace HorizonEngine
             _fonts.Add(font.assetID, font);
         }
 
+
+        internal static Dictionary<uint, HorizonEngine.Texture>.ValueCollection textures
+        {
+            get
+            {
+                return _textures.Values;
+            }
+        }
+
+        internal static HorizonEngine.Texture CreateTexture(string name, string source, Vector4? sourceRectangle = null)
+        {
+            HorizonEngine.Texture texture = new HorizonEngine.Texture(name, source, sourceRectangle);
+            _textures.Add(texture.assetID, texture);
+            return texture;
+        }
+
+        internal static HorizonEngine.Texture GetTexture(uint id)
+        {
+            if (_textures.ContainsKey(id))
+                return _textures[id];
+
+            return null;
+        }
+
+        internal static void Load(HorizonEngine.Texture texture)
+        {
+            _textures.Add(texture.assetID, texture);
+        }
+
+        internal static Texture2D GetSourceTexture(string source)
+        {
+            if (_sourceTextures.ContainsKey(source))
+                return _sourceTextures[source];
+
+            Texture2D texture2D = Screen.CreateTexture2D(Path.Combine(Assets.path, source));
+            _sourceTextures.Add(source, texture2D);
+            return texture2D;
+        }
+
         public static Animation GetAnimation(uint id) { return null; }
         public static RenderTexture GetRenderTexture(uint id) { return null; }
         public static AnimatorController GetAnimatorController(uint id) { return null; }
-        public static HorizonEngine.Texture GetTexture(uint id) { return null; }
-
 
 
         /*

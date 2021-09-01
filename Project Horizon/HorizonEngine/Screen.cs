@@ -88,5 +88,13 @@ namespace HorizonEngine
 
             return fontBake.CreateSpriteFont(_graphics.GraphicsDevice);
         }
+
+        internal static Texture2D CreateTexture2D(string fullPath)
+        {
+            FileStream stream = new FileStream(fullPath, FileMode.Open);
+            Texture2D texture = Texture2D.FromStream(_graphics.GraphicsDevice, stream);
+            stream.Close();
+            return texture;
+        }
     }
 }

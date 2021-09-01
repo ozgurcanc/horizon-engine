@@ -66,8 +66,23 @@ namespace HorizonEngine
             ImGui.Text("Texture");
             ImGui.SameLine();
             ImGui.Text(textureName);
+            ImGui.SameLine();
+            if(ImGui.Button("select texture"))
+            {
+                ImGui.OpenPopup("select_texture");
+            }
 
-            
+            if(ImGui.BeginPopup("select_texture"))
+            {
+                if (ImGui.Selectable("None")) this.texture = null;
+
+                foreach (HorizonEngine.Texture texture in Assets.textures)
+                {
+                    if (ImGui.Selectable(texture.name)) this.texture = texture;
+                }
+
+                ImGui.EndPopup();
+            }
 
             base.OnInspectorGUI();
         }
