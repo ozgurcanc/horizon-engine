@@ -9,6 +9,8 @@ using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
 using MonoGame.ImGui;
 using ImGuiNET;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace HorizonEngine
 {
@@ -41,6 +43,17 @@ namespace HorizonEngine
             {
                 _enabled = value;
             }
+        }
+
+        internal static void Save()
+        {
+            File.WriteAllText("assets.json", JsonConvert.SerializeObject(_rootDirectory));
+        }
+
+        internal static void Load()
+        {
+            _rootDirectory = JsonConvert.DeserializeObject<AssetsDirectory>(File.ReadAllText("assets.json"));
+            _selectedDirectory = _rootDirectory;
         }
 
         internal static void Draw()

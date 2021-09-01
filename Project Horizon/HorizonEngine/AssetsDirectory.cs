@@ -9,9 +9,11 @@ using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
 using MonoGame.ImGui;
 using ImGuiNET;
+using Newtonsoft.Json;
 
 namespace HorizonEngine
 {
+    [JsonObject(MemberSerialization.Fields)]
     internal class AssetsDirectory
     {
         private string _name;

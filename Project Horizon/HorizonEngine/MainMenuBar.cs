@@ -24,6 +24,8 @@ namespace HorizonEngine
                     if (ImGui.MenuItem("Save Scene")) { Scene.Save(); }
                     if (ImGui.MenuItem("Load Scene")) { Scene.Load(); }
                     ImGui.Separator();
+                    if (ImGui.MenuItem("Save Assets")) { AssetsWindow.Save(); }
+                    if (ImGui.MenuItem("Load Assets")) { AssetsWindow.Load(); }
                     ImGui.EndMenu();
                 }
                 if(ImGui.BeginMenu("Edit"))
