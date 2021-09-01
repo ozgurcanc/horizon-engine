@@ -178,7 +178,7 @@ namespace HorizonEngine
         {
             //_graphics = new GraphicsDeviceManager(this);
             //Camera.InitCamera(graphicsDeviceManager);
-            Assets.InitAssets(contentManager);
+            //Assets.InitAssets(contentManager);
             //Content.RootDirectory = "Content";
             //IsMouseVisible = true;
 

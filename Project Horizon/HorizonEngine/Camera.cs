@@ -23,7 +23,7 @@ namespace HorizonEngine
         private Color _backgroundColor;
         [JsonIgnore]
         private RenderTexture _renderTexture;
-        private string _renderTextureAssetID;
+        private uint _assetID;
 
         public Camera()
         {
@@ -32,6 +32,7 @@ namespace HorizonEngine
             _cullingMask = 0;
             _backgroundColor = Color.CornflowerBlue;
             _renderTexture = null;
+            _assetID = 0;
         }
 
         internal static float scale
@@ -167,7 +168,7 @@ namespace HorizonEngine
             set
             {
                 _renderTexture = value;
-                _renderTextureAssetID = value == null ? null : _renderTexture.name;
+                _assetID = value == null ? 0 : _renderTexture.assetID;
             }
         }
 
@@ -189,8 +190,7 @@ namespace HorizonEngine
 
         public override void OnLoad()
         {
-            if (_renderTextureAssetID == null) return;
-            _renderTexture = Assets.GetRenderTexture(_renderTextureAssetID);
+            _renderTexture = Assets.GetRenderTexture(_assetID);
         }
 
         public override void OnInspectorGUI()

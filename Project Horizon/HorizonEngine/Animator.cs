@@ -15,7 +15,7 @@ namespace HorizonEngine
 {
     public class Animator : Component
     {
-        private string _animatorControllerAssetID;
+        private uint _assetID;
         [JsonIgnore]
         AnimatorController _animatorController;
         [JsonIgnore]
@@ -34,7 +34,7 @@ namespace HorizonEngine
         {
             _currentAnimation = _nextAnimation = null;
             _parameters = new Dictionary<string, AnimatorParameter>();
-            _animatorControllerAssetID = null;
+            _assetID = 0;
         }
 
         public AnimatorController animatorController
@@ -46,7 +46,7 @@ namespace HorizonEngine
             set
             {
                 _animatorController = value;
-                _animatorControllerAssetID = value == null ? null : _animatorController.name;
+                _assetID = value == null ? 0 : _animatorController.assetID;
                 if (value != null)
                 {
                     _parameters = new Dictionary<string, AnimatorParameter>();
@@ -207,7 +207,7 @@ namespace HorizonEngine
 
         public override void OnLoad()
         {
-            this.animatorController = Assets.GetAnimatorController(_animatorControllerAssetID);
+            this.animatorController = Assets.GetAnimatorController(_assetID);
         }
 
         public override void OnInspectorGUI()

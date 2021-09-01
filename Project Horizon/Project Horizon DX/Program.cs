@@ -45,7 +45,7 @@ namespace Project_Horizon_DX
             }
         }
 
-
+        /*
         public void Load()
         {
             //Screen.resolution = new Vector2(1600, 900);
@@ -126,6 +126,7 @@ namespace Project_Horizon_DX
             
             //Scene.mainCamera.
         }
+        */
     }
 
     public static class Program

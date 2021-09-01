@@ -13,24 +13,42 @@ namespace HorizonEngine
 {
     public static class Assets
     {
-        private static ContentManager _contentManager;
+        private static uint _assetID;
         private static Dictionary<string, Texture2D> _sourceTextures;
-        private static Dictionary<string, HorizonEngine.Texture> _textures;
-        private static Dictionary<string, Animation> _animations;
-        private static Dictionary<string, Font> _fonts;
-        private static Dictionary<string, RenderTexture> _renderTextures;
-        private static Dictionary<string, AnimatorController> _animatorControllers;
+        private static Dictionary<uint, HorizonEngine.Texture> _textures;
+        private static Dictionary<uint, Animation> _animations;
+        private static Dictionary<uint, Font> _fonts;
+        private static Dictionary<uint, RenderTexture> _renderTextures;
+        private static Dictionary<uint, AnimatorController> _animatorControllers;
 
-        static internal void InitAssets(ContentManager contentManager)
+        static Assets()
         {
-            _contentManager = contentManager;
             _sourceTextures = new Dictionary<string, Texture2D>();
-            _textures = new Dictionary<string, Texture>();
-            _animations = new Dictionary<string, Animation>();
-            _fonts = new Dictionary<string, Font>();
-            _renderTextures = new Dictionary<string, RenderTexture>();
-            _animatorControllers = new Dictionary<string, AnimatorController>();
+            _textures = new Dictionary<uint, Texture>();
+            _animations = new Dictionary<uint, Animation>();
+            _fonts = new Dictionary<uint, Font>();
+            _renderTextures = new Dictionary<uint, RenderTexture>();
+            _animatorControllers = new Dictionary<uint, AnimatorController>();
+            _assetID = 1;
         }
+
+        internal static uint availableAssetID
+        {
+            get
+            {
+                return _assetID++;
+            }
+        }
+
+        public static Font GetFont(uint id) { return null;  }
+        public static Animation GetAnimation(uint id) { return null; }
+        public static RenderTexture GetRenderTexture(uint id) { return null; }
+        public static AnimatorController GetAnimatorController(uint id) { return null; }
+        public static HorizonEngine.Texture GetTexture(uint id) { return null; }
+
+
+
+        /*
 
         public static void LoadTexture(string name, string sourceTexture, Vector4? sourceRectangle = null)
         {
@@ -129,5 +147,6 @@ namespace HorizonEngine
 
             return null;
         }
+        */
     }
 }

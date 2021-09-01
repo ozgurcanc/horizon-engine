@@ -19,7 +19,7 @@ namespace HorizonEngine
         private Dictionary<string, List<Tuple<string, bool, float, float, AnimatorCondition[]>>> _transitions;
         private string _defaultAnimation;
 
-        internal AnimatorController(string name) : base(name)
+        internal AnimatorController(string name) : base(name, null)
         {
             _parameters = new Dictionary<string, AnimatorParameter>();
             _animations = new Dictionary<string, Animation>();
@@ -62,7 +62,8 @@ namespace HorizonEngine
         {
             foreach (string animation in animations)
             {
-                _animations.Add(animation, Assets.GetAnimation(animation));
+                // Fix here
+                //_animations.Add(animation, Assets.GetAnimation(animation));
                 _transitions.Add(animation, new List<Tuple<string, bool, float, float, AnimatorCondition[]>>());
             }
 

@@ -16,7 +16,7 @@ namespace HorizonEngine
         private string[] _texts;
         [JsonIgnore]
         private Font _font;
-        private string _fontAssetID;
+        private uint _assetID;
         private Vector2[] _halfSizeOfTexts;
         private static int _local;
 
@@ -24,7 +24,7 @@ namespace HorizonEngine
         {
             _texts = null;
             _font = null;
-            _fontAssetID = null;
+            _assetID = 0;
         }
 
         public static int local
@@ -58,7 +58,7 @@ namespace HorizonEngine
             set
             {
                 _font = value;
-                _fontAssetID = value == null ? null : _font.name;
+                _assetID = value == null ? 0 : _font.assetID;
                 UpdateSizeOfText();
             }
         }
@@ -89,7 +89,7 @@ namespace HorizonEngine
 
         public override void OnLoad()
         {
-            _font = Assets.GetFont(_fontAssetID);
+            _font = Assets.GetFont(_assetID);
         }
     }
 }

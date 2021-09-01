@@ -13,7 +13,7 @@ namespace HorizonEngine
     {
         private SpriteFont _font;
 
-        internal Font(string name, SpriteFont font) : base(name)
+        internal Font(string name, string source, SpriteFont font) : base(name, source)
         {
             _font = font;
         }

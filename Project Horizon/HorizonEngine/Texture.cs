@@ -14,7 +14,7 @@ namespace HorizonEngine
         private Texture2D _texture;
         private Rectangle _sourceRectangle;
 
-        internal Texture(string name, Texture2D texture, Rectangle sourceRectangle) : base(name)
+        internal Texture(string name, string source, Texture2D texture, Rectangle sourceRectangle) : base(name, source)
         {
             _texture = texture;
             _sourceRectangle = sourceRectangle;

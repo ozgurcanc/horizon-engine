@@ -15,12 +15,12 @@ namespace HorizonEngine
     {
         [JsonIgnore]
         private HorizonEngine.Texture _texture;
-        private string _textureAssetID;
+        private uint _assetID;
 
         public Sprite()
         {
             _texture = null;
-            _textureAssetID = null;
+            _assetID = 0;
         }
 
         public HorizonEngine.Texture texture
@@ -32,7 +32,7 @@ namespace HorizonEngine
             set
             {
                 _texture = value;
-                _textureAssetID = value == null ? null : _texture.name;
+                _assetID = value == null ? 0 : _texture.assetID;
             }
         }
 
@@ -45,7 +45,7 @@ namespace HorizonEngine
 
         public override void OnLoad()
         {
-            _texture = Assets.GetTexture(_textureAssetID);
+            _texture = Assets.GetTexture(_assetID);
         }
 
         public override void OnInspectorGUI()

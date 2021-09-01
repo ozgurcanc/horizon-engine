@@ -11,7 +11,7 @@ namespace HorizonEngine
 {
     public class RenderTexture : HorizonEngine.Texture
     {
-        internal RenderTexture(string name, int widht, int height) : base(name, Screen.CreateRenderTarget(widht, height), new Rectangle(0, 0, widht, height))
+        internal RenderTexture(string name, int widht, int height) : base(name, null, Screen.CreateRenderTarget(widht, height), new Rectangle(0, 0, widht, height))
         {
 
         }
