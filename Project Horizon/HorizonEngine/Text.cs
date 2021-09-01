@@ -92,6 +92,23 @@ namespace HorizonEngine
             ImGui.Text("Font");
             ImGui.SameLine();
             ImGui.Text(fontName);
+            ImGui.SameLine();
+            if(ImGui.Button("select font"))
+            {
+                ImGui.OpenPopup("select_font");
+            }
+
+            if(ImGui.BeginPopup("select_font"))
+            {
+                if (ImGui.Selectable("None")) this.font = null;
+
+                foreach(Font font in Assets.fonts)
+                {
+                    if (ImGui.Selectable(font.name)) this.font = font;
+                }
+
+                ImGui.EndPopup();
+            }
 
             string text = this.text;
             ImGui.Text("Text");

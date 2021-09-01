@@ -11,6 +11,7 @@ using MonoGame.ImGui;
 using ImGuiNET;
 using System.IO;
 using Newtonsoft.Json;
+using System.Windows.Forms;
 
 namespace HorizonEngine
 {
@@ -54,6 +55,7 @@ namespace HorizonEngine
         {
             _rootDirectory = JsonConvert.DeserializeObject<AssetsDirectory>(File.ReadAllText("assets.json"));
             _selectedDirectory = _rootDirectory;
+            _rootDirectory.Reload();
         }
 
         internal static void Draw()
@@ -106,7 +108,20 @@ namespace HorizonEngine
                     _selectedDirectory = _selectedDirectory.parent;
                     deletedDirectory.Destroy();
                 }
-                ImGui.EndPopup();
+                ImGui.Separator();
+                if (ImGui.MenuItem("Import New Font"))
+                {
+                    ImportFont();
+                }
+                ImGui.EndPopup();               
+            }
+
+            foreach (Asset asset in _selectedDirectory.assets)
+            {
+                if (ImGui.Selectable(asset.name))
+                {
+
+                }
             }
 
             ImGui.EndChild();
@@ -153,6 +168,34 @@ namespace HorizonEngine
             }
 
             ImGui.PopID();
+        }
+
+        private static void ImportFont()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                InitialDirectory = Assets.path,
+                Title = "Import New Font",
+
+                CheckFileExists = true,
+                CheckPathExists = true,
+
+                //DefaultExt = "txt",
+                Filter = "Font files (*.ttf)|*.ttf",
+                //FilterIndex = 2,
+                RestoreDirectory = true,
+
+                ReadOnlyChecked = true,
+                ShowReadOnly = true
+            };
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                //openFileDialog.FileName;
+                File.Copy(openFileDialog.FileName, Path.Combine(Assets.path, openFileDialog.SafeFileName), true);
+                Font font = Assets.CreateFont(openFileDialog.SafeFileName, openFileDialog.SafeFileName);
+                _selectedDirectory.AddAsset(font);
+            }
         }
     }
 }

@@ -19,12 +19,14 @@ namespace HorizonEngine
         private string _name;
         private AssetsDirectory _parent;
         private List<AssetsDirectory> _subdirectories;
+        private List<Asset> _assets;
 
         internal AssetsDirectory(string name)
         {
             _parent = null;
             _name = name;
             _subdirectories = new List<AssetsDirectory>();
+            _assets = new List<Asset>();
         }
 
         internal bool isLeaf
@@ -75,13 +77,30 @@ namespace HorizonEngine
             }
         }
 
+        internal IReadOnlyCollection<Asset> assets
+        {
+            get
+            {
+                return _assets.AsReadOnly();
+            }
+        }
+
         internal void Destroy()
         {
             this.parent = null;
         }
 
+        internal void Reload()
+        {
+            _assets.ForEach(x => x.Reload());
+            _subdirectories.ForEach(x => x.Reload());
+        }
 
 
+        internal void AddAsset(Asset asset)
+        {
+            _assets.Add(asset);
+        }
 
     }
 }

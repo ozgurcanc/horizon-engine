@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Newtonsoft.Json;
 
 namespace HorizonEngine
 {
+    [JsonObject(MemberSerialization.Fields)]
     public abstract class Asset
     {
         private string _name;
@@ -49,5 +51,7 @@ namespace HorizonEngine
                 return _source;
             }
         }
+
+        internal virtual void Reload() { }
     }
 }

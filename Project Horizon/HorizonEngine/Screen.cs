@@ -5,6 +5,8 @@ using Microsoft.Xna.Framework.Content;
 using System;
 using System.Diagnostics;
 using System.Collections.Generic;
+using SpriteFontPlus;
+using System.IO;
 
 namespace HorizonEngine
 {
@@ -72,6 +74,19 @@ namespace HorizonEngine
         internal static RenderTarget2D CreateRenderTarget(int width, int height)
         {
             return new RenderTarget2D(_graphics.GraphicsDevice, width, height);
+        }
+
+        internal static SpriteFont CreateSpriteFont(string fullPath)
+        {
+            var fontBake = TtfFontBaker.Bake(File.ReadAllBytes(fullPath), 25, 1024, 1024, new[]
+                                    {
+                                        CharacterRange.BasicLatin,
+                                        CharacterRange.Latin1Supplement,
+                                        CharacterRange.LatinExtendedA,
+                                        CharacterRange.Cyrillic
+                                    });
+
+            return fontBake.CreateSpriteFont(_graphics.GraphicsDevice);
         }
     }
 }

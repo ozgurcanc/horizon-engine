@@ -8,11 +8,13 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using System.Diagnostics;
+using System.IO;
 
 namespace HorizonEngine
 {
     public static class Assets
     {
+        private static string _path;
         private static uint _assetID;
         private static Dictionary<string, Texture2D> _sourceTextures;
         private static Dictionary<uint, HorizonEngine.Texture> _textures;
@@ -30,6 +32,15 @@ namespace HorizonEngine
             _renderTextures = new Dictionary<uint, RenderTexture>();
             _animatorControllers = new Dictionary<uint, AnimatorController>();
             _assetID = 1;
+            _path = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "Assets");
+        }
+
+        internal static string path
+        {
+            get
+            {
+                return _path;
+            }
         }
 
         internal static uint availableAssetID
@@ -40,7 +51,34 @@ namespace HorizonEngine
             }
         }
 
-        public static Font GetFont(uint id) { return null;  }
+        internal static Dictionary<uint, Font>.ValueCollection fonts
+        {
+            get
+            {
+                return _fonts.Values;
+            }
+        }
+
+        internal static Font CreateFont(string name, string source)
+        {
+            Font font = new Font(name, source);
+            _fonts.Add(font.assetID, font);
+            return font;
+        }
+
+        public static Font GetFont(uint id) 
+        {
+            if (_fonts.ContainsKey(id))
+                return _fonts[id];
+           
+            return null;  
+        }
+
+        internal static void Load(Font font)
+        {
+            _fonts.Add(font.assetID, font);
+        }
+
         public static Animation GetAnimation(uint id) { return null; }
         public static RenderTexture GetRenderTexture(uint id) { return null; }
         public static AnimatorController GetAnimatorController(uint id) { return null; }
