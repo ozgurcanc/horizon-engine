@@ -119,8 +119,36 @@ namespace HorizonEngine
             return texture2D;
         }
 
+        internal static Dictionary<uint, RenderTexture>.ValueCollection renderTextures
+        {
+            get
+            {
+                return _renderTextures.Values;
+            }
+        }
+
+        internal static RenderTexture CreateRenderTexture(string name, int width, int height)
+        {
+            RenderTexture renderTexture = new RenderTexture(name, width, height);
+            _renderTextures.Add(renderTexture.assetID, renderTexture);
+            _textures.Add(renderTexture.assetID, renderTexture);
+            return renderTexture;
+        }
+
+        internal static RenderTexture GetRenderTexture(uint id)
+        {
+            if (_renderTextures.ContainsKey(id))
+                return _renderTextures[id];
+
+            return null;
+        }
+
+        internal static void Load(RenderTexture renderTexture)
+        {
+            _textures.Add(renderTexture.assetID, renderTexture);
+            _renderTextures.Add(renderTexture.assetID, renderTexture);
+        }
         public static Animation GetAnimation(uint id) { return null; }
-        public static RenderTexture GetRenderTexture(uint id) { return null; }
         public static AnimatorController GetAnimatorController(uint id) { return null; }
 
 

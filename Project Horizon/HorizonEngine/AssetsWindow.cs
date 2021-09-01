@@ -117,6 +117,11 @@ namespace HorizonEngine
                 {
                     ImportTexture();
                 }
+                if(ImGui.MenuItem("New Render Texture"))
+                {
+                    RenderTexture renderTexture = Assets.CreateRenderTexture("RenderTexture", 400, 400);
+                    _selectedDirectory.AddAsset(renderTexture);
+                }
                 ImGui.EndPopup();               
             }
 

@@ -236,6 +236,23 @@ namespace HorizonEngine
             ImGui.Text("Render Target");
             ImGui.SameLine();
             ImGui.Text(renderTarget);
+            ImGui.SameLine();
+            if(ImGui.Button("select render texture"))
+            {
+                ImGui.OpenPopup("select_render_target");
+            }
+
+            if(ImGui.BeginPopup("select_render_target"))
+            {
+                if (ImGui.Selectable("None")) this.renderTarget = null;
+
+                foreach(RenderTexture renderTexture in Assets.renderTextures)
+                {
+                    if (ImGui.Selectable(renderTexture.name)) this.renderTarget = renderTexture;
+                }
+
+                ImGui.EndPopup();
+            }
 
         }
     }

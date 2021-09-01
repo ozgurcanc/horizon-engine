@@ -40,11 +40,15 @@ namespace HorizonEngine
             }
         }
 
-        internal Texture2D texture
+        protected internal Texture2D texture
         {
             get
             {
                 return _texture;
+            }
+            protected set
+            {
+                _texture = value;
             }
         }
 

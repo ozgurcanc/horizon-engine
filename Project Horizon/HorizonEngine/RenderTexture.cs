@@ -11,9 +11,13 @@ namespace HorizonEngine
 {
     public class RenderTexture : HorizonEngine.Texture
     {
-        internal RenderTexture(string name, int widht, int height) : base(name, null, Screen.CreateRenderTarget(widht, height), null)
-        {
+        private int _width;
+        private int _height;
 
+        internal RenderTexture(string name, int width, int height) : base(name, null, Screen.CreateRenderTarget(width, height), null)
+        {
+            _width = width;
+            _height = height;
         }
 
         internal RenderTarget2D renderTexture
@@ -22,6 +26,12 @@ namespace HorizonEngine
             {
                 return (RenderTarget2D)this.texture;
             }
+        }
+
+        internal override void Reload()
+        {
+            this.texture = Screen.CreateRenderTarget(_width, _height);
+            Assets.Load(this);
         }
     }
 }
