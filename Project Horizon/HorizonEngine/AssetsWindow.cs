@@ -49,10 +49,12 @@ namespace HorizonEngine
         internal static void Save()
         {
             File.WriteAllText("assets.json", JsonConvert.SerializeObject(_rootDirectory));
+            Assets.Save();
         }
 
         internal static void Load()
         {
+            Assets.Load();
             _rootDirectory = JsonConvert.DeserializeObject<AssetsDirectory>(File.ReadAllText("assets.json"));
             _selectedDirectory = _rootDirectory;
             _rootDirectory.Reload();
@@ -121,6 +123,11 @@ namespace HorizonEngine
                 {
                     RenderTexture renderTexture = Assets.CreateRenderTexture("RenderTexture", 400, 400);
                     _selectedDirectory.AddAsset(renderTexture);
+                }
+                if (ImGui.MenuItem("New Animation"))
+                {
+                    Animation animation = Assets.CreateAnimation("Animation");
+                    _selectedDirectory.AddAsset(animation);
                 }
                 ImGui.EndPopup();               
             }
@@ -223,15 +230,20 @@ namespace HorizonEngine
                 RestoreDirectory = true,
 
                 ReadOnlyChecked = true,
-                ShowReadOnly = true
+                ShowReadOnly = true,
+
+                Multiselect = true,
             };
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 //openFileDialog.FileName;
-                File.Copy(openFileDialog.FileName, Path.Combine(Assets.path, openFileDialog.SafeFileName), true);
-                HorizonEngine.Texture texture = Assets.CreateTexture(openFileDialog.SafeFileName, openFileDialog.SafeFileName);
-                _selectedDirectory.AddAsset(texture);
+                for(int i=0; i<openFileDialog.FileNames.Length; i++)
+                {
+                    File.Copy(openFileDialog.FileNames[i], Path.Combine(Assets.path, openFileDialog.SafeFileNames[i]), true);
+                    HorizonEngine.Texture texture = Assets.CreateTexture(openFileDialog.SafeFileNames[i], openFileDialog.SafeFileNames[i]);
+                    _selectedDirectory.AddAsset(texture);
+                }               
             }
         }
     }

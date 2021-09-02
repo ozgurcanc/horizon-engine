@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using System.Diagnostics;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace HorizonEngine
 {
@@ -33,6 +34,16 @@ namespace HorizonEngine
             _animatorControllers = new Dictionary<uint, AnimatorController>();
             _assetID = 1;
             _path = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "Assets");
+        }
+
+        internal static void Save()
+        {
+            File.WriteAllText("assetID.json", JsonConvert.SerializeObject(_assetID));
+        }
+
+        internal static void Load()
+        {
+            _assetID = JsonConvert.DeserializeObject<uint>(File.ReadAllText("assetID.json"));
         }
 
         internal static string path
@@ -148,7 +159,35 @@ namespace HorizonEngine
             _textures.Add(renderTexture.assetID, renderTexture);
             _renderTextures.Add(renderTexture.assetID, renderTexture);
         }
-        public static Animation GetAnimation(uint id) { return null; }
+
+        internal static Dictionary<uint, Animation>.ValueCollection animations
+        {
+            get
+            {
+                return _animations.Values;
+            }
+        }
+
+        internal static Animation CreateAnimation(string name, float duration = 1f, bool loop = true)
+        {
+            Animation animation = new Animation(name, duration, loop);
+            _animations.Add(animation.assetID, animation);
+            return animation;
+        }
+
+        internal static Animation GetAnimation(uint id)
+        {
+            if (_animations.ContainsKey(id))
+                return _animations[id];
+
+            return null;
+        }
+
+        internal static void Load(Animation animation)
+        {
+            _animations.Add(animation.assetID, animation);
+        }
+
         public static AnimatorController GetAnimatorController(uint id) { return null; }
 
 

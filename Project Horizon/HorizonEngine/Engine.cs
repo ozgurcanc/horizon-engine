@@ -47,11 +47,13 @@ namespace HorizonEngine
             ImGui.GetIO().ConfigFlags |= ImGuiConfigFlags.DockingEnable;
 
             GameWindow.Init(_guiRenderer);
+            AnimationWindow.Init(_guiRenderer);
 
             GameWindow.enabled = true;
             InspectorWindow.enabled = true;
             HierarchyWindow.enabled = true;
             AssetsWindow.enabled = true;
+            AnimationWindow.enabled = true;
 
             base.Initialize();
         }
@@ -97,6 +99,7 @@ namespace HorizonEngine
             GameWindow.Draw();
             InspectorWindow.Draw();
             AssetsWindow.Draw();
+            AnimationWindow.Draw();
 
             _guiRenderer.EndLayout();
 

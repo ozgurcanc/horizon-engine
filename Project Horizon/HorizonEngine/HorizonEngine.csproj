@@ -69,6 +69,7 @@
   <ItemGroup>
     <Compile Include="AABB.cs" />
     <Compile Include="Animation.cs" />
+    <Compile Include="AnimationWindow.cs" />
     <Compile Include="Animator.cs" />
     <Compile Include="AnimatorCondition.cs" />
     <Compile Include="AnimatorController.cs" />
