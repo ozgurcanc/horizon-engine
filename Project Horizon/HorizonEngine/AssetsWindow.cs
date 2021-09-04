@@ -129,6 +129,11 @@ namespace HorizonEngine
                     Animation animation = Assets.CreateAnimation("Animation");
                     _selectedDirectory.AddAsset(animation);
                 }
+                if (ImGui.MenuItem("New Animator Controller"))
+                {
+                    AnimatorController animatorController = Assets.CreateAnimatorController("AnimatorController");
+                    _selectedDirectory.AddAsset(animatorController);
+                }
                 ImGui.EndPopup();               
             }
 

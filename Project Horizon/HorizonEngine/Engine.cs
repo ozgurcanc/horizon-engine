@@ -54,6 +54,7 @@ namespace HorizonEngine
             HierarchyWindow.enabled = true;
             AssetsWindow.enabled = true;
             AnimationWindow.enabled = true;
+            AnimatorWindow.enabled = true;
 
             base.Initialize();
         }
@@ -100,6 +101,7 @@ namespace HorizonEngine
             InspectorWindow.Draw();
             AssetsWindow.Draw();
             AnimationWindow.Draw();
+            AnimatorWindow.Draw();
 
             _guiRenderer.EndLayout();
 

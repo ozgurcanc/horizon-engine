@@ -74,6 +74,8 @@
     <Compile Include="AnimatorCondition.cs" />
     <Compile Include="AnimatorController.cs" />
     <Compile Include="AnimatorParameter.cs" />
+    <Compile Include="AnimatorTransition.cs" />
+    <Compile Include="AnimatorWindow.cs" />
     <Compile Include="Application.cs" />
     <Compile Include="Asset.cs" />
     <Compile Include="Assets.cs" />

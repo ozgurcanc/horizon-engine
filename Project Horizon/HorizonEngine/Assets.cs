@@ -188,8 +188,33 @@ namespace HorizonEngine
             _animations.Add(animation.assetID, animation);
         }
 
-        public static AnimatorController GetAnimatorController(uint id) { return null; }
+        internal static Dictionary<uint, AnimatorController>.ValueCollection animatorControllers
+        {
+            get
+            {
+                return _animatorControllers.Values;
+            }
+        }
 
+        internal static AnimatorController CreateAnimatorController(string name)
+        {
+            AnimatorController animatorController = new AnimatorController(name);
+            _animatorControllers.Add(animatorController.assetID, animatorController);
+            return animatorController;
+        }
+
+        internal static AnimatorController GetAnimatorController(uint id)
+        {
+            if (_animatorControllers.ContainsKey(id))
+                return _animatorControllers[id];
+
+            return null;
+        }
+
+        internal static void Load(AnimatorController animatorController)
+        {
+            _animatorControllers.Add(animatorController.assetID, animatorController);
+        }
 
         /*
 

@@ -11,36 +11,15 @@ namespace Project_Horizon_DX
 {
     class TestScene
     {
-        class A
-        {
-            public int value;
-        }
-        class Test2 : Behaviour
-        {
-            public A a;
-            public override void Update()
-            {
-                if (Input.GetKeyDown(Keys.E))
-                {
-                    Debug.WriteLine(a.value);
-                    a.value -= 1;
-                }
-            }
-        }
 
         class Test : Behaviour
         {
-            public A a;
             public override void Update()
             {
                 if(Input.GetKeyDown(Keys.Q))
                 {
-                    gameObject.GetComponent<Animator>().SetTrigger("trigger");
-                }
-                if(Input.GetKeyDown(Keys.W))
-                {
-                    Debug.WriteLine(a.value);
-                    a.value += 1;
+                    Debug.WriteLine("here");
+                    gameObject.GetComponent<Animator>().SetTrigger("Trigger");
                 }
             }
         }

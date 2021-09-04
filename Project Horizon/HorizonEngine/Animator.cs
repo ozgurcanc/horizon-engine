@@ -19,13 +19,12 @@ namespace HorizonEngine
         [JsonIgnore]
         AnimatorController _animatorController;
         [JsonIgnore]
-        private Dictionary<string, AnimatorParameter> _parameters;
+        private Dictionary<string, List<AnimatorParameter>> _parameters;
         [JsonIgnore]
         private Animation _currentAnimation;
         [JsonIgnore]
         private Animation _nextAnimation;
         private int _currentFrame;
-        private float _frameDuration;
         private float _totalDuration;
         private float _currentDuration;
         private float _transitionDuration;
@@ -33,7 +32,7 @@ namespace HorizonEngine
         public Animator()
         {
             _currentAnimation = _nextAnimation = null;
-            _parameters = new Dictionary<string, AnimatorParameter>();
+            _parameters = new Dictionary<string, List<AnimatorParameter>>();
             _assetID = 0;
         }
 
@@ -49,29 +48,22 @@ namespace HorizonEngine
                 _assetID = value == null ? 0 : _animatorController.assetID;
                 if (value != null)
                 {
-                    _parameters = new Dictionary<string, AnimatorParameter>();
-                    foreach (string key in _animatorController.parameters.Keys)
+                    _parameters = new Dictionary<string, List<AnimatorParameter>>();
+                    foreach (AnimatorParameter parameter in _animatorController.parameters)
                     {
-                        AnimatorParameter parameter = _animatorController.parameters[key];
-                        if (parameter is IntParameter)
-                        {
-                            _parameters.Add(key, new IntParameter(parameter.name, (int)parameter.value));
-                        }
-                        else if (parameter is BoolParameter)
-                        {
-                            _parameters.Add(key, new BoolParameter(parameter.name, (bool)parameter.value));
-                        }
-                        else if (parameter is TriggerParameter)
-                        {
-                            _parameters.Add(key, new TriggerParameter(parameter.name));
-                        }
-                        else if (parameter is FloatParameter)
-                        {
-                            _parameters.Add(key, new FloatParameter(parameter.name, (float)parameter.value));
-                        }
+                        if (!_parameters.ContainsKey(parameter.name)) 
+                            _parameters.Add(parameter.name, new List<AnimatorParameter>());
+
+                        _parameters[parameter.name].Add(parameter.Copy());
                     }
 
-                    this.Play(value.defaultAnimation);
+                    Animation anim = value.defaultAnimation;
+                    if (anim == null) this.Play(null);
+                    else this.Play(value.defaultAnimation.name);
+                }
+                else
+                {
+                    this.Play(null);
                 }
             }
         }
@@ -85,22 +77,22 @@ namespace HorizonEngine
 
         public void SetBool(string name, bool value)
         {
-            _parameters[name].value = value;
+            _parameters[name][0].value = value;
         }
 
         public void SetTrigger(string name)
         {
-            _parameters[name].value = true;
+            _parameters[name][0].value = true;
         }
 
         public void SetInteger(string name, int value)
         {
-            _parameters[name].value = value;
+            _parameters[name][0].value = value;
         }
 
         public void SetFloat(string name, float value)
         {
-            _parameters[name].value = value;
+            _parameters[name][0].value = value;
         }
 
         internal void AnimationUpdate(float deltaTime)
@@ -113,7 +105,7 @@ namespace HorizonEngine
             float currentExitTime = (_totalDuration / _currentAnimation.duration) % 1f;
             float previousExitTime = currentExitTime - deltaTime / _currentAnimation.duration;
 
-            if (_currentDuration >= _frameDuration)
+            if (_currentDuration >= _currentAnimation.frameDuration)
             {
                 int length = _currentAnimation.length;
                 _currentFrame++;
@@ -129,14 +121,14 @@ namespace HorizonEngine
 
             if (_nextAnimation == null)
             {
-                foreach (var x in animatorController.transitions[_currentAnimation.name])
+                foreach (AnimatorTransition x in animatorController.GetTransitions(_currentAnimation.assetID))
                 {
-                    float item3 = previousExitTime < 0f ? x.Item3 % 1f : x.Item3;
-                    if ((!x.Item2 || (previousExitTime <= item3 && item3 <= currentExitTime)) && CheckCondition(x.Item5))
+                    float exitTime = previousExitTime < 0f ? x.exitTime % 1f : x.exitTime;
+                    if ((!x.hasExitTime || (previousExitTime <= exitTime && exitTime <= currentExitTime)) && CheckCondition(x.conditions))
                     {
                         //SetCurrentAnimation(x.Item1);
-                        _nextAnimation = animatorController.animations[x.Item1];
-                        _transitionDuration = x.Item4;
+                        _nextAnimation = x.to;
+                        _transitionDuration = x.duration;
                         return;
                     }
                 }
@@ -154,52 +146,33 @@ namespace HorizonEngine
 
         public void Play(string name)
         {
-            _currentAnimation = animatorController.animations[name];
+            if(name == null)
+            {
+                _currentAnimation = null;
+                _nextAnimation = null;
+                return;
+            }
+            _currentAnimation = animatorController.GetAnimation(name);
             _currentFrame = 0;
             _currentDuration = 0f;
             _totalDuration = 0f;
-            _frameDuration = _currentAnimation.duration / _currentAnimation.length;
             gameObject.GetComponent<Sprite>().texture = _currentAnimation[0];
             _nextAnimation = null;
         }
-        private bool CheckCondition(AnimatorCondition[] conditions)
+        private bool CheckCondition(IList<AnimatorCondition> conditions)
         {
-            if (conditions == null)
-                return true;
-
             bool result = true;
-            List<AnimatorParameter> triggerParameters = new List<AnimatorParameter>();
+            List<AnimatorCondition> triggers = new List<AnimatorCondition>();
 
             foreach(AnimatorCondition condition in conditions)
             {
-                AnimatorParameter parameter = _parameters[condition.parameter];
-                ComparisonType comparison = condition.comparison;
-
-                if (parameter is TriggerParameter) triggerParameters.Add(parameter);
-
-                if(comparison == ComparisonType.Equals)
-                {
-                    result &= parameter.value.Equals(condition.targetValue);
-                }
-                else if(comparison == ComparisonType.NotEquals)
-                {
-                    result &= !parameter.value.Equals(condition.targetValue);
-                }
-                else if(comparison == ComparisonType.Greater)
-                {
-                    if (parameter is IntParameter) result &= (int)parameter.value > (int)condition.targetValue;
-                    else result &= (float)parameter.value > (float)condition.targetValue;
-                }
-                else if(comparison == ComparisonType.Less)
-                {
-                    if (parameter is IntParameter) result &= (int)parameter.value < (int)condition.targetValue;
-                    else result &= (float)parameter.value < (float)condition.targetValue;
-                }
+                result &= condition.CheckCondition();
+                if (condition is TriggerCondition) triggers.Add(condition);
             }
 
             if(result)
             {
-                foreach (var x in triggerParameters) x.value = false;
+                foreach (var x in triggers) x.parameter.value = false;
             }
 
             return result;
@@ -228,6 +201,23 @@ namespace HorizonEngine
             ImGui.Text("Controller");
             ImGui.SameLine();
             ImGui.Text(controller);
+            ImGui.SameLine();
+            if (ImGui.Button("select controller"))
+            {
+                ImGui.OpenPopup("select_controller");
+            }
+
+            if (ImGui.BeginPopup("select_controller"))
+            {
+                if (ImGui.Selectable("None")) this.animatorController = null;
+
+                foreach (AnimatorController animatorController in Assets.animatorControllers)
+                {
+                    if (ImGui.Selectable(animatorController.name)) this.animatorController = animatorController;
+                }
+
+                ImGui.EndPopup();
+            }
         }
     }
 }
