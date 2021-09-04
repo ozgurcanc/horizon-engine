@@ -18,7 +18,6 @@ namespace Project_Horizon_DX
             {
                 if(Input.GetKeyDown(Keys.Q))
                 {
-                    Debug.WriteLine("here");
                     gameObject.GetComponent<Animator>().SetTrigger("Trigger");
                 }
             }

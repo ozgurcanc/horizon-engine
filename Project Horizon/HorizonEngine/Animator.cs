@@ -21,6 +21,8 @@ namespace HorizonEngine
         [JsonIgnore]
         private Dictionary<string, List<AnimatorParameter>> _parameters;
         [JsonIgnore]
+        private Dictionary<AnimatorParameter, AnimatorParameter> _parameterMap;
+        [JsonIgnore]
         private Animation _currentAnimation;
         [JsonIgnore]
         private Animation _nextAnimation;
@@ -49,12 +51,15 @@ namespace HorizonEngine
                 if (value != null)
                 {
                     _parameters = new Dictionary<string, List<AnimatorParameter>>();
+                    _parameterMap = new Dictionary<AnimatorParameter, AnimatorParameter>();
                     foreach (AnimatorParameter parameter in _animatorController.parameters)
                     {
                         if (!_parameters.ContainsKey(parameter.name)) 
                             _parameters.Add(parameter.name, new List<AnimatorParameter>());
 
-                        _parameters[parameter.name].Add(parameter.Copy());
+                        AnimatorParameter parameterCopy = parameter.Copy();
+                        _parameters[parameter.name].Add(parameterCopy);
+                        _parameterMap.Add(parameter, parameterCopy);
                     }
 
                     Animation anim = value.defaultAnimation;
@@ -162,17 +167,38 @@ namespace HorizonEngine
         private bool CheckCondition(IList<AnimatorCondition> conditions)
         {
             bool result = true;
-            List<AnimatorCondition> triggers = new List<AnimatorCondition>();
+            List<AnimatorParameter> triggers = new List<AnimatorParameter>();
 
             foreach(AnimatorCondition condition in conditions)
             {
-                result &= condition.CheckCondition();
-                if (condition is TriggerCondition) triggers.Add(condition);
+                ComparisonType comparison = condition.comparison;
+                AnimatorParameter parameter = _parameterMap[condition.parameter];
+
+                if (comparison == ComparisonType.Equals)
+                {
+                    result &= parameter.value.Equals(condition.targetValue);
+                }
+                else if (comparison == ComparisonType.NotEquals)
+                {
+                    result &= !parameter.value.Equals(condition.targetValue);
+                }
+                else if (comparison == ComparisonType.Greater)
+                {
+                    if (parameter is IntParameter) result &= (int)parameter.value > (int)condition.targetValue;
+                    else result &= (float)parameter.value > (float)condition.targetValue;
+                }
+                else if (comparison == ComparisonType.Less)
+                {
+                    if (parameter is IntParameter) result &= (int)parameter.value < (int)condition.targetValue;
+                    else result &= (float)parameter.value < (float)condition.targetValue;
+                }
+
+                if (parameter is TriggerParameter) triggers.Add(parameter);
             }
 
             if(result)
             {
-                foreach (var x in triggers) x.parameter.value = false;
+                foreach (var x in triggers) x.value = false;
             }
 
             return result;
