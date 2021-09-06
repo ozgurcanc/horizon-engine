@@ -124,7 +124,8 @@ namespace HorizonEngine
                 ImGui.Separator();
                 if(ImGui.Button("OK"))
                 {
-                    _animatorController.AddTransition(new AnimatorTransition(anims.ElementAt(_transitionFrom), anims.ElementAt(_transitionTo)));
+                    if(animations.Length > 0)
+                        _animatorController.AddTransition(new AnimatorTransition(anims.ElementAt(_transitionFrom), anims.ElementAt(_transitionTo)));
                     ImGui.CloseCurrentPopup();
                 }
 
@@ -139,29 +140,38 @@ namespace HorizonEngine
             ImGui.BeginChild("controller_animations");
             ImGui.Text("Animations");
             ImGui.Separator();
+            int i = 0;
             foreach(Animation anim in _animatorController.animations)
             {
-                if (ImGui.Selectable(anim.name, anim == _animatorController.defaultAnimation)) { }
+                i++;
+                ImGui.PushID(i);
+                if (ImGui.RadioButton("##delete", true)) _animatorController.RemoveAnimation(anim);
+                if (ImGui.IsItemHovered())
+                {
+                    ImGui.BeginTooltip();
+                    ImGui.TextUnformatted("Delete");
+                    ImGui.EndTooltip();
+                }
+                ImGui.SameLine();
+                if (ImGui.Selectable(anim.name, anim == _animatorController.defaultAnimation)) { }              
 
                 if (ImGui.IsItemClicked(ImGuiMouseButton.Right))
                 {
                     _currentAnimation = anim;
                     ImGui.OpenPopup("animation_settings");
                 }
-            }
 
-            if (ImGui.BeginPopup("animation_settings"))
-            {
-                if (ImGui.Selectable("Make Default"))
+                if (ImGui.BeginPopup("animation_settings"))
                 {
-                    _animatorController.SetDefaultAnimation(_currentAnimation);
+                    if (ImGui.Selectable("Make Default"))
+                    {
+                        _animatorController.SetDefaultAnimation(_currentAnimation);
+                    }
+                    ImGui.EndPopup();
                 }
-                if(ImGui.Selectable("Delete"))
-                {
-                    _animatorController.RemoveAnimation(_currentAnimation);
-                }
-                ImGui.EndPopup();
-            }
+
+                ImGui.PopID();
+            }          
             ImGui.EndChild();
 
             ImGui.SameLine();
@@ -169,11 +179,19 @@ namespace HorizonEngine
             ImGui.BeginChild("controler_parameters");
             ImGui.Text("Parameters");
             ImGui.Separator();
-            int i = 0;
-            foreach(AnimatorParameter parameter in _animatorController.parameters)
+            i = 0;
+            foreach(AnimatorParameter parameter in _animatorController.parameters.ToArray())
             {
                 i++;
                 ImGui.PushID(i);
+                if (ImGui.RadioButton("##delete", true)) _animatorController.RemoveParameter(parameter);
+                if(ImGui.IsItemHovered())
+                {
+                    ImGui.BeginTooltip();
+                    ImGui.TextUnformatted("Delete");
+                    ImGui.EndTooltip();
+                }
+                ImGui.SameLine();
                 parameter.OnAnimatorGUI();
                 ImGui.PopID();
             }
@@ -187,10 +205,18 @@ namespace HorizonEngine
             i = 0;
             foreach (List<AnimatorTransition> transitionList in _animatorController.transitions)
             {               
-                foreach (AnimatorTransition transition in transitionList)
+                foreach (AnimatorTransition transition in transitionList.ToArray())
                 {
                     i++;
                     ImGui.PushID(i);
+                    if (ImGui.RadioButton("##delete", true)) _animatorController.RemoveTransition(transition);
+                    if (ImGui.IsItemHovered())
+                    {
+                        ImGui.BeginTooltip();
+                        ImGui.TextUnformatted("Delete");
+                        ImGui.EndTooltip();
+                    }
+                    ImGui.SameLine();
                     transition.OnAnimatorGUI(_animatorController.parameters);
                     ImGui.PopID();
                 }

@@ -76,6 +76,10 @@ namespace HorizonEngine
             _animations.Remove(animation.assetID);
             if (_defaultAnimation == animation) _defaultAnimation = null;
             _transitions.Remove(animation.assetID);
+            foreach(List<AnimatorTransition> transitions in _transitions.Values)
+            {
+                transitions.RemoveAll(x => x.to == animation);
+            }
         }
 
         internal void AddParameter(AnimatorParameter parameter)
@@ -86,6 +90,13 @@ namespace HorizonEngine
         internal void RemoveParameter(AnimatorParameter parameter)
         {
             _parameters.Remove(parameter);
+            foreach (List<AnimatorTransition> transitions in _transitions.Values)
+            {
+                foreach(AnimatorTransition animatorTransition in transitions)
+                {
+                    animatorTransition.RemoveAllConditions(parameter);
+                }
+            }
         }
 
         internal void AddTransition(AnimatorTransition transition)

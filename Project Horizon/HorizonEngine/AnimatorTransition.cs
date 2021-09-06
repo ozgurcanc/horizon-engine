@@ -104,6 +104,11 @@ namespace HorizonEngine
             _conditions.Remove(condition);
         }
 
+        internal void RemoveAllConditions(AnimatorParameter parameter)
+        {
+            _conditions.RemoveAll(x => x.parameter == parameter);
+        }
+
         internal void OnAnimatorGUI(ReadOnlyCollection<AnimatorParameter> parameters)
         {
             if (!ImGui.CollapsingHeader(_from.name + " -> " + _to.name))
@@ -131,37 +136,51 @@ namespace HorizonEngine
             if(ImGui.SliderFloat("##exitTime", ref exitTime, 0f, 1f))
             {
                 this.exitTime = exitTime;
-            }
+            }         
 
-            if(ImGui.RadioButton("Add Condition", true))
+            ImGui.Text("Conditions");
+            ImGui.SameLine();
+            if (ImGui.RadioButton("Add Condition", true))
             {
                 ImGui.OpenPopup("add_condition_to_transition");
             }
 
-            if(ImGui.BeginPopup("add_condition_to_transition"))
+            int id = 0;
+            if (ImGui.BeginPopup("add_condition_to_transition"))
             {
-                foreach(AnimatorParameter parameter in parameters)
+                foreach (AnimatorParameter parameter in parameters)
                 {
-                    if(ImGui.Selectable(parameter.name))
+                    ImGui.PushID(++id);
+                    if (ImGui.Selectable(parameter.name))
                     {
                         _conditions.Add(parameter.Condition());
                     }
+                    ImGui.PopID();
                 }
                 ImGui.EndPopup();
             }
-
-            ImGui.Text("Conditions");
             ImGui.Separator();
 
-            int i = 0;
-            foreach(AnimatorCondition condition in _conditions)
+            id = 0;
+            foreach(AnimatorCondition condition in _conditions.ToArray())
             {
-                i++;
-                ImGui.PushID(i);
+                ImGui.PushItemWidth(ImGui.GetWindowWidth() * 0.3f);
+                ImGui.PushID(++id);
+                if (ImGui.RadioButton("##delete", true)) _conditions.Remove(condition);
+                if (ImGui.IsItemHovered())
+                {
+                    ImGui.BeginTooltip();
+                    ImGui.TextUnformatted("Delete");
+                    ImGui.EndTooltip();
+                }
+                ImGui.SameLine();
                 condition.OnAnimatorGUI();
                 ImGui.PopID();
+                ImGui.PopItemWidth();
             }
 
+            ImGui.Separator();
+            ImGui.Spacing();
         }
     }
 }
