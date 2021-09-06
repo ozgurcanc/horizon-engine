@@ -48,6 +48,7 @@ namespace HorizonEngine
 
             GameWindow.Init(_guiRenderer);
             AnimationWindow.Init(_guiRenderer);
+            SpriteEditorWindow.Init(_guiRenderer);
 
             GameWindow.enabled = true;
             InspectorWindow.enabled = true;
@@ -55,6 +56,7 @@ namespace HorizonEngine
             AssetsWindow.enabled = true;
             AnimationWindow.enabled = true;
             AnimatorWindow.enabled = true;
+            SpriteEditorWindow.enabled = true;
 
             base.Initialize();
         }
@@ -102,6 +104,7 @@ namespace HorizonEngine
             AssetsWindow.Draw();
             AnimationWindow.Draw();
             AnimatorWindow.Draw();
+            SpriteEditorWindow.Draw();
 
             _guiRenderer.EndLayout();
 

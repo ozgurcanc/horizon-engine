@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace HorizonEngine
 {
@@ -15,7 +17,8 @@ namespace HorizonEngine
         [JsonIgnore]
         private Texture2D _texture;
         private Rectangle _sourceRectangle;
-
+        private bool _isOriginal;
+        private List<HorizonEngine.Texture> _internalTextures;
 
         internal Texture(string name, string source, Vector4? sourceRectangle) : this(name, source, Assets.GetSourceTexture(source), sourceRectangle)
         {
@@ -24,7 +27,9 @@ namespace HorizonEngine
 
         protected Texture(string name, string source, Texture2D texture, Vector4? sourceRectangle) : base(name, source)
         {
+            _internalTextures = new List<Texture>();
             _texture = texture;
+            _isOriginal = true;
 
             int width = texture.Width;
             int height = texture.Height;
@@ -64,7 +69,7 @@ namespace HorizonEngine
         {
             get
             {
-                return _texture.Width;
+                return _sourceRectangle.Width;
             }
         }
 
@@ -72,12 +77,42 @@ namespace HorizonEngine
         {
             get
             {
-                return _texture.Height;
+                return _sourceRectangle.Height;
             }
+        }
+
+        internal bool isOriginal
+        {
+            get
+            {
+                return _isOriginal;
+            }
+        }
+
+        internal ReadOnlyCollection<HorizonEngine.Texture> internalTextures
+        {
+            get
+            {
+                return _internalTextures.AsReadOnly();
+            }
+        }
+
+        internal void CreateInternalTexture(string name, Vector4 sourceRectangle)
+        {
+            float z = this.width / (float)texture.Width;
+            float w = this.height / (float)texture.Height;
+            sourceRectangle.Z *= z;
+            sourceRectangle.W *= w;
+            sourceRectangle.X = sourceRectangle.X * z + this.sourceRectangle.X / (float)texture.Width;
+            sourceRectangle.Y = sourceRectangle.Y * w + this.sourceRectangle.Y / (float)texture.Height;
+            HorizonEngine.Texture internalTex = Assets.CreateTexture(name, this.source, sourceRectangle);
+            internalTex._isOriginal = false;
+            _internalTextures.Add(internalTex);
         }
 
         internal override void Reload()
         {
+            _internalTextures.ForEach(x => x.Reload());
             _texture = Assets.GetSourceTexture(source);
             Assets.Load(this);
         }

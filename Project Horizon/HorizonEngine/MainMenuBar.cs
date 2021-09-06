@@ -50,6 +50,7 @@ namespace HorizonEngine
                     if (ImGui.MenuItem("Assets", null, AssetsWindow.enabled)) { AssetsWindow.enabled = !AssetsWindow.enabled; }
                     if (ImGui.MenuItem("Animation", null, AnimationWindow.enabled)) { AnimationWindow.enabled = !AnimationWindow.enabled; }
                     if (ImGui.MenuItem("Animator", null, AnimatorWindow.enabled)) { AnimatorWindow.enabled = !AnimatorWindow.enabled; }
+                    if (ImGui.MenuItem("Sprite Editor", null, SpriteEditorWindow.enabled)) { SpriteEditorWindow.enabled = !SpriteEditorWindow.enabled; }
 
                     ImGui.EndMenu();
                 }
