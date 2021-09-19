@@ -156,7 +156,7 @@ namespace HorizonEngine
 
         internal static void Open(Texture sprite)
         {
-            _texture = sprite;
+            _texture = sprite.baseTexture;
             _selectedTexture = sprite;
         }
 

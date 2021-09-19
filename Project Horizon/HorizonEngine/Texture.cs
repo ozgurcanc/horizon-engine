@@ -18,8 +18,8 @@ namespace HorizonEngine
         [JsonIgnore]
         private Texture2D _texture;
         private Rectangle _sourceRectangle;
-        private bool _isOriginal;
         private List<HorizonEngine.Texture> _internalTextures;
+        private HorizonEngine.Texture _linkedTexture;
 
         internal Texture(string name, string source, Vector4? sourceRectangle) : this(name, source, Assets.GetSourceTexture(source), sourceRectangle)
         {
@@ -30,7 +30,6 @@ namespace HorizonEngine
         {
             _internalTextures = new List<Texture>();
             _texture = texture;
-            _isOriginal = true;
 
             int width = texture.Width;
             int height = texture.Height;
@@ -55,6 +54,14 @@ namespace HorizonEngine
             protected set
             {
                 _texture = value;
+            }
+        }
+
+        internal HorizonEngine.Texture baseTexture
+        {
+            get
+            {
+                return _linkedTexture == null ? this : _linkedTexture;
             }
         }
 
@@ -94,7 +101,7 @@ namespace HorizonEngine
         {
             get
             {
-                return _isOriginal;
+                return _linkedTexture == null;
             }
         }
 
@@ -108,16 +115,8 @@ namespace HorizonEngine
 
         internal void CreateInternalTexture(string name, Vector4 sourceRectangle)
         {
-            /*
-            float z = this.width / (float)texture.Width;
-            float w = this.height / (float)texture.Height;
-            sourceRectangle.Z *= z;
-            sourceRectangle.W *= w;
-            sourceRectangle.X = sourceRectangle.X * z + this.sourceRectangle.X / (float)texture.Width;
-            sourceRectangle.Y = sourceRectangle.Y * w + this.sourceRectangle.Y / (float)texture.Height;
-            */
             HorizonEngine.Texture internalTex = Assets.CreateTexture(name, this.source, sourceRectangle);
-            internalTex._isOriginal = false;
+            internalTex._linkedTexture = this;
             _internalTextures.Add(internalTex);
         }
 

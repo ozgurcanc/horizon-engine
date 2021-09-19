@@ -152,7 +152,9 @@ namespace HorizonEngine
 
         private static void ShowAsset(Asset asset)
         {
-            ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.NoTreePushOnOpen;
+            bool isTexture = asset is HorizonEngine.Texture;
+            bool isInner = isTexture && ((HorizonEngine.Texture)asset).internalTextures.Count > 0;
+            ImGuiTreeNodeFlags flags = isInner ? _innerNodeFlag : _leafNodeFlag;
 
             if (asset.assetID == _selectedAssetID) flags |= ImGuiTreeNodeFlags.Selected;
 
@@ -166,12 +168,24 @@ namespace HorizonEngine
                 InspectorWindow.Inspect(asset);
             }
 
-            if (ImGui.BeginDragDropSource())
+            if(!isTexture || (isTexture && ((HorizonEngine.Texture)asset).isOriginal))
             {
-                _dragAsset = asset;
-                ImGui.SetDragDropPayload("Asset", IntPtr.Zero, 0);
-                ImGui.Text(asset.name);
-                ImGui.EndDragDropSource();
+                if (ImGui.BeginDragDropSource())
+                {
+                    _dragAsset = asset;
+                    ImGui.SetDragDropPayload("Asset", IntPtr.Zero, 0);
+                    ImGui.Text(asset.name);
+                    ImGui.EndDragDropSource();
+                }
+            }
+
+            if (isInner && nodeOpen)
+            {
+                foreach (var internalTexture in ((Texture)asset).internalTextures)
+                {
+                    ShowAsset(internalTexture);
+                }  
+                ImGui.TreePop();
             }
 
             ImGui.PopID();
