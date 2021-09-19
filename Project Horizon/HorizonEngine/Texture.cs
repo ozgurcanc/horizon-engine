@@ -64,6 +64,14 @@ namespace HorizonEngine
             {
                 return _sourceRectangle;
             }
+            set
+            {
+                if (isOriginal) return;
+                _sourceRectangle.X = MathHelper.Clamp(value.X, 0, _texture.Width - 1);
+                _sourceRectangle.Y = MathHelper.Clamp(value.Y, 0, _texture.Height - 1);
+                _sourceRectangle.Width = MathHelper.Clamp(value.Width, 1, _texture.Width - _sourceRectangle.X);
+                _sourceRectangle.Height = MathHelper.Clamp(value.Height, 1, _texture.Height - _sourceRectangle.Y);
+            }
         }
 
         public int width
@@ -100,12 +108,14 @@ namespace HorizonEngine
 
         internal void CreateInternalTexture(string name, Vector4 sourceRectangle)
         {
+            /*
             float z = this.width / (float)texture.Width;
             float w = this.height / (float)texture.Height;
             sourceRectangle.Z *= z;
             sourceRectangle.W *= w;
             sourceRectangle.X = sourceRectangle.X * z + this.sourceRectangle.X / (float)texture.Width;
             sourceRectangle.Y = sourceRectangle.Y * w + this.sourceRectangle.Y / (float)texture.Height;
+            */
             HorizonEngine.Texture internalTex = Assets.CreateTexture(name, this.source, sourceRectangle);
             internalTex._isOriginal = false;
             _internalTextures.Add(internalTex);

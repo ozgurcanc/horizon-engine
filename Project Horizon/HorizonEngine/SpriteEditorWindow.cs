@@ -87,6 +87,48 @@ namespace HorizonEngine
 
             ImGui.BeginChild("rigth");
             ImGui.PushItemWidth(ImGui.GetWindowWidth() * 0.25f);
+            ImGui.Text("Sprite");
+
+            string name = _selectedTexture.name;
+            ImGui.Text("Name");
+            ImGui.SameLine();
+            if (ImGui.InputText("##name", ref name, 100))
+            {
+                _selectedTexture.name = name;
+            }
+
+            bool rectangleModified = false;
+            Rectangle rectangle = _selectedTexture.sourceRectangle;
+            ImGui.Text("X");
+            ImGui.SameLine();
+            if (ImGui.DragInt("##PosX", ref rectangle.X))
+            {
+                rectangleModified = true;
+            }
+            ImGui.SameLine();
+            ImGui.Text("Y");
+            ImGui.SameLine();
+            if (ImGui.DragInt("##PosY", ref rectangle.Y))
+            {
+                rectangleModified = true;
+            }
+
+            ImGui.Text("W");
+            ImGui.SameLine();
+            if (ImGui.DragInt("##Width", ref rectangle.Width))
+            {
+                rectangleModified = true;
+            }
+            ImGui.SameLine();
+            ImGui.Text("H");
+            ImGui.SameLine();
+            if (ImGui.DragInt("##Height", ref rectangle.Height))
+            {
+                rectangleModified = true;
+            }
+
+            if (rectangleModified) _selectedTexture.sourceRectangle = rectangle;
+
             ImGui.Text("Column");
             ImGui.SameLine();
             if(ImGui.DragInt("##spriteColumn", ref _column))
@@ -207,7 +249,13 @@ namespace HorizonEngine
                 {
                     k++;
                     Vector4 sourceRectangle = new Vector4(i * width, j * height, width, height);
-                    _selectedTexture.CreateInternalTexture(_selectedTexture.name + "_" + k.ToString(), sourceRectangle);
+                    float z = _selectedTexture.width / (float)_texture.width;
+                    float w = _selectedTexture.height / (float)_texture.height;
+                    sourceRectangle.Z *= z;
+                    sourceRectangle.W *= w;
+                    sourceRectangle.X = sourceRectangle.X * z + _selectedTexture.sourceRectangle.X / (float)_texture.width;
+                    sourceRectangle.Y = sourceRectangle.Y * w + _selectedTexture.sourceRectangle.Y / (float)_texture.height;
+                    _texture.CreateInternalTexture(_selectedTexture.name + "_" + k.ToString(), sourceRectangle);
                 }
             }
 
