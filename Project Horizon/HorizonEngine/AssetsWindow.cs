@@ -22,6 +22,8 @@ namespace HorizonEngine
         private static ImGuiTreeNodeFlags _innerNodeFlag;
         private static AssetsDirectory _selectedDirectory;
         private static AssetsDirectory _rootDirectory;
+        private static int _selectedAssetID;
+        private static Asset _dragAsset;
         private static int _pushID;
 
         static AssetsWindow()
@@ -32,6 +34,8 @@ namespace HorizonEngine
 
             _rootDirectory = new AssetsDirectory("Assets");
             _selectedDirectory = _rootDirectory;
+
+            _selectedAssetID = -1;
         }
 
         internal static bool enabled
@@ -139,14 +143,37 @@ namespace HorizonEngine
 
             foreach (Asset asset in _selectedDirectory.assets)
             {
-                if (ImGui.Selectable(asset.name))
-                {
-
-                }
+                ShowAsset(asset);
             }
 
             ImGui.EndChild();
 
+        }
+
+        private static void ShowAsset(Asset asset)
+        {
+            ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.NoTreePushOnOpen;
+
+            if (asset.assetID == _selectedAssetID) flags |= ImGuiTreeNodeFlags.Selected;
+
+            ImGui.PushID(asset.assetID.ToString());
+
+            bool nodeOpen = ImGui.TreeNodeEx(asset.name, flags);
+
+            if (ImGui.IsItemClicked(ImGuiMouseButton.Left))
+            {
+                _selectedAssetID = (int)asset.assetID;
+            }
+
+            if (ImGui.BeginDragDropSource())
+            {
+                _dragAsset = asset;
+                ImGui.SetDragDropPayload("Asset", IntPtr.Zero, 0);
+                ImGui.Text(asset.name);
+                ImGui.EndDragDropSource();
+            }
+
+            ImGui.PopID();
         }
 
         private static void ShowDirectory(AssetsDirectory directory)
@@ -177,6 +204,11 @@ namespace HorizonEngine
                 if (ImGui.IsMouseReleased(ImGuiMouseButton.Left) && ImGui.GetDragDropPayload().IsDataType("Directory"))
                 {
                     _selectedDirectory.parent = directory;
+                }
+                if (ImGui.IsMouseReleased(ImGuiMouseButton.Left) && ImGui.GetDragDropPayload().IsDataType("Asset"))
+                {
+                    _selectedDirectory.RemoveAsset(_dragAsset);
+                    directory.AddAsset(_dragAsset);
                 }
                 ImGui.EndDragDropTarget();
             }

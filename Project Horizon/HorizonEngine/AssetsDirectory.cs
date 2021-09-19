@@ -102,5 +102,10 @@ namespace HorizonEngine
             _assets.Add(asset);
         }
 
+        internal void RemoveAsset(Asset asset)
+        {
+            _assets.Remove(asset);
+        }
+
     }
 }
