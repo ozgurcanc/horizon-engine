@@ -68,6 +68,8 @@ namespace HorizonEngine
             }
         }
 
-        internal virtual void Reload() { }
+        internal abstract void Reload();
+
+        internal abstract void Delete();
     }
 }

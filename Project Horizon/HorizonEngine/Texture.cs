@@ -127,6 +127,16 @@ namespace HorizonEngine
             Assets.Load(this);
         }
 
+        internal override void Delete()
+        {
+            if(_linkedTexture != null)
+            {
+                _linkedTexture._internalTextures.Remove(this);
+            }
+            foreach (var x in _internalTextures.ToArray()) x.Delete();
+            Assets.Delete(this);
+        }
+
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();

@@ -22,9 +22,9 @@ namespace HorizonEngine
         private static ImGuiTreeNodeFlags _innerNodeFlag;
         private static AssetsDirectory _selectedDirectory;
         private static AssetsDirectory _rootDirectory;
-        private static int _selectedAssetID;
-        private static Asset _dragAsset;
+        private static Asset _selectedAsset;
         private static int _pushID;
+        private static bool _clicked;
 
         static AssetsWindow()
         {
@@ -34,8 +34,6 @@ namespace HorizonEngine
 
             _rootDirectory = new AssetsDirectory("Assets");
             _selectedDirectory = _rootDirectory;
-
-            _selectedAssetID = -1;
         }
 
         internal static bool enabled
@@ -69,6 +67,7 @@ namespace HorizonEngine
             if (!enabled) return;
 
             _pushID = 0;
+            _clicked = false;
 
             if (!ImGui.Begin("Assets", ref _enabled, ImGuiWindowFlags.NoScrollbar))
             {
@@ -138,6 +137,12 @@ namespace HorizonEngine
                     AnimatorController animatorController = Assets.CreateAnimatorController("AnimatorController");
                     _selectedDirectory.AddAsset(animatorController);
                 }
+                ImGui.Separator();
+                if (ImGui.MenuItem("Delete", _selectedAsset != null))
+                {
+                    _selectedDirectory.RemoveAsset(_selectedAsset);
+                    _selectedAsset.Delete();
+                }
                 ImGui.EndPopup();               
             }
 
@@ -148,6 +153,12 @@ namespace HorizonEngine
 
             ImGui.EndChild();
 
+            if (!_clicked && (ImGui.IsItemClicked(ImGuiMouseButton.Left) || ImGui.IsItemClicked(ImGuiMouseButton.Right)))
+            {
+                _selectedAsset = null;
+                InspectorWindow.Inspect(null);
+            }
+
         }
 
         private static void ShowAsset(Asset asset)
@@ -156,15 +167,16 @@ namespace HorizonEngine
             bool isInner = isTexture && ((HorizonEngine.Texture)asset).internalTextures.Count > 0;
             ImGuiTreeNodeFlags flags = isInner ? _innerNodeFlag : _leafNodeFlag;
 
-            if (asset.assetID == _selectedAssetID) flags |= ImGuiTreeNodeFlags.Selected;
+            if (_selectedAsset != null && asset.assetID == _selectedAsset.assetID) flags |= ImGuiTreeNodeFlags.Selected;
 
             ImGui.PushID(asset.assetID.ToString());
 
             bool nodeOpen = ImGui.TreeNodeEx(asset.name, flags);
 
-            if (ImGui.IsItemClicked(ImGuiMouseButton.Left))
+            if (ImGui.IsItemClicked(ImGuiMouseButton.Left) || ImGui.IsItemClicked(ImGuiMouseButton.Right))
             {
-                _selectedAssetID = (int)asset.assetID;
+                _selectedAsset = asset;
+                _clicked = true;
                 InspectorWindow.Inspect(asset);
             }
 
@@ -172,7 +184,6 @@ namespace HorizonEngine
             {
                 if (ImGui.BeginDragDropSource())
                 {
-                    _dragAsset = asset;
                     ImGui.SetDragDropPayload("Asset", IntPtr.Zero, 0);
                     ImGui.Text(asset.name);
                     ImGui.EndDragDropSource();
@@ -206,6 +217,7 @@ namespace HorizonEngine
             if (ImGui.IsItemClicked(ImGuiMouseButton.Left) || ImGui.IsItemClicked(ImGuiMouseButton.Right))
             {
                 _selectedDirectory = directory;
+                _selectedAsset = null;
             }
 
             if (ImGui.BeginDragDropSource())
@@ -222,8 +234,8 @@ namespace HorizonEngine
                 }
                 if (ImGui.IsMouseReleased(ImGuiMouseButton.Left) && ImGui.GetDragDropPayload().IsDataType("Asset"))
                 {
-                    _selectedDirectory.RemoveAsset(_dragAsset);
-                    directory.AddAsset(_dragAsset);
+                    _selectedDirectory.RemoveAsset(_selectedAsset);
+                    directory.AddAsset(_selectedAsset);
                 }
                 ImGui.EndDragDropTarget();
             }

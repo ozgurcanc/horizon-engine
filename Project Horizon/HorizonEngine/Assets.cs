@@ -216,6 +216,32 @@ namespace HorizonEngine
             _animatorControllers.Add(animatorController.assetID, animatorController);
         }
 
+        internal static void Delete(Font font)
+        {
+            _fonts.Remove(font.assetID);
+        }
+
+        internal static void Delete(AnimatorController animatorController)
+        {
+            _animatorControllers.Remove(animatorController.assetID);
+        }
+
+        internal static void Delete(Animation animation)
+        {
+            _animations.Remove(animation.assetID);
+        }
+
+        internal static void Delete(HorizonEngine.Texture texture)
+        {
+            _textures.Remove(texture.assetID);
+        }
+
+        internal static void Delete(RenderTexture renderTexture)
+        {
+            _renderTextures.Remove(renderTexture.assetID);
+            _textures.Remove(renderTexture.assetID);
+        }
+
         /*
 
         public static void LoadTexture(string name, string sourceTexture, Vector4? sourceRectangle = null)

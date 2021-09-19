@@ -33,5 +33,10 @@ namespace HorizonEngine
             this.texture = Screen.CreateRenderTarget(_width, _height);
             Assets.Load(this);
         }
+
+        internal override void Delete()
+        {
+            Assets.Delete(this);
+        }
     }
 }

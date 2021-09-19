@@ -34,5 +34,10 @@ namespace HorizonEngine
             _font = Screen.CreateSpriteFont(Path.Combine(Assets.path, source));
             Assets.Load(this);
         }
+
+        internal override void Delete()
+        {
+            Assets.Delete(this);
+        }
     }
 }

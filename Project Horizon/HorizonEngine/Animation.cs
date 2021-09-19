@@ -95,6 +95,11 @@ namespace HorizonEngine
             Assets.Load(this);
         }
 
+        internal override void Delete()
+        {
+            Assets.Delete(this);
+        }
+
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
