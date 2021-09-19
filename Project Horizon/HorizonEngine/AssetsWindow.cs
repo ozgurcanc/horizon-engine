@@ -163,6 +163,7 @@ namespace HorizonEngine
             if (ImGui.IsItemClicked(ImGuiMouseButton.Left))
             {
                 _selectedAssetID = (int)asset.assetID;
+                InspectorWindow.Inspect(asset);
             }
 
             if (ImGui.BeginDragDropSource())

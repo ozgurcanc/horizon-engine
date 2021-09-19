@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using System.Diagnostics;
 using Newtonsoft.Json;
+using ImGuiNET;
 
 namespace HorizonEngine
 {
@@ -130,63 +131,14 @@ namespace HorizonEngine
             Assets.Load(this);
         }
 
-        /*
-        internal Dictionary<string, AnimatorParameter> parameters
+        public override void OnInspectorGUI()
         {
-            get
+            base.OnInspectorGUI();
+
+            if (ImGui.Button("Open in Animator Window"))
             {
-                return _parameters;
+                AnimatorWindow.Open(this);
             }
         }
-
-        internal Dictionary<string, Animation> animations
-        {
-            get
-            {
-                return _animations;
-            }
-        }
-
-        internal Dictionary<string, AnimatorTransition> transitions
-        {
-            get
-            {
-                return _transitions;
-            }
-        }
-
-        internal string defaultAnimation
-        {
-            get
-            {
-                return _defaultAnimation;
-            }
-        }
-
-        public void SetAnimations(params string[] animations)
-        {
-            foreach (string animation in animations)
-            {
-                // Fix here
-                //_animations.Add(animation, Assets.GetAnimation(animation));
-                _transitions.Add(animation, new List<Tuple<string, bool, float, float, AnimatorCondition[]>>());
-            }
-
-            _defaultAnimation = animations[0];
-        }
-
-        public void SetParameters(params AnimatorParameter[] parameters)
-        {
-            foreach (AnimatorParameter parameter in parameters)
-            {
-                _parameters.Add(parameter.name, parameter);
-            }
-        }
-       
-        public void SetTransition(string from, string to, bool hasExitTime, float exitTime, float duration, params AnimatorCondition[] conditions)
-        {
-            _transitions[from].Add(Tuple.Create(to, hasExitTime, MathHelper.Clamp(exitTime, 0f, 1f), duration, conditions));
-        }
-        */
     }
 }

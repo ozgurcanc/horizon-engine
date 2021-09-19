@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using System.Diagnostics;
+using ImGuiNET;
 
 namespace HorizonEngine
 {
@@ -92,6 +93,16 @@ namespace HorizonEngine
         internal override void Reload()
         {
             Assets.Load(this);
+        }
+
+        public override void OnInspectorGUI()
+        {
+            base.OnInspectorGUI();
+
+            if (ImGui.Button("Open in Animation Window"))
+            {
+                AnimationWindow.Open(this);
+            }
         }
     }
 }

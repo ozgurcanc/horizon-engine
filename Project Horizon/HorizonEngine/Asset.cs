@@ -7,11 +7,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Newtonsoft.Json;
+using System.Diagnostics;
+using ImGuiNET;
 
 namespace HorizonEngine
 {
     [JsonObject(MemberSerialization.Fields)]
-    public abstract class Asset
+    public abstract class Asset : IEditor
     {
         private string _name;
         private string _source;
@@ -49,6 +51,20 @@ namespace HorizonEngine
             get
             {
                 return _source;
+            }
+        }
+
+        public virtual void OnInspectorGUI()
+        {
+            ImGui.Text(this.GetType().Name);
+            ImGui.Separator();
+
+            string name = this.name;
+            ImGui.Text("Name");
+            ImGui.SameLine();
+            if (ImGui.InputText("##name", ref name, 100))
+            {
+                this.name = name;
             }
         }
 

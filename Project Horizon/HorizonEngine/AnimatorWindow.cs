@@ -55,7 +55,7 @@ namespace HorizonEngine
                 {
                     foreach (AnimatorController animatorController in Assets.animatorControllers)
                     {
-                        if (ImGui.Selectable(animatorController.name)) _animatorController = animatorController;
+                        if (ImGui.Selectable(animatorController.name)) Open(animatorController);
                     }
                     ImGui.EndPopup();
                 }
@@ -224,6 +224,11 @@ namespace HorizonEngine
             ImGui.EndChild();
 
             ImGui.End();
+        }
+
+        internal static void Open(AnimatorController animatorController)
+        {
+            _animatorController = animatorController;
         }
     }
 }

@@ -58,7 +58,7 @@ namespace HorizonEngine
                 {
                     foreach(Animation animation in Assets.animations)
                     {
-                        if (ImGui.Selectable(animation.name)) _animation = animation;
+                        if (ImGui.Selectable(animation.name)) Open(animation);
                     }
                     ImGui.EndPopup();
                 }
@@ -214,6 +214,11 @@ namespace HorizonEngine
                 _currentDuration = 0f;
                 _currentTextureIndex = (_currentTextureIndex + 1) % animationCount;
             }
+        }
+
+        internal static void Open(Animation animation)
+        {
+            _animation = animation;
         }
     }
 }

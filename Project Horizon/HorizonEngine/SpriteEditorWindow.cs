@@ -65,8 +65,7 @@ namespace HorizonEngine
                         if (!sprite.isOriginal) continue;
                         if (ImGui.Selectable(sprite.name))
                         {
-                            _texture = sprite;
-                            _selectedTexture = sprite;
+                            Open(sprite);
                         }
                     }
                     ImGui.EndPopup();
@@ -111,6 +110,12 @@ namespace HorizonEngine
             ImGui.EndChild();
 
             ImGui.End();
+        }
+
+        internal static void Open(Texture sprite)
+        {
+            _texture = sprite;
+            _selectedTexture = sprite;
         }
 
         private static void DrawImage()

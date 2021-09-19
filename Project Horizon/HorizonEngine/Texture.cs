@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using ImGuiNET;
 
 namespace HorizonEngine
 {
@@ -115,6 +116,19 @@ namespace HorizonEngine
             _internalTextures.ForEach(x => x.Reload());
             _texture = Assets.GetSourceTexture(source);
             Assets.Load(this);
+        }
+
+        public override void OnInspectorGUI()
+        {
+            base.OnInspectorGUI();
+
+            if(!(this is RenderTexture))
+            {
+                if (ImGui.Button("Open in Sprite Editor"))
+                {
+                    SpriteEditorWindow.Open(this);
+                }
+            }
         }
     }
 }
