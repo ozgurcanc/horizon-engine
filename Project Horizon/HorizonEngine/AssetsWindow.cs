@@ -50,14 +50,12 @@ namespace HorizonEngine
 
         internal static void Save()
         {
-            File.WriteAllText("assets.json", JsonConvert.SerializeObject(_rootDirectory));
-            Assets.Save();
+            File.WriteAllText(Path.Combine(Application.projectPath, "Assets.json"), JsonConvert.SerializeObject(_rootDirectory));
         }
 
         internal static void Load()
         {
-            Assets.Load();
-            _rootDirectory = JsonConvert.DeserializeObject<AssetsDirectory>(File.ReadAllText("assets.json"));
+            _rootDirectory = JsonConvert.DeserializeObject<AssetsDirectory>(File.ReadAllText(Path.Combine(Application.projectPath, "Assets.json")));
             _selectedDirectory = _rootDirectory;
             _rootDirectory.Reload();
         }
@@ -254,7 +252,7 @@ namespace HorizonEngine
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
-                InitialDirectory = Assets.path,
+                InitialDirectory = Application.assetsPath,
                 Title = "Import New Font",
 
                 CheckFileExists = true,
@@ -272,7 +270,7 @@ namespace HorizonEngine
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 //openFileDialog.FileName;
-                File.Copy(openFileDialog.FileName, Path.Combine(Assets.path, openFileDialog.SafeFileName), true);
+                File.Copy(openFileDialog.FileName, Path.Combine(Application.assetsPath, openFileDialog.SafeFileName), true);
                 Font font = Assets.CreateFont(openFileDialog.SafeFileName, openFileDialog.SafeFileName);
                 _selectedDirectory.AddAsset(font);
             }
@@ -282,7 +280,7 @@ namespace HorizonEngine
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
-                InitialDirectory = Assets.path,
+                InitialDirectory = Application.assetsPath,
                 Title = "Import New Texture",
 
                 CheckFileExists = true,
@@ -304,7 +302,7 @@ namespace HorizonEngine
                 //openFileDialog.FileName;
                 for(int i=0; i<openFileDialog.FileNames.Length; i++)
                 {
-                    File.Copy(openFileDialog.FileNames[i], Path.Combine(Assets.path, openFileDialog.SafeFileNames[i]), true);
+                    File.Copy(openFileDialog.FileNames[i], Path.Combine(Application.assetsPath, openFileDialog.SafeFileNames[i]), true);
                     HorizonEngine.Texture texture = Assets.CreateTexture(openFileDialog.SafeFileNames[i], openFileDialog.SafeFileNames[i]);
                     _selectedDirectory.AddAsset(texture);
                 }               

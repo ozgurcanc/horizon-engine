@@ -19,20 +19,20 @@ namespace HorizonEngine
 
         public Engine()
         {
-            _graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
-            IsMouseVisible = true;
-
-            Screen.Init(_graphics);
-            Application.isEditor = true;
-            _scene = new Scene(this.Content, _graphics);
-
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
                 Formatting = Formatting.Indented,
                 PreserveReferencesHandling = PreserveReferencesHandling.All,
                 TypeNameHandling = TypeNameHandling.All,
             };
+
+            _graphics = new GraphicsDeviceManager(this);
+            Content.RootDirectory = "Content";
+            IsMouseVisible = true;
+
+            Screen.Init(_graphics);
+            Application.isEditor = true;            
+            _scene = new Scene(this.Content, _graphics);           
         }
 
         protected override void Initialize()
@@ -45,6 +45,8 @@ namespace HorizonEngine
 
             _guiRenderer = new ImGUIRenderer(this).Initialize().RebuildFontAtlas();
             ImGui.GetIO().ConfigFlags |= ImGuiConfigFlags.DockingEnable;
+
+            Application.Init();
 
             GameWindow.Init(_guiRenderer);
             AnimationWindow.Init(_guiRenderer);

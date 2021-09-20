@@ -22,13 +22,13 @@ namespace HorizonEngine
                 if(ImGui.BeginMenu("File"))
                 {
                     if (ImGui.MenuItem("Save Scene")) { Scene.Save(); }
-                    if (ImGui.MenuItem("Load Scene")) { Scene.Load(); }
+                    if (ImGui.MenuItem("Load Scene")) { Scene.Load(Scene.name); }
                     ImGui.Separator();
                     if (ImGui.MenuItem("Save Assets")) { AssetsWindow.Save(); }
                     if (ImGui.MenuItem("Load Assets")) { AssetsWindow.Load(); }
                     ImGui.Separator();
                     if (ImGui.MenuItem("Save All")) { AssetsWindow.Save(); Scene.Save(); }
-                    if (ImGui.MenuItem("Load All")) { AssetsWindow.Load(); Scene.Load(); }
+                    if (ImGui.MenuItem("Load All")) { AssetsWindow.Load(); Scene.Load(Scene.name); }
                     ImGui.EndMenu();
                 }
                 if(ImGui.BeginMenu("Edit"))

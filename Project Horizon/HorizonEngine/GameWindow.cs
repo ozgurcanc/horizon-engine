@@ -79,7 +79,7 @@ namespace HorizonEngine
             if(ImGui.Checkbox("Play", ref _isPlaying))
             {
                 if (_isPlaying) Scene.Save();
-                Scene.Load();
+                Scene.Load(Scene.name);
             }
             ImGui.SameLine();
             if(ImGui.Checkbox("Pause", ref _isPaused))

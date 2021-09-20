@@ -5,12 +5,18 @@ using Microsoft.Xna.Framework.Content;
 using System;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace HorizonEngine
 {
     public static class Application
     {
         private static bool _isEditor;
+        private static string _projectPath;
+        private static string _assetsPath;
+        private static string _scenesPath;
+        private static ProjectSettings _projectSettings;
 
         public static bool isEditor
         {
@@ -22,6 +28,64 @@ namespace HorizonEngine
             {
                 _isEditor = value;
             }
+        }
+
+        internal static string assetsPath
+        {
+            get
+            {
+                return _assetsPath;
+            }
+        }
+
+        internal static string scenesPath
+        {
+            get
+            {
+                return _scenesPath;
+            }
+        }
+
+        internal static string projectPath
+        {
+            get
+            {
+                return _projectPath;
+            }
+        }
+
+        internal static uint availableAssetID
+        {
+            get
+            {
+                return _projectSettings.availableAssetID;
+            }
+        }
+
+        internal static void Init()
+        {
+            _projectPath = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "Project");
+            _assetsPath = Path.Combine(_projectPath, "Assets");
+            _scenesPath = Path.Combine(_projectPath, "Scenes");
+
+            string projectSettingsPath = Path.Combine(_projectPath, "ProjectSettings.json");
+
+            if (!Directory.Exists(_projectPath))
+            {
+                Directory.CreateDirectory(_projectPath);
+                Directory.CreateDirectory(_assetsPath);
+                Directory.CreateDirectory(_scenesPath);
+                Scene.NewScene("New Scene");
+                _projectSettings = new ProjectSettings();
+                _projectSettings.currentScene = "New Scene";
+                File.WriteAllText(projectSettingsPath, JsonConvert.SerializeObject(_projectSettings));
+                AssetsWindow.Save();
+            }
+            
+            _projectSettings = JsonConvert.DeserializeObject<ProjectSettings>(File.ReadAllText(projectSettingsPath));
+            AssetsWindow.Load();
+            Scene.Load(_projectSettings.currentScene);
+            
         }
     }
 }

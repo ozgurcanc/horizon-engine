@@ -16,6 +16,7 @@ namespace HorizonEngine
         //private SpriteBatch _spriteBatch;
 
         private static Scene _main;
+        private string _name;
         private List<GameObject> _gameObjects;
         private List<Renderer> _renderers;
         private List<Behaviour> _behaviours;
@@ -33,6 +34,14 @@ namespace HorizonEngine
             get
             {
                 return _main;
+            }
+        }
+
+        internal static string name
+        {
+            get
+            {
+                return Scene.main._name;
             }
         }
 
@@ -149,29 +158,29 @@ namespace HorizonEngine
         {
             List<GameObject> rootGameObjects = Scene.main._gameObjects.FindAll(x => x.parent == null);
 
-            File.WriteAllText("scene.json", JsonConvert.SerializeObject(rootGameObjects));
+            File.WriteAllText(Path.Combine(Application.scenesPath, Scene.main._name + ".json"), JsonConvert.SerializeObject(rootGameObjects));
         }
 
-        internal static void Load()
+        internal static void Load(string name)
         {
             Scene scene = Scene.main;
             List<GameObject> dontDestroyOnLoad = scene._gameObjects.FindAll(x => x.dontDestroyOnLoad && x.parent == null);
-            scene._gameObjects.Clear();
-            scene._renderers.Clear();
-            scene._behaviours.Clear();
-            scene._rigidbodies.Clear();
-            scene._colliders.Clear();
-            scene._contactPairs.Clear();
-            scene._mouseOverColliders.Clear();
-            scene._mouseClickedColliders = null;
-            scene._startBehaviours.Clear();
-            scene._animators.Clear();
-            scene._cameras.Clear();
+            scene.Clear();
+            scene._name = name;
 
-            List<GameObject> rootGameObjects = JsonConvert.DeserializeObject<List<GameObject>>(File.ReadAllText("scene.json"));
+            List<GameObject> rootGameObjects = JsonConvert.DeserializeObject<List<GameObject>>(File.ReadAllText(Path.Combine(Application.scenesPath, Scene.main._name + ".json")));
             rootGameObjects.ForEach(x => x.OnLoad());
 
             dontDestroyOnLoad.ForEach(x => x.OnLoad());
+        }
+
+        internal static void NewScene(string name)
+        {
+            Scene scene = Scene.main;
+            scene._name = name;
+            scene.Clear();
+            Scene.CreateGameObject("Camera").AddComponent<Camera>();
+            Save();
         }
 
         internal Scene(ContentManager contentManager, GraphicsDeviceManager graphicsDeviceManager)
@@ -454,6 +463,21 @@ namespace HorizonEngine
 
             }
             
+        }
+
+        private void Clear()
+        {
+            _gameObjects.Clear();
+            _renderers.Clear();
+            _behaviours.Clear();
+            _rigidbodies.Clear();
+            _colliders.Clear();
+            _contactPairs.Clear();
+            _mouseOverColliders.Clear();
+            _mouseClickedColliders = null;
+            _startBehaviours.Clear();
+            _animators.Clear();
+            _cameras.Clear();
         }
     }
 }

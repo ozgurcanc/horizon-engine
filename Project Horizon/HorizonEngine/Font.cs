@@ -18,7 +18,7 @@ namespace HorizonEngine
 
         internal Font(string name, string source) : base(name, source)
         {
-            _font = Screen.CreateSpriteFont(Path.Combine(Assets.path, source));
+            _font = Screen.CreateSpriteFont(Path.Combine(Application.assetsPath, source));
         }
 
         internal SpriteFont font
@@ -31,7 +31,7 @@ namespace HorizonEngine
 
         internal override void Reload()
         {
-            _font = Screen.CreateSpriteFont(Path.Combine(Assets.path, source));
+            _font = Screen.CreateSpriteFont(Path.Combine(Application.assetsPath, source));
             Assets.Load(this);
         }
 

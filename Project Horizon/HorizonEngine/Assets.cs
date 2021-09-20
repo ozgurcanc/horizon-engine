@@ -15,8 +15,6 @@ namespace HorizonEngine
 {
     public static class Assets
     {
-        private static string _path;
-        private static uint _assetID;
         private static Dictionary<string, Texture2D> _sourceTextures;
         private static Dictionary<uint, HorizonEngine.Texture> _textures;
         private static Dictionary<uint, Animation> _animations;
@@ -32,35 +30,6 @@ namespace HorizonEngine
             _fonts = new Dictionary<uint, Font>();
             _renderTextures = new Dictionary<uint, RenderTexture>();
             _animatorControllers = new Dictionary<uint, AnimatorController>();
-            _assetID = 1;
-            _path = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "Assets");
-        }
-
-        internal static void Save()
-        {
-            File.WriteAllText("assetID.json", JsonConvert.SerializeObject(_assetID));
-        }
-
-        internal static void Load()
-        {
-            _assetID = JsonConvert.DeserializeObject<uint>(File.ReadAllText("assetID.json"));
-        }
-
-        internal static string path
-        {
-            get
-            {
-                return _path;
-            }
-        }
-
-        internal static uint availableAssetID
-        {
-            get
-            {
-                _assetID++;
-                return _assetID;
-            }
         }
 
         internal static Dictionary<uint, Font>.ValueCollection fonts
@@ -125,7 +94,7 @@ namespace HorizonEngine
             if (_sourceTextures.ContainsKey(source))
                 return _sourceTextures[source];
 
-            Texture2D texture2D = Screen.CreateTexture2D(Path.Combine(Assets.path, source));
+            Texture2D texture2D = Screen.CreateTexture2D(Path.Combine(Application.assetsPath, source));
             _sourceTextures.Add(source, texture2D);
             return texture2D;
         }

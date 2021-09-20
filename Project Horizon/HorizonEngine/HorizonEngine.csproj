@@ -116,6 +116,7 @@
     <Compile Include="MonoGame.ImGui\obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
     <Compile Include="MonoGame.ImGui\Utilities\GenerateRasterizerState.cs" />
     <Compile Include="Physics.cs" />
+    <Compile Include="ProjectSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Random.cs" />
     <Compile Include="Renderer.cs" />
