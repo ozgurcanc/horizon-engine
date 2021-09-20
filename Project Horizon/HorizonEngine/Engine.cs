@@ -77,7 +77,8 @@ namespace HorizonEngine
 
             // TODO: Add your update logic here
 
-            _scene.Update(gameTime);
+            if(GameWindow.isRunning)
+                _scene.Update(gameTime);
 
             base.Update(gameTime);
         }

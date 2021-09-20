@@ -19,6 +19,8 @@ namespace HorizonEngine
         private static int _resolutionX;
         private static int _resolutionY;
         private static ImGUIRenderer _guiRenderer;
+        private static bool _isPlaying;
+        private static bool _isPaused;
 
         internal static bool enabled
         {
@@ -29,6 +31,14 @@ namespace HorizonEngine
             set
             {
                 _enabled = value;
+            }
+        }
+
+        internal static bool isRunning
+        {
+            get
+            {
+                return _isPlaying && !_isPaused;
             }
         }
 
@@ -63,6 +73,18 @@ namespace HorizonEngine
                     ImGui.CloseCurrentPopup();
                 }
                 ImGui.EndPopup();
+            }
+
+            ImGui.SameLine();
+            if(ImGui.Checkbox("Play", ref _isPlaying))
+            {
+                if (_isPlaying) Scene.Save();
+                Scene.Load();
+            }
+            ImGui.SameLine();
+            if(ImGui.Checkbox("Pause", ref _isPaused))
+            {
+
             }
 
             ImGui.BeginChild("Image");
