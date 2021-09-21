@@ -77,6 +77,8 @@ namespace HorizonEngine
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            if (Application.isQuit)
+                Exit();
             // TODO: Add your update logic here
 
             //if(GameWindow.isRunning)

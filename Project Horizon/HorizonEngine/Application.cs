@@ -17,6 +17,7 @@ namespace HorizonEngine
         private static string _assetsPath;
         private static string _scenesPath;
         private static ProjectSettings _projectSettings;
+        private static bool _isQuit;
 
         public static bool isEditor
         {
@@ -27,6 +28,14 @@ namespace HorizonEngine
             internal set
             {
                 _isEditor = value;
+            }
+        }
+
+        internal static bool isQuit
+        {
+            get
+            {
+                return _isQuit;
             }
         }
 
@@ -82,6 +91,11 @@ namespace HorizonEngine
             
             _projectSettings = JsonConvert.DeserializeObject<ProjectSettings>(File.ReadAllText(projectSettingsPath));
             AssetsWindow.Load();            
+        }
+
+        public static void Quit()
+        {
+            _isQuit = true;
         }
     }
 }

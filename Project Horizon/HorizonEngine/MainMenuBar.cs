@@ -40,8 +40,12 @@ namespace HorizonEngine
                         }
                         ImGui.EndMenu();
                     }
+                    ImGui.Separator();
                     if (ImGui.MenuItem("Rename Scene", Scene.name != null)) { renameSceneFlag = true; }
                     if (ImGui.MenuItem("Delete Scene", Scene.name != null)) { deleteSceneFlag = true; }
+                    if (ImGui.MenuItem("Save Scene", Scene.name != null)) { Scene.Save(); }
+                    ImGui.Separator();
+                    if (ImGui.MenuItem("Exit")) { Application.Quit(); }
                     ImGui.EndMenu();
                 }
                 if(ImGui.BeginMenu("Edit"))

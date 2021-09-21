@@ -156,7 +156,7 @@ namespace HorizonEngine
 
         internal static void Save()
         {
-            if (Scene.name == null) return;
+            //if (Scene.name == null) return;
 
             List<GameObject> rootGameObjects = Scene.main._gameObjects.FindAll(x => x.parent == null);
 
