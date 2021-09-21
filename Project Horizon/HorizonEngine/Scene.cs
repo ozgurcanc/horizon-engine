@@ -495,6 +495,8 @@ namespace HorizonEngine
             _startBehaviours.Clear();
             _animators.Clear();
             _cameras.Clear();
+
+            Undo.Reset();
         }
     }
 }

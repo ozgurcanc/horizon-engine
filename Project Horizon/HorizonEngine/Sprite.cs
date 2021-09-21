@@ -59,6 +59,7 @@ namespace HorizonEngine
             ImGui.SameLine();
             if (ImGui.Checkbox("##enabled" + id, ref enabled))
             {
+                Undo.RegisterAction(this, this.enabled, enabled, nameof(Sprite.enabled));
                 this.enabled = enabled;
             }
 
@@ -74,11 +75,19 @@ namespace HorizonEngine
 
             if(ImGui.BeginPopup("select_texture"))
             {
-                if (ImGui.Selectable("None")) this.texture = null;
+                if (ImGui.Selectable("None"))
+                {
+                    Undo.RegisterAction(this, this.texture, null, nameof(Sprite.texture));
+                    this.texture = null;
+                }
 
                 foreach (HorizonEngine.Texture texture in Assets.textures)
                 {
-                    if (ImGui.Selectable(texture.name)) this.texture = texture;
+                    if (ImGui.Selectable(texture.name))
+                    {
+                        Undo.RegisterAction(this, this.texture, texture, nameof(Sprite.texture));
+                        this.texture = texture;
+                    }
                 }
 
                 ImGui.EndPopup();

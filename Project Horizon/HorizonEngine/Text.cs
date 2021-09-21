@@ -85,6 +85,7 @@ namespace HorizonEngine
             ImGui.SameLine();
             if (ImGui.Checkbox("##enabled" + id, ref enabled))
             {
+                Undo.RegisterAction(this, this.enabled, enabled, nameof(Text.enabled));
                 this.enabled = enabled;
             }
 
@@ -100,11 +101,19 @@ namespace HorizonEngine
 
             if(ImGui.BeginPopup("select_font"))
             {
-                if (ImGui.Selectable("None")) this.font = null;
+                if (ImGui.Selectable("None"))
+                {
+                    Undo.RegisterAction(this, this.font, null, nameof(Text.font));
+                    this.font = null;
+                }
 
                 foreach(Font font in Assets.fonts)
                 {
-                    if (ImGui.Selectable(font.name)) this.font = font;
+                    if (ImGui.Selectable(font.name))
+                    {
+                        Undo.RegisterAction(this, this.font, font, nameof(Text.font));
+                        this.font = font;
+                    }
                 }
 
                 ImGui.EndPopup();
@@ -115,6 +124,7 @@ namespace HorizonEngine
             ImGui.SameLine();
             if (ImGui.InputText("##text" + id, ref text, 400))
             {
+                Undo.RegisterAction(this, this.text, text, nameof(Text.text));
                 this.text = text;
             }
 

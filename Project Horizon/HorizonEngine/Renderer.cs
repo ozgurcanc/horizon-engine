@@ -110,6 +110,7 @@ namespace HorizonEngine
             ImGui.SameLine();
             if (ImGui.Checkbox("##flipx" + id, ref flipX))
             {
+                Undo.RegisterAction(this, this.flipX, flipX, nameof(Renderer.flipX));
                 this.flipX = flipX;
             }
             ImGui.SameLine();
@@ -117,6 +118,7 @@ namespace HorizonEngine
             ImGui.SameLine();
             if (ImGui.Checkbox("##flipy" + id, ref flipY))
             {
+                Undo.RegisterAction(this, this.flipY, flipY, nameof(Renderer.flipY));
                 this.flipY = flipY;
             }
             ImGui.SameLine();
@@ -127,6 +129,7 @@ namespace HorizonEngine
             ImGui.SameLine();
             if (ImGui.DragInt("##order" + id, ref sortingOrder))
             {
+                Undo.RegisterAction(this, this.sortingOrder, sortingOrder, nameof(Renderer.sortingOrder));
                 this.sortingOrder = sortingOrder;
             }
 
@@ -136,6 +139,7 @@ namespace HorizonEngine
             ImGui.SameLine();
             if (ImGui.ColorPicker4("##color" + id, ref numColor))
             {
+                Undo.RegisterAction(this, this.color, color, nameof(Renderer.color));
                 this.color = new Color(numColor.X, numColor.Y, numColor.Z, numColor.W);
             }
         }

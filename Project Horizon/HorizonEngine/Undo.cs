@@ -48,7 +48,8 @@ namespace HorizonEngine
         internal static void RegisterAction(object target, object undoValue, object redoValue, string propertyName)
         {
             UndoAction peek = _undoStack.Count > 0 ? _undoStack.Peek() : null;
-            if(peek != null && peek.target == target && peek.propertyName == propertyName)
+            if(false)
+            //if(peek != null && peek.target == target && peek.propertyName == propertyName)
             {
                 peek.redoValue = redoValue;
             }
