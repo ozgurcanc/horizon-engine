@@ -55,6 +55,9 @@ namespace HorizonEngine
                 return;
             }
 
+            if (Scene.name == null) return;
+            if (!ImGui.CollapsingHeader(Scene.name)) return;
+
             ImGui.BeginChild("main");
 
             foreach(GameObject gameObject in Scene.gameObjects)

@@ -75,17 +75,13 @@ namespace HorizonEngine
                 Directory.CreateDirectory(_projectPath);
                 Directory.CreateDirectory(_assetsPath);
                 Directory.CreateDirectory(_scenesPath);
-                Scene.NewScene("New Scene");
                 _projectSettings = new ProjectSettings();
-                _projectSettings.currentScene = "New Scene";
                 File.WriteAllText(projectSettingsPath, JsonConvert.SerializeObject(_projectSettings));
                 AssetsWindow.Save();
             }
             
             _projectSettings = JsonConvert.DeserializeObject<ProjectSettings>(File.ReadAllText(projectSettingsPath));
-            AssetsWindow.Load();
-            Scene.Load(_projectSettings.currentScene);
-            
+            AssetsWindow.Load();            
         }
     }
 }

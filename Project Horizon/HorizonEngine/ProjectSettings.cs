@@ -14,7 +14,6 @@ namespace HorizonEngine
     internal class ProjectSettings
     {
         private uint _assetID;
-        private string _currentScene;
 
         public uint availableAssetID
         {
@@ -22,18 +21,6 @@ namespace HorizonEngine
             {
                 _assetID++;
                 return _assetID;
-            }
-        }
-
-        public string currentScene
-        {
-            get
-            {
-                return _currentScene;
-            }
-            set
-            {
-                _currentScene = value;
             }
         }
     }

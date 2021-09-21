@@ -156,9 +156,11 @@ namespace HorizonEngine
 
         internal static void Save()
         {
+            if (Scene.name == null) return;
+
             List<GameObject> rootGameObjects = Scene.main._gameObjects.FindAll(x => x.parent == null);
 
-            File.WriteAllText(Path.Combine(Application.scenesPath, Scene.main._name + ".json"), JsonConvert.SerializeObject(rootGameObjects));
+            File.WriteAllText(Path.Combine(Application.scenesPath, Scene.main._name), JsonConvert.SerializeObject(rootGameObjects));
         }
 
         internal static void Load(string name)
@@ -168,7 +170,7 @@ namespace HorizonEngine
             scene.Clear();
             scene._name = name;
 
-            List<GameObject> rootGameObjects = JsonConvert.DeserializeObject<List<GameObject>>(File.ReadAllText(Path.Combine(Application.scenesPath, Scene.main._name + ".json")));
+            List<GameObject> rootGameObjects = JsonConvert.DeserializeObject<List<GameObject>>(File.ReadAllText(Path.Combine(Application.scenesPath, Scene.main._name)));
             rootGameObjects.ForEach(x => x.OnLoad());
 
             dontDestroyOnLoad.ForEach(x => x.OnLoad());
@@ -181,6 +183,21 @@ namespace HorizonEngine
             scene.Clear();
             Scene.CreateGameObject("Camera").AddComponent<Camera>();
             Save();
+        }
+
+        internal static void DeleteScene()
+        {
+            File.Delete(Path.Combine(Application.scenesPath, Scene.name));
+            _main._name = null;
+            _main.Clear();
+        }
+
+        internal static void Rename(string name)
+        {
+            string source = Path.Combine(Application.scenesPath, Scene.name);
+            string destination = Path.Combine(Application.scenesPath, name);
+            File.Move(source, destination);
+            _main._name = name;
         }
 
         internal Scene(ContentManager contentManager, GraphicsDeviceManager graphicsDeviceManager)
