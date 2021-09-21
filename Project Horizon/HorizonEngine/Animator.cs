@@ -161,7 +161,8 @@ namespace HorizonEngine
             _currentFrame = 0;
             _currentDuration = 0f;
             _totalDuration = 0f;
-            gameObject.GetComponent<Sprite>().texture = _currentAnimation[0];
+            var sprite = gameObject.GetComponent<Sprite>();
+            if (sprite != null) sprite.texture = _currentAnimation[0];
             _nextAnimation = null;
         }
         private bool CheckCondition(IList<AnimatorCondition> conditions)
@@ -220,6 +221,7 @@ namespace HorizonEngine
             ImGui.SameLine();
             if (ImGui.Checkbox("##enabled" + id, ref enabled))
             {
+                Undo.RegisterAction(this, this.enabled, enabled, nameof(Animator.enabled));
                 this.enabled = enabled;
             }
 
@@ -235,11 +237,19 @@ namespace HorizonEngine
 
             if (ImGui.BeginPopup("select_controller"))
             {
-                if (ImGui.Selectable("None")) this.animatorController = null;
+                if (ImGui.Selectable("None"))
+                {
+                    Undo.RegisterAction(this, this.animatorController, null, nameof(Animator.animatorController));
+                    this.animatorController = null;
+                }
 
                 foreach (AnimatorController animatorController in Assets.animatorControllers)
                 {
-                    if (ImGui.Selectable(animatorController.name)) this.animatorController = animatorController;
+                    if (ImGui.Selectable(animatorController.name))
+                    {
+                        Undo.RegisterAction(this, this.animatorController, animatorController, nameof(Animator.animatorController));
+                        this.animatorController = animatorController;
+                    }
                 }
 
                 ImGui.EndPopup();

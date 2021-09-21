@@ -139,8 +139,9 @@ namespace HorizonEngine
             ImGui.SameLine();
             if (ImGui.ColorPicker4("##color" + id, ref numColor))
             {
-                Undo.RegisterAction(this, this.color, color, nameof(Renderer.color));
-                this.color = new Color(numColor.X, numColor.Y, numColor.Z, numColor.W);
+                Color temp = new Color(numColor.X, numColor.Y, numColor.Z, numColor.W);
+                Undo.RegisterAction(this, this.color, temp, nameof(Renderer.color));
+                this.color = temp;
             }
         }
 

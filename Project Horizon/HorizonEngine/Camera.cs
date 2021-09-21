@@ -204,6 +204,7 @@ namespace HorizonEngine
             ImGui.SameLine();
             if (ImGui.Checkbox("##enabled" + id, ref enabled))
             {
+                Undo.RegisterAction(this, this.enabled, enabled, nameof(Camera.enabled));
                 this.enabled = enabled;
             }
 
@@ -212,6 +213,7 @@ namespace HorizonEngine
             ImGui.SameLine();
             if(ImGui.DragFloat("##cameraWidth" + id, ref width))
             {
+                Undo.RegisterAction(this, this.width, width, nameof(Camera.width));
                 this.width = width;
             }
 
@@ -220,6 +222,7 @@ namespace HorizonEngine
             ImGui.SameLine();
             if (ImGui.DragFloat("##cameraHeight" + id, ref height))
             {
+                Undo.RegisterAction(this, this.height, height, nameof(Camera.height));
                 this.height = height;
             }
 
@@ -229,7 +232,9 @@ namespace HorizonEngine
             //ImGui.SameLine();
             if (ImGui.ColorPicker4("##backgroundColor" + id, ref numColor))
             {
-                this.backgroundColor = new Color(numColor.X, numColor.Y, numColor.Z, numColor.W);
+                Color temp = new Color(numColor.X, numColor.Y, numColor.Z, numColor.W);
+                Undo.RegisterAction(this, this.backgroundColor, temp, nameof(Camera.backgroundColor));
+                this.backgroundColor = temp;
             }
 
             string renderTarget = this.renderTarget == null ? "None" : this.renderTarget.name;
@@ -244,11 +249,19 @@ namespace HorizonEngine
 
             if(ImGui.BeginPopup("select_render_target"))
             {
-                if (ImGui.Selectable("None")) this.renderTarget = null;
+                if (ImGui.Selectable("None"))
+                {
+                    Undo.RegisterAction(this, this.renderTarget, null, nameof(Camera.renderTarget));
+                    this.renderTarget = null;
+                }
 
                 foreach(RenderTexture renderTexture in Assets.renderTextures)
                 {
-                    if (ImGui.Selectable(renderTexture.name)) this.renderTarget = renderTexture;
+                    if (ImGui.Selectable(renderTexture.name))
+                    {
+                        Undo.RegisterAction(this, this.renderTarget, renderTexture, nameof(Camera.renderTarget));
+                        this.renderTarget = renderTexture;
+                    }
                 }
 
                 ImGui.EndPopup();
