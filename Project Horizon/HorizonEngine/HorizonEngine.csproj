@@ -130,6 +130,7 @@
     <Compile Include="Texture.cs" />
     <Compile Include="Time.cs" />
     <Compile Include="TransformMatrix.cs" />
+    <Compile Include="Undo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

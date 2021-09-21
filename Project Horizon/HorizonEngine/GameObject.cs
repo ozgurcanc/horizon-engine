@@ -337,6 +337,7 @@ namespace HorizonEngine
             ImGui.SameLine();
             if (ImGui.InputText("##name", ref name, 100))
             {
+                Undo.RegisterAction(this, this.name, name, nameof(GameObject.name));
                 this.name = name;
             }
 
@@ -345,6 +346,7 @@ namespace HorizonEngine
             ImGui.SameLine();
             if (ImGui.Checkbox("##active", ref activeSelf))
             {
+                Undo.RegisterAction(this, this.activeSelf, activeSelf, nameof(GameObject.activeSelf));
                 this.activeSelf = activeSelf;
             }
 
@@ -354,6 +356,7 @@ namespace HorizonEngine
             ImGui.SameLine();
             if (ImGui.Combo("##Layer", ref layer, layers, layers.Length))
             {
+                Undo.RegisterAction(this, this.layer, (Layer)layer, nameof(GameObject.layer));
                 this.layer = (Layer)layer;
             }
 
@@ -368,6 +371,7 @@ namespace HorizonEngine
             ImGui.SameLine();
             if (ImGui.DragFloat("##PositionX", ref position.X))
             {
+                Undo.RegisterAction(this, this.position, position, nameof(GameObject.position));
                 this.position = position;
             }
             ImGui.SameLine();
@@ -375,6 +379,7 @@ namespace HorizonEngine
             ImGui.SameLine();
             if (ImGui.DragFloat("##PositionY", ref position.Y))
             {
+                Undo.RegisterAction(this, this.position, position, nameof(GameObject.position));
                 this.position = position;
             }
 
@@ -383,6 +388,7 @@ namespace HorizonEngine
             ImGui.SameLine();
             if (ImGui.DragFloat("##Rotation", ref rotation))
             {
+                Undo.RegisterAction(this, this.rotation, rotation, nameof(GameObject.rotation));
                 this.rotation = rotation;
             }
 
@@ -393,6 +399,7 @@ namespace HorizonEngine
             ImGui.SameLine();
             if (ImGui.DragFloat("##SizeX", ref size.X))
             {
+                Undo.RegisterAction(this, this.size, size, nameof(GameObject.size));
                 this.size = size;
             }
             ImGui.SameLine();
@@ -400,6 +407,7 @@ namespace HorizonEngine
             ImGui.SameLine();
             if (ImGui.DragFloat("##SizeY", ref size.Y))
             {
+                Undo.RegisterAction(this, this.size, size, nameof(GameObject.size));
                 this.size = size;
             }
 

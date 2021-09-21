@@ -46,8 +46,8 @@ namespace HorizonEngine
                 }
                 if(ImGui.BeginMenu("Edit"))
                 {
-                    if (ImGui.MenuItem("Undo", "CTRL+Z")) { }
-                    if (ImGui.MenuItem("Redo", "CRTL+Y", false, false)) { }
+                    if (ImGui.MenuItem("Undo", "CTRL+Z", false, Undo.canUndo)) { Undo.PerformUndo();  }
+                    if (ImGui.MenuItem("Redo", "CRTL+Y", false, Undo.canRedo)) { Undo.PerformRedo();  }
                     ImGui.Separator();
                     if (ImGui.MenuItem("Cut", "CTRL+X")) { }
                     if (ImGui.MenuItem("Copy", "CTRL+C")) { }
