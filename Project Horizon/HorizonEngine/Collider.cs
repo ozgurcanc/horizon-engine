@@ -80,6 +80,7 @@ namespace HorizonEngine
             ImGui.SameLine();
             if (ImGui.Checkbox("##isTrigger" + id, ref isTrigger))
             {
+                Undo.RegisterAction(this, this.isTrigger, isTrigger, nameof(Collider.isTrigger));
                 this.isTrigger = isTrigger;
             }
         }

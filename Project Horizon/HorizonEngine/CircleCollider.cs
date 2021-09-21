@@ -50,6 +50,7 @@ namespace HorizonEngine
             ImGui.SameLine();
             if (ImGui.Checkbox("##enabled" + id, ref enabled))
             {
+                Undo.RegisterAction(this, this.enabled, enabled, nameof(CircleCollider.enabled));
                 this.enabled = enabled;
             }
 
@@ -60,6 +61,7 @@ namespace HorizonEngine
             ImGui.SameLine();
             if(ImGui.DragFloat("##radius" + id, ref radius))
             {
+                Undo.RegisterAction(this, this.radius, radius, nameof(CircleCollider.radius));
                 this.radius = radius;
             }
         }

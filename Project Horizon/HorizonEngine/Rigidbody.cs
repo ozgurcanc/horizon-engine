@@ -223,6 +223,7 @@ namespace HorizonEngine
             ImGui.SameLine();
             if (ImGui.Checkbox("##enabled" + id, ref enabled))
             {
+                Undo.RegisterAction(this, this.enabled, enabled, nameof(Rigidbody.enabled));
                 this.enabled = enabled;
             }
 
@@ -235,6 +236,7 @@ namespace HorizonEngine
             ImGui.SameLine();
             if (ImGui.DragFloat("##velocityX" + id, ref velocity.X))
             {
+                Undo.RegisterAction(this, this.velocity, velocity, nameof(Rigidbody.velocity));
                 this.velocity = velocity;
             }
             ImGui.SameLine();
@@ -242,6 +244,7 @@ namespace HorizonEngine
             ImGui.SameLine();
             if (ImGui.DragFloat("##velocityY" + id, ref velocity.Y))
             {
+                Undo.RegisterAction(this, this.velocity, velocity, nameof(Rigidbody.velocity));
                 this.velocity = velocity;
             }
 
@@ -250,6 +253,7 @@ namespace HorizonEngine
             ImGui.SameLine();
             if (ImGui.DragFloat("##angularVel" + id, ref angularVelocity))
             {
+                Undo.RegisterAction(this, this.angularVelocity, angularVelocity, nameof(Rigidbody.angularVelocity));
                 this.angularVelocity = angularVelocity;
             }
 
@@ -258,6 +262,7 @@ namespace HorizonEngine
             ImGui.SameLine();
             if(ImGui.DragFloat("##linearDrag" + id, ref linearDrag))
             {
+                Undo.RegisterAction(this, this.linearDrag, linearDrag, nameof(Rigidbody.linearDrag));
                 this.linearDrag = linearDrag;
             }
 
@@ -266,6 +271,7 @@ namespace HorizonEngine
             ImGui.SameLine();
             if (ImGui.DragFloat("##angularDrag" + id, ref angularDrag))
             {
+                Undo.RegisterAction(this, this.angularDrag, angularDrag, nameof(Rigidbody.angularDrag));
                 this.angularDrag = angularDrag;
             }
 
@@ -274,6 +280,7 @@ namespace HorizonEngine
             ImGui.SameLine();
             if(ImGui.DragFloat("##mass" + id, ref mass))
             {
+                Undo.RegisterAction(this, this.mass, mass, nameof(Rigidbody.mass));
                 this.mass = mass;
             }
 
@@ -282,6 +289,7 @@ namespace HorizonEngine
             ImGui.SameLine();
             if (ImGui.DragFloat("##inertia" + id, ref inertia))
             {
+                Undo.RegisterAction(this, this.inertia, inertia, nameof(Rigidbody.inertia));
                 this.inertia = inertia;
             }
 
@@ -290,6 +298,7 @@ namespace HorizonEngine
             ImGui.SameLine();
             if (ImGui.DragFloat("##gravityScale" + id, ref gravityScale))
             {
+                Undo.RegisterAction(this, this.gravityScale, gravityScale, nameof(Rigidbody.gravityScale));
                 this.gravityScale = gravityScale;
             }
 

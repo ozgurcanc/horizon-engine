@@ -43,6 +43,7 @@ namespace HorizonEngine
             ImGui.SameLine();
             if (ImGui.Checkbox("##enabled" + id, ref enabled))
             {
+                Undo.RegisterAction(this, this.enabled, enabled, nameof(BoxCollider.enabled));
                 this.enabled = enabled;
             }
 
