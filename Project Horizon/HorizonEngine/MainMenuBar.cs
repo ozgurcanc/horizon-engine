@@ -27,23 +27,40 @@ namespace HorizonEngine
             {
                 if(ImGui.BeginMenu("File"))
                 {
-                    if (ImGui.MenuItem("New Scene", !GameWindow.isPlaying)) { newSceneFlag = true; }                  
-                    if (ImGui.BeginMenu("Open Scene", !GameWindow.isPlaying))
+                    if (ImGui.MenuItem("New Scene")) 
+                    {
+                        GameWindow.isPlaying = false;
+                        newSceneFlag = true; 
+                    }                  
+                    if (ImGui.BeginMenu("Open Scene"))
                     {
                         var scenes = Directory.GetFiles(Application.scenesPath).Select(x => Path.GetFileName(x));
                         foreach(var x in scenes)
                         {
                             if(ImGui.MenuItem(x))
                             {
+                                GameWindow.isPlaying = false;
                                 Scene.Load(x);
                             }
                         }
                         ImGui.EndMenu();
                     }
                     ImGui.Separator();
-                    if (ImGui.MenuItem("Rename Scene", Scene.name != null && !GameWindow.isPlaying)) { renameSceneFlag = true; }
-                    if (ImGui.MenuItem("Delete Scene", Scene.name != null && !GameWindow.isPlaying)) { deleteSceneFlag = true; }
-                    if (ImGui.MenuItem("Save Scene", Scene.name != null && !GameWindow.isPlaying)) { Scene.Save(); }
+                    if (ImGui.MenuItem("Rename Scene", Scene.name != null)) 
+                    {
+                        GameWindow.isPlaying = false;
+                        renameSceneFlag = true; 
+                    }
+                    if (ImGui.MenuItem("Delete Scene", Scene.name != null)) 
+                    {
+                        GameWindow.isPlaying = false;
+                        deleteSceneFlag = true; 
+                    }
+                    if (ImGui.MenuItem("Save Scene", Scene.name != null)) 
+                    {
+                        GameWindow.isPlaying = false;
+                        Scene.Save(); 
+                    }
                     ImGui.Separator();
                     if (ImGui.MenuItem("Exit")) { Application.Quit(); }
                     ImGui.EndMenu();
@@ -56,6 +73,9 @@ namespace HorizonEngine
                     if (ImGui.MenuItem("Cut", "CTRL+X")) { }
                     if (ImGui.MenuItem("Copy", "CTRL+C")) { }
                     if (ImGui.MenuItem("Paste", "CTRL+V")) { }
+                    ImGui.Separator();
+                    if (ImGui.MenuItem("Play", null, GameWindow.isPlaying)) { GameWindow.isPlaying = !GameWindow.isPlaying; }
+                    if (ImGui.MenuItem("Pause", null, GameWindow.isPaused)) { GameWindow.isPaused = !GameWindow.isPaused; }
 
                     ImGui.EndMenu();
                 }

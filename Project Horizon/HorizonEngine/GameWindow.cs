@@ -48,6 +48,13 @@ namespace HorizonEngine
             {
                 return _isPlaying;
             }
+            set
+            {
+                if (_isPlaying == value) return;
+                _isPlaying = value;
+                if (_isPlaying) Scene.BeginPlayMode();
+                else Scene.EndPlayMode();
+            }
         }
 
         internal static bool isPaused
@@ -55,6 +62,10 @@ namespace HorizonEngine
             get
             {
                 return _isPaused;
+            }
+            set
+            {
+                _isPaused = value;
             }
         }
 
@@ -91,16 +102,17 @@ namespace HorizonEngine
                 ImGui.EndPopup();
             }
 
+            bool isPlaying = GameWindow.isPlaying;
+            bool isPaused = GameWindow.isPaused;               
             ImGui.SameLine();
-            if(ImGui.Checkbox("Play", ref _isPlaying))
+            if(ImGui.Checkbox("Play", ref isPlaying))
             {
-                if (_isPlaying) Scene.BeginPlayMode();
-                else Scene.EndPlayMode();
+                GameWindow.isPlaying = isPlaying;
             }
             ImGui.SameLine();
-            if(ImGui.Checkbox("Pause", ref _isPaused))
+            if(ImGui.Checkbox("Pause", ref isPaused))
             {
-
+                GameWindow.isPaused = isPaused;
             }
 
             ImGui.BeginChild("Image");
