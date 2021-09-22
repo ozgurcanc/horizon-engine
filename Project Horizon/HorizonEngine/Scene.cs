@@ -259,6 +259,12 @@ namespace HorizonEngine
 
         public static void Destroy(GameObject gameObject)
         {
+            gameObject.parent = null;
+            DestroyInternal(gameObject);
+        }
+
+        internal static void DestroyInternal(GameObject gameObject)
+        {
             int lastIndex = Scene.main._gameObjects.Count - 1;
             GameObject temp = Scene.main._gameObjects[lastIndex];
             temp.gameObjectID = gameObject.gameObjectID;

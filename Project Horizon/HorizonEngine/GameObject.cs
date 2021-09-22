@@ -188,12 +188,18 @@ namespace HorizonEngine
 
         internal void Destroy()
         {
-            _behaviours.Clear();
-            foreach (Component component in _components.Values) component.enabled = false;
-            _components.Clear();
-            foreach (GameObject child in _childs.ToArray()) Scene.Destroy(child);
-            _childs.Clear();
-            parent = null;
+            //_behaviours.Clear();
+            if(activeInHierarchy)
+            {
+                foreach (Component component in _components.Values)
+                {
+                    if (component.enabled) Scene.DisableComponent(component);
+                }
+            }
+            //_components.Clear();
+            foreach (GameObject child in _childs.ToArray()) Scene.DestroyInternal(child);
+            //_childs.Clear();
+            //parent = null;
         }
 
         internal void OnLoad()
@@ -230,6 +236,15 @@ namespace HorizonEngine
             return clone;
         }
 
+        internal void UndoComponent(Component component)
+        {
+            Debug.Assert(_components.ContainsKey(component.GetType()) == false);
+            component.gameObject = this;
+            _components.Add(component.GetType(), component);
+            if (component is Behaviour) _behaviours.Add((Behaviour)component);
+            if (_activeInHierarchy && component.enabled) Scene.EnableComponent(component);
+        }
+
         public T AddComponent<T>() where T : Component, new()
         {
             Debug.Assert(_components.ContainsKey(typeof(T)) == false);
@@ -238,7 +253,7 @@ namespace HorizonEngine
             _components.Add(typeof(T), component);
             if (component is Behaviour) _behaviours.Add((Behaviour)component);
 
-            if(_activeInHierarchy) Scene.EnableComponent(component);
+            if(activeInHierarchy) Scene.EnableComponent(component);
 
             return (T)component;
         }
@@ -251,7 +266,7 @@ namespace HorizonEngine
                 Component component = _components[type];
                 if (component is Behaviour) _behaviours.Remove((Behaviour)component);
                 _components.Remove(type);
-                component.enabled = false;
+                if (activeInHierarchy && component.enabled) Scene.DisableComponent(component);
             }
         }
 
@@ -436,7 +451,8 @@ namespace HorizonEngine
                     {
                         MethodInfo method = typeof(GameObject).GetMethod(nameof(GameObject.AddComponent));
                         MethodInfo generic = method.MakeGenericMethod(component);
-                        generic.Invoke(this, null);
+                        var x = generic.Invoke(this, null);
+                        Undo.RegisterAction((Component)x, true);
                     }
                 }
 
@@ -452,14 +468,15 @@ namespace HorizonEngine
 
             if(ImGui.BeginPopup("remove_component"))
             {
-                var components = _components.Keys;
+                var components = _components.Values;
 
-                foreach(Type component in components)
+                foreach(Component component in components)
                 {
-                    if(ImGui.Selectable(component.Name))
+                    if(ImGui.Selectable(component.GetType().Name))
                     {
+                        Undo.RegisterAction(component, false);
                         MethodInfo method = typeof(GameObject).GetMethod(nameof(GameObject.RemoveComponent));
-                        MethodInfo generic = method.MakeGenericMethod(component);
+                        MethodInfo generic = method.MakeGenericMethod(component.GetType());
                         generic.Invoke(this, null);
                     }
                 }

@@ -67,15 +67,24 @@ namespace HorizonEngine
 
             if(ImGui.BeginPopupContextWindow())
             {
-                if (ImGui.MenuItem("New GameObject")) { Scene.CreateGameObject(); }
-                if (ImGui.MenuItem("Delete", _selectedGameObject != null)) 
+                if (ImGui.MenuItem("New GameObject")) 
                 { 
+                    var x = Scene.CreateGameObject();
+                    Undo.RegisterAction(x, true);
+                }
+                if (ImGui.MenuItem("Delete", _selectedGameObject != null)) 
+                {
+                    Undo.RegisterAction(_selectedGameObject, false);
                     Scene.Destroy(_selectedGameObject);
                     _selectedGameObjectId = -1;
                     _selectedGameObject = null;
                     InspectorWindow.Inspect(null);
                 }
-                if (ImGui.MenuItem("Duplicate", _selectedGameObject != null)) { Scene.Clone(_selectedGameObject); }
+                if (ImGui.MenuItem("Duplicate", _selectedGameObject != null)) 
+                { 
+                    var x = Scene.Clone(_selectedGameObject);
+                    Undo.RegisterAction(x, true);
+                }
                 ImGui.EndPopup();
             }
 
@@ -85,6 +94,7 @@ namespace HorizonEngine
             {
                 if (!_dropped && ImGui.IsMouseReleased(ImGuiMouseButton.Left) && ImGui.GetDragDropPayload().IsDataType("GameObject"))
                 {
+                    Undo.RegisterAction(_selectedGameObject, _selectedGameObject.parent, null, nameof(GameObject.parent));
                     _selectedGameObject.parent = null;
                 }
                 ImGui.EndDragDropTarget();
@@ -129,6 +139,7 @@ namespace HorizonEngine
             {
                 if(ImGui.IsMouseReleased(ImGuiMouseButton.Left) && ImGui.GetDragDropPayload().IsDataType("GameObject"))
                 {
+                    Undo.RegisterAction(_selectedGameObject, _selectedGameObject.parent, gameObject, nameof(GameObject.parent));
                     _selectedGameObject.parent = gameObject;
                     _dropped = true;
                 }
