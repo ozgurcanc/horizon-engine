@@ -118,7 +118,7 @@ namespace HorizonEngine
         {
             get
             {
-                return _undoStack.Count > 0;
+                return _undoStack.Count > 0 && !GameWindow.isPlaying;
             }
         }
 
@@ -126,23 +126,27 @@ namespace HorizonEngine
         {
             get
             {
-                return _redoStack.Count > 0;
+                return _redoStack.Count > 0 && !GameWindow.isPlaying;
             }
         }
 
         internal static void RegisterAction(object target, object undoValue, object redoValue, string propertyName)
         {
-             PropertyAction undoAction = new PropertyAction();
-             undoAction.target = target;
-             undoAction.undoValue = undoValue;
-             undoAction.redoValue = redoValue;
-             undoAction.propertyName = propertyName;
-             _undoStack.Push(undoAction);
+            if (GameWindow.isPlaying) return;
+
+            PropertyAction undoAction = new PropertyAction();
+            undoAction.target = target;
+            undoAction.undoValue = undoValue;
+            undoAction.redoValue = redoValue;
+            undoAction.propertyName = propertyName;
+            _undoStack.Push(undoAction);
             _redoStack.Clear();
         }
 
         internal static void RegisterAction(GameObject gameObject, bool isCreateAction)
         {
+            if (GameWindow.isPlaying) return;
+
             GameObjectAction undoAction = new GameObjectAction();
             undoAction.parent = gameObject.parent;
             undoAction.gameObject = gameObject;
@@ -153,6 +157,8 @@ namespace HorizonEngine
 
         internal static void RegisterAction(Component component, bool isCreateAction)
         {
+            if (GameWindow.isPlaying) return;
+
             ComponentAction undoAction = new ComponentAction();
             undoAction.gameObject = component.gameObject;
             undoAction.component = component;

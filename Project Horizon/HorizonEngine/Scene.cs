@@ -28,6 +28,7 @@ namespace HorizonEngine
         private List<Behaviour> _startBehaviours;
         private List<Animator> _animators;
         private List<Camera> _cameras;
+        private static List<GameObject> _cache;
 
         internal static Scene main
         {
@@ -168,6 +169,7 @@ namespace HorizonEngine
             Scene scene = Scene.main;
             List<GameObject> dontDestroyOnLoad = scene._gameObjects.FindAll(x => x.dontDestroyOnLoad && x.parent == null);
             scene.Clear();
+            Undo.Reset();
             scene._name = name;
 
             List<GameObject> rootGameObjects = JsonConvert.DeserializeObject<List<GameObject>>(File.ReadAllText(Path.Combine(Application.scenesPath, Scene.main._name)));
@@ -181,6 +183,7 @@ namespace HorizonEngine
             Scene scene = Scene.main;
             scene._name = name;
             scene.Clear();
+            Undo.Reset();
             Scene.CreateGameObject("Camera").AddComponent<Camera>();
             Save();
         }
@@ -190,6 +193,7 @@ namespace HorizonEngine
             File.Delete(Path.Combine(Application.scenesPath, Scene.name));
             _main._name = null;
             _main.Clear();
+            Undo.Reset();
         }
 
         internal static void Rename(string name)
@@ -305,7 +309,7 @@ namespace HorizonEngine
             Time.Update(gameTime);
             float deltaTime = Time.deltaTime;
 
-            foreach (Camera camera in _cameras) camera.Update();
+            //foreach (Camera camera in _cameras) camera.Update();
             Input.Update();
             var watch = new Stopwatch();
             watch.Start();
@@ -485,7 +489,28 @@ namespace HorizonEngine
 
 
             }
-            
+
+            foreach (Camera camera in _cameras) camera.Update();
+        }
+
+        internal static void BeginPlayMode()
+        {
+            List<GameObject> rootGameObjects = Scene.main._gameObjects.FindAll(x => x.parent == null);
+            _cache = rootGameObjects;
+
+            Scene scene = Scene.main;
+            scene.Clear();
+            rootGameObjects = JsonConvert.DeserializeObject<List<GameObject>>(JsonConvert.SerializeObject(rootGameObjects));
+            rootGameObjects.ForEach(x => x.OnLoad());
+        }
+
+        internal static void EndPlayMode()
+        {
+            Scene scene = Scene.main;
+            scene.Clear();
+            List<GameObject> rootGameObjects = _cache;
+            rootGameObjects.ForEach(x => x.OnLoad());
+            _cache = null;
         }
 
         private void Clear()
@@ -500,9 +525,7 @@ namespace HorizonEngine
             _mouseClickedColliders = null;
             _startBehaviours.Clear();
             _animators.Clear();
-            _cameras.Clear();
-
-            Undo.Reset();
+            _cameras.Clear();          
         }
     }
 }

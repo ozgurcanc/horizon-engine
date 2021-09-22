@@ -42,6 +42,22 @@ namespace HorizonEngine
             }
         }
 
+        internal static bool isPlaying
+        {
+            get
+            {
+                return _isPlaying;
+            }
+        }
+
+        internal static bool isPaused
+        {
+            get
+            {
+                return _isPaused;
+            }
+        }
+
         internal static void Init(ImGUIRenderer guiRenderer)
         {
             _guiRenderer = guiRenderer;
@@ -78,8 +94,8 @@ namespace HorizonEngine
             ImGui.SameLine();
             if(ImGui.Checkbox("Play", ref _isPlaying))
             {
-                //if (_isPlaying) Scene.Save();
-                //Scene.Load(Scene.name);
+                if (_isPlaying) Scene.BeginPlayMode();
+                else Scene.EndPlayMode();
             }
             ImGui.SameLine();
             if(ImGui.Checkbox("Pause", ref _isPaused))
