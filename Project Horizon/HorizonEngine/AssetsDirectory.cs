@@ -88,6 +88,8 @@ namespace HorizonEngine
         internal void Destroy()
         {
             this.parent = null;
+            _assets.ForEach(x => x.Delete());
+            foreach (var subDirectory in _subdirectories.ToArray()) subDirectory.Destroy();
         }
 
         internal void Reload()

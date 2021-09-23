@@ -67,6 +67,7 @@ namespace HorizonEngine
             _pushID = 0;
             _clicked = false;
             bool deleteAssetFlag = false;
+            bool deleteDirectoryFlag = false;
 
             if (!ImGui.Begin("Assets", ref _enabled, ImGuiWindowFlags.NoScrollbar))
             {
@@ -107,10 +108,8 @@ namespace HorizonEngine
                     newDirectory.parent = _selectedDirectory;
                 }
                 if (ImGui.MenuItem("Delete Folder", _selectedDirectory.parent != null))
-                {
-                    AssetsDirectory deletedDirectory = _selectedDirectory;
-                    _selectedDirectory = _selectedDirectory.parent;
-                    deletedDirectory.Destroy();
+                {                
+                    deleteDirectoryFlag = true;
                 }
                 ImGui.Separator();
                 if (ImGui.MenuItem("Import New Font"))
@@ -143,6 +142,33 @@ namespace HorizonEngine
                 }
                 ImGui.EndPopup();               
             }
+
+            if(deleteDirectoryFlag)
+            {
+                ImGui.OpenPopup("Delete Directory");               
+            }
+            if (ImGui.BeginPopupModal("Delete Directory"))
+            {
+                ImGui.Text(_selectedDirectory.name + " will be deleted");
+                ImGui.TextColored(new System.Numerics.Vector4(1f, 0f, 0f, 1f), "You cannot undo this action");
+                if (ImGui.Button("Cancel"))
+                {
+                    ImGui.CloseCurrentPopup();
+                }
+                ImGui.SameLine();
+                if (ImGui.Button("Delete"))
+                {
+                    GameWindow.isPlaying = false;
+                    AssetsDirectory deletedDirectory = _selectedDirectory;
+                    _selectedDirectory = _selectedDirectory.parent;
+                    deletedDirectory.Destroy();
+                    Scene.Reload();
+                    AssetsWindow.Save();
+                    ImGui.CloseCurrentPopup();
+                }
+                ImGui.EndPopup();
+            }
+
 
             if (deleteAssetFlag)
             {
