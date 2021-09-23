@@ -16,7 +16,6 @@ namespace HorizonEngine
         private static string _projectPath;
         private static string _assetsPath;
         private static string _scenesPath;
-        private static ProjectSettings _projectSettings;
         private static bool _isQuit;
 
         public static bool isEditor
@@ -63,14 +62,6 @@ namespace HorizonEngine
             }
         }
 
-        internal static uint availableAssetID
-        {
-            get
-            {
-                return _projectSettings.availableAssetID;
-            }
-        }
-
         internal static void Init()
         {
             _projectPath = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "Project");
@@ -84,12 +75,9 @@ namespace HorizonEngine
                 Directory.CreateDirectory(_projectPath);
                 Directory.CreateDirectory(_assetsPath);
                 Directory.CreateDirectory(_scenesPath);
-                _projectSettings = new ProjectSettings();
-                File.WriteAllText(projectSettingsPath, JsonConvert.SerializeObject(_projectSettings));
                 Assets.Save();
             }
             
-            _projectSettings = JsonConvert.DeserializeObject<ProjectSettings>(File.ReadAllText(projectSettingsPath));
             Assets.Load();            
         }
 

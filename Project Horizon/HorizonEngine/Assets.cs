@@ -15,7 +15,15 @@ namespace HorizonEngine
 {
     public static class Assets
     {
+        [JsonObject(MemberSerialization.Fields)]
+        private class AssetsSaveData
+        {
+            public uint nextAssetID;
+            public AssetsDirectory rootDirectory;
+        }
+
         private static bool _isModified;
+        private static uint _nextAssetID;
         private static AssetsDirectory _rootDirectory;
         private static Dictionary<string, Texture2D> _sourceTextures;
         private static Dictionary<uint, HorizonEngine.Texture> _textures;
@@ -35,15 +43,29 @@ namespace HorizonEngine
             _rootDirectory = new AssetsDirectory("Assets");
         }
 
+        internal static uint availableAssetID
+        {
+            get
+            {
+                _nextAssetID++;
+                return _nextAssetID;
+            }
+        }
+
         internal static void Save()
         {
+            AssetsSaveData assetsSaveData = new AssetsSaveData();
+            assetsSaveData.nextAssetID = _nextAssetID;
+            assetsSaveData.rootDirectory = _rootDirectory;
             _isModified = false;
-            File.WriteAllText(Path.Combine(Application.projectPath, "Assets.json"), JsonConvert.SerializeObject(_rootDirectory));
+            File.WriteAllText(Path.Combine(Application.projectPath, "Assets.json"), JsonConvert.SerializeObject(assetsSaveData));
         }
 
         internal static void Load()
         {
-            _rootDirectory = JsonConvert.DeserializeObject<AssetsDirectory>(File.ReadAllText(Path.Combine(Application.projectPath, "Assets.json")));
+            AssetsSaveData assetsSaveData = JsonConvert.DeserializeObject<AssetsSaveData>(File.ReadAllText(Path.Combine(Application.projectPath, "Assets.json")));
+            _nextAssetID = assetsSaveData.nextAssetID;
+            _rootDirectory = assetsSaveData.rootDirectory;
             _rootDirectory.Reload();
         }
 

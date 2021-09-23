@@ -23,7 +23,7 @@ namespace HorizonEngine
         {
             _name = name;
             _source = source;
-            _assetID = Application.availableAssetID;
+            _assetID = Assets.availableAssetID;
         }
 
         public string name
