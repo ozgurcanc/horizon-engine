@@ -66,6 +66,7 @@ namespace HorizonEngine
 
             _pushID = 0;
             _clicked = false;
+            bool deleteAssetFlag = false;
 
             if (!ImGui.Begin("Assets", ref _enabled, ImGuiWindowFlags.NoScrollbar))
             {
@@ -138,10 +139,34 @@ namespace HorizonEngine
                 ImGui.Separator();
                 if (ImGui.MenuItem("Delete", _selectedAsset != null))
                 {
-                    _selectedDirectory.RemoveAsset(_selectedAsset);
-                    _selectedAsset.Delete();
+                    deleteAssetFlag = true;
                 }
                 ImGui.EndPopup();               
+            }
+
+            if (deleteAssetFlag)
+            {
+                ImGui.OpenPopup("Delete Asset");
+            }
+            if (ImGui.BeginPopupModal("Delete Asset"))
+            {
+                ImGui.Text(_selectedAsset.name + " will be deleted");
+                ImGui.TextColored(new System.Numerics.Vector4(1f, 0f, 0f, 1f), "You cannot undo this action");
+                if (ImGui.Button("Cancel"))
+                {
+                    ImGui.CloseCurrentPopup();
+                }
+                ImGui.SameLine();
+                if (ImGui.Button("Delete"))
+                {
+                    GameWindow.isPlaying = false;
+                    _selectedDirectory.RemoveAsset(_selectedAsset);
+                    _selectedAsset.Delete();
+                    Scene.Reload();
+                    AssetsWindow.Save();
+                    ImGui.CloseCurrentPopup();
+                }
+                ImGui.EndPopup();
             }
 
             foreach (Asset asset in _selectedDirectory.assets)

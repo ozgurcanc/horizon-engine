@@ -38,6 +38,7 @@ namespace HorizonEngine
         internal override void Delete()
         {
             Assets.Delete(this);
+            File.Delete(Path.Combine(Application.assetsPath, this.source));
         }
     }
 }

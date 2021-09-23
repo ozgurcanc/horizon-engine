@@ -198,17 +198,20 @@ namespace HorizonEngine
         internal static void Delete(Animation animation)
         {
             _animations.Remove(animation.assetID);
+            foreach (var x in _animatorControllers.Values) x.RemoveAnimation(animation);
         }
 
         internal static void Delete(HorizonEngine.Texture texture)
         {
             _textures.Remove(texture.assetID);
+            foreach (var x in _animations.Values) x.RemoveFrame(texture);
         }
 
         internal static void Delete(RenderTexture renderTexture)
         {
             _renderTextures.Remove(renderTexture.assetID);
             _textures.Remove(renderTexture.assetID);
+            foreach (var x in _animations.Values) x.RemoveFrame(renderTexture);
         }
 
         /*

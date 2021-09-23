@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using ImGuiNET;
+using System.IO;
 
 namespace HorizonEngine
 {
@@ -135,6 +136,7 @@ namespace HorizonEngine
             }
             foreach (var x in _internalTextures.ToArray()) x.Delete();
             Assets.Delete(this);
+            if (_linkedTexture == null) File.Delete(Path.Combine(Application.assetsPath, this.source));
         }
 
         public override void OnInspectorGUI()

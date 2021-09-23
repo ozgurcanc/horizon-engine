@@ -161,8 +161,8 @@ namespace HorizonEngine
             _currentFrame = 0;
             _currentDuration = 0f;
             _totalDuration = 0f;
-            var sprite = gameObject.GetComponent<Sprite>();
-            if (sprite != null) sprite.texture = _currentAnimation[0];
+            //var sprite = gameObject.GetComponent<Sprite>();
+            //if (sprite != null) sprite.texture = _currentAnimation[0];
             _nextAnimation = null;
         }
         private bool CheckCondition(IList<AnimatorCondition> conditions)

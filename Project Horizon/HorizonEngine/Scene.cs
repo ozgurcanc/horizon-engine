@@ -178,6 +178,14 @@ namespace HorizonEngine
             dontDestroyOnLoad.ForEach(x => x.OnLoad());
         }
 
+        internal static void Reload()
+        {
+            Scene scene = Scene.main;
+            List<GameObject> rootGameObjects = scene._gameObjects.FindAll(x => x.parent == null);
+            scene.Clear();
+            rootGameObjects.ForEach(x => x.OnLoad());
+        }
+
         internal static void NewScene(string name)
         {
             Scene scene = Scene.main;
