@@ -59,7 +59,8 @@ namespace HorizonEngine
                     if (ImGui.MenuItem("Save Scene", Scene.name != null)) 
                     {
                         GameWindow.isPlaying = false;
-                        Scene.Save(); 
+                        Scene.Save();
+                        Assets.Save();
                     }
                     ImGui.Separator();
                     if (ImGui.MenuItem("Exit")) { Application.Quit(); }

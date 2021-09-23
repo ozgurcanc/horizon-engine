@@ -39,6 +39,7 @@ namespace HorizonEngine
             set
             {
                 _comparison = value;
+                Assets.SetModified();
             }
         }
 
@@ -51,6 +52,7 @@ namespace HorizonEngine
             set
             {
                 _targetValue = value;
+                Assets.SetModified();
             }
         }
 

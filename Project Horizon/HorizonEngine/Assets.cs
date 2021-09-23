@@ -15,6 +15,8 @@ namespace HorizonEngine
 {
     public static class Assets
     {
+        private static bool _isModified;
+        private static AssetsDirectory _rootDirectory;
         private static Dictionary<string, Texture2D> _sourceTextures;
         private static Dictionary<uint, HorizonEngine.Texture> _textures;
         private static Dictionary<uint, Animation> _animations;
@@ -30,6 +32,40 @@ namespace HorizonEngine
             _fonts = new Dictionary<uint, Font>();
             _renderTextures = new Dictionary<uint, RenderTexture>();
             _animatorControllers = new Dictionary<uint, AnimatorController>();
+            _rootDirectory = new AssetsDirectory("Assets");
+        }
+
+        internal static void Save()
+        {
+            _isModified = false;
+            File.WriteAllText(Path.Combine(Application.projectPath, "Assets.json"), JsonConvert.SerializeObject(_rootDirectory));
+        }
+
+        internal static void Load()
+        {
+            _rootDirectory = JsonConvert.DeserializeObject<AssetsDirectory>(File.ReadAllText(Path.Combine(Application.projectPath, "Assets.json")));
+            _rootDirectory.Reload();
+        }
+
+        internal static AssetsDirectory rootDirectory
+        {
+            get
+            {
+                return _rootDirectory;
+            }
+        }
+
+        internal static bool isModified
+        {
+            get
+            {
+                return _isModified;
+            }
+        }
+
+        internal static void SetModified()
+        {
+            _isModified = true;
         }
 
         internal static Dictionary<uint, Font>.ValueCollection fonts
@@ -47,7 +83,7 @@ namespace HorizonEngine
             return font;
         }
 
-        public static Font GetFont(uint id) 
+        internal static Font GetFont(uint id) 
         {
             if (_fonts.ContainsKey(id))
                 return _fonts[id];

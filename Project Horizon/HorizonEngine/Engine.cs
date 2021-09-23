@@ -48,6 +48,7 @@ namespace HorizonEngine
 
             Application.Init();
 
+            AssetsWindow.Init();
             GameWindow.Init(_guiRenderer);
             AnimationWindow.Init(_guiRenderer);
             SpriteEditorWindow.Init(_guiRenderer);

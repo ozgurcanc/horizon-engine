@@ -21,19 +21,16 @@ namespace HorizonEngine
         private static ImGuiTreeNodeFlags _leafNodeFlag;
         private static ImGuiTreeNodeFlags _innerNodeFlag;
         private static AssetsDirectory _selectedDirectory;
-        private static AssetsDirectory _rootDirectory;
         private static Asset _selectedAsset;
         private static int _pushID;
         private static bool _clicked;
 
-        static AssetsWindow()
+        internal static void Init()
         {
-            _selectedDirectory = null;
+            //_selectedDirectory = null;
             _leafNodeFlag = ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.NoTreePushOnOpen;
             _innerNodeFlag = ImGuiTreeNodeFlags.OpenOnDoubleClick | ImGuiTreeNodeFlags.OpenOnArrow;
-
-            _rootDirectory = new AssetsDirectory("Assets");
-            _selectedDirectory = _rootDirectory;
+            _selectedDirectory = Assets.rootDirectory;
         }
 
         internal static bool enabled
@@ -46,19 +43,7 @@ namespace HorizonEngine
             {
                 _enabled = value;
             }
-        }
-
-        internal static void Save()
-        {
-            File.WriteAllText(Path.Combine(Application.projectPath, "Assets.json"), JsonConvert.SerializeObject(_rootDirectory));
-        }
-
-        internal static void Load()
-        {
-            _rootDirectory = JsonConvert.DeserializeObject<AssetsDirectory>(File.ReadAllText(Path.Combine(Application.projectPath, "Assets.json")));
-            _selectedDirectory = _rootDirectory;
-            _rootDirectory.Reload();
-        }
+        }     
 
         internal static void Draw()
         {
@@ -69,7 +54,8 @@ namespace HorizonEngine
             bool deleteAssetFlag = false;
             bool deleteDirectoryFlag = false;
 
-            if (!ImGui.Begin("Assets", ref _enabled, ImGuiWindowFlags.NoScrollbar))
+            string windowName = Assets.isModified ? "Assets*###1" : "Assets###1";
+            if (!ImGui.Begin(windowName, ref _enabled, ImGuiWindowFlags.NoScrollbar))
             {
                 ImGui.End();
                 return;
@@ -78,7 +64,7 @@ namespace HorizonEngine
             string name = _selectedDirectory.name;
             ImGui.Text("Current Folder");
             ImGui.SameLine();
-            ImGuiInputTextFlags renameFlags = _selectedDirectory == _rootDirectory ? ImGuiInputTextFlags.ReadOnly : ImGuiInputTextFlags.None;
+            ImGuiInputTextFlags renameFlags = _selectedDirectory == Assets.rootDirectory ? ImGuiInputTextFlags.ReadOnly : ImGuiInputTextFlags.None;
             if (ImGui.InputText("##directoryName", ref name, 100, renameFlags))
             {
                 _selectedDirectory.name = name;
@@ -90,7 +76,7 @@ namespace HorizonEngine
 
             ImGui.BeginChild("directory");
 
-            ShowDirectory(_rootDirectory);
+            ShowDirectory(Assets.rootDirectory);
 
             ImGui.EndChild();
 
@@ -163,7 +149,6 @@ namespace HorizonEngine
                     _selectedDirectory = _selectedDirectory.parent;
                     deletedDirectory.Destroy();
                     Scene.Reload();
-                    AssetsWindow.Save();
                     ImGui.CloseCurrentPopup();
                 }
                 ImGui.EndPopup();
@@ -186,10 +171,8 @@ namespace HorizonEngine
                 if (ImGui.Button("Delete"))
                 {
                     GameWindow.isPlaying = false;
-                    _selectedDirectory.RemoveAsset(_selectedAsset);
-                    _selectedAsset.Delete();
+                    _selectedDirectory.DeleteAsset(_selectedAsset);
                     Scene.Reload();
-                    AssetsWindow.Save();
                     ImGui.CloseCurrentPopup();
                 }
                 ImGui.EndPopup();
@@ -283,8 +266,7 @@ namespace HorizonEngine
                 }
                 if (ImGui.IsMouseReleased(ImGuiMouseButton.Left) && ImGui.GetDragDropPayload().IsDataType("Asset"))
                 {
-                    _selectedDirectory.RemoveAsset(_selectedAsset);
-                    directory.AddAsset(_selectedAsset);
+                    _selectedDirectory.MoveAsset(_selectedAsset, directory);
                 }
                 ImGui.EndDragDropTarget();
             }

@@ -86,16 +86,17 @@ namespace HorizonEngine
                 Directory.CreateDirectory(_scenesPath);
                 _projectSettings = new ProjectSettings();
                 File.WriteAllText(projectSettingsPath, JsonConvert.SerializeObject(_projectSettings));
-                AssetsWindow.Save();
+                Assets.Save();
             }
             
             _projectSettings = JsonConvert.DeserializeObject<ProjectSettings>(File.ReadAllText(projectSettingsPath));
-            AssetsWindow.Load();            
+            Assets.Load();            
         }
 
         public static void Quit()
         {
             _isQuit = true;
         }
+
     }
 }

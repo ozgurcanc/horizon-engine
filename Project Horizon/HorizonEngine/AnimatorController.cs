@@ -64,12 +64,14 @@ namespace HorizonEngine
         internal void SetDefaultAnimation(Animation animation)
         {
             _defaultAnimation = animation;
+            Assets.SetModified();
         }
 
         internal void AddAnimation(Animation animation)
         {
             _animations.Add(animation.assetID, animation);
             _transitions.Add(animation.assetID, new List<AnimatorTransition>());
+            Assets.SetModified();
         }
 
         internal void RemoveAnimation(Animation animation)
@@ -81,11 +83,13 @@ namespace HorizonEngine
             {
                 transitions.RemoveAll(x => x.to == animation);
             }
+            Assets.SetModified();
         }
 
         internal void AddParameter(AnimatorParameter parameter)
         {
             _parameters.Add(parameter);
+            Assets.SetModified();
         }
 
         internal void RemoveParameter(AnimatorParameter parameter)
@@ -98,16 +102,19 @@ namespace HorizonEngine
                     animatorTransition.RemoveAllConditions(parameter);
                 }
             }
+            Assets.SetModified();
         }
 
         internal void AddTransition(AnimatorTransition transition)
         {
             _transitions[transition.from.assetID].Add(transition);
+            Assets.SetModified();
         }
 
         internal void RemoveTransition(AnimatorTransition transition)
         {
             _transitions[transition.from.assetID].Remove(transition);
+            Assets.SetModified();
         }
 
         internal List<AnimatorTransition> GetTransitions(uint animation)

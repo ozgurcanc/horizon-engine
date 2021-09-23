@@ -54,6 +54,7 @@ namespace HorizonEngine
                 if (_parent != null) _parent._subdirectories.Remove(this);
                 _parent = value;
                 if (value != null) _parent._subdirectories.Add(this);
+                Assets.SetModified();
             }
         }
 
@@ -66,6 +67,7 @@ namespace HorizonEngine
             set
             {
                 _name = value;
+                Assets.SetModified();
             }
         }
 
@@ -90,6 +92,7 @@ namespace HorizonEngine
             this.parent = null;
             _assets.ForEach(x => x.Delete());
             foreach (var subDirectory in _subdirectories.ToArray()) subDirectory.Destroy();
+            Assets.Save();
         }
 
         internal void Reload()
@@ -102,11 +105,20 @@ namespace HorizonEngine
         internal void AddAsset(Asset asset)
         {
             _assets.Add(asset);
+            Assets.Save();
         }
 
-        internal void RemoveAsset(Asset asset)
+        internal void DeleteAsset(Asset asset)
         {
             _assets.Remove(asset);
+            asset.Delete();
+            Assets.Save();
+        }
+
+        internal void MoveAsset(Asset asset, AssetsDirectory destination)
+        {
+            _assets.Remove(asset);
+            destination.AddAsset(asset);
         }
 
     }

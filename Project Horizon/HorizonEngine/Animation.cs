@@ -42,6 +42,7 @@ namespace HorizonEngine
             set
             {
                 _duration = value >= 0 ? value : 0f;
+                Assets.SetModified();
             }
         }
 
@@ -70,17 +71,20 @@ namespace HorizonEngine
             set
             {
                 _loop = value;
+                Assets.SetModified();
             }
         }
 
         internal void AddFrame(HorizonEngine.Texture frame)
         {
             _frames.Add(frame);
+            Assets.SetModified();
         }
 
         internal void RemoveFrame(HorizonEngine.Texture frame)
         {
             _frames.Remove(frame);
+            Assets.SetModified();
         }
 
         internal void SwapFrame(int index1, int index2)
@@ -88,6 +92,7 @@ namespace HorizonEngine
             var x = _frames[index1];
             _frames[index1] = _frames[index2];
             _frames[index2] = x;
+            Assets.SetModified();
         }      
 
         internal override void Reload()

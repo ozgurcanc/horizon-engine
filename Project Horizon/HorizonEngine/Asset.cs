@@ -35,6 +35,7 @@ namespace HorizonEngine
             set
             {
                 _name = value;
+                Assets.SetModified();
             }
         }
 

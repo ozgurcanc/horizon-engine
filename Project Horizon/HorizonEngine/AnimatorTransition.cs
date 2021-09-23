@@ -59,6 +59,7 @@ namespace HorizonEngine
             set
             {
                 _hasExitTime = value;
+                Assets.SetModified();
             }
         }
 
@@ -71,6 +72,7 @@ namespace HorizonEngine
             set
             {
                 _exitTime = MathHelper.Clamp(value, 0f, 1f);
+                Assets.SetModified();
             }
         }
 
@@ -83,6 +85,7 @@ namespace HorizonEngine
             set
             {
                 _duration = value >= 0f ? value : 0f;
+                Assets.SetModified();
             }
         }
 
@@ -97,11 +100,13 @@ namespace HorizonEngine
         internal void AddCondition(AnimatorCondition condition)
         {
             _conditions.Add(condition);
+            Assets.SetModified();
         }
 
         internal void RemoveCondition(AnimatorCondition condition)
         {
             _conditions.Remove(condition);
+            Assets.SetModified();
         }
 
         internal void RemoveAllConditions(AnimatorParameter parameter)
@@ -153,7 +158,7 @@ namespace HorizonEngine
                     ImGui.PushID(++id);
                     if (ImGui.Selectable(parameter.name))
                     {
-                        _conditions.Add(parameter.Condition());
+                        this.AddCondition(parameter.Condition());
                     }
                     ImGui.PopID();
                 }
@@ -166,7 +171,7 @@ namespace HorizonEngine
             {
                 ImGui.PushItemWidth(ImGui.GetWindowWidth() * 0.3f);
                 ImGui.PushID(++id);
-                if (ImGui.RadioButton("##delete", true)) _conditions.Remove(condition);
+                if (ImGui.RadioButton("##delete", true)) this.RemoveCondition(condition);
                 if (ImGui.IsItemHovered())
                 {
                     ImGui.BeginTooltip();
