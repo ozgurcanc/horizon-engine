@@ -56,7 +56,8 @@ namespace HorizonEngine
             }
 
             if (Scene.name == null) return;
-            if (!ImGui.CollapsingHeader(Scene.name)) return;
+            string sceneName = Undo.isSceneModified ? Scene.name + "*###sceneName" : Scene.name + "###sceneName";
+            if (!ImGui.CollapsingHeader(sceneName)) return;
 
             ImGui.BeginChild("main");
 

@@ -107,6 +107,7 @@ namespace HorizonEngine
 
         private static Stack<UndoAction> _undoStack;
         private static Stack<UndoAction> _redoStack;
+        private static int _sceneSavePoint;
 
         static Undo()
         {
@@ -130,9 +131,19 @@ namespace HorizonEngine
             }
         }
 
+        internal static bool isSceneModified
+        {
+            get
+            {
+                return _sceneSavePoint != _undoStack.Count;
+            }
+        }
+
         internal static void RegisterAction(object target, object undoValue, object redoValue, string propertyName)
         {
             if (GameWindow.isPlaying) return;
+
+            if (_sceneSavePoint > _undoStack.Count) _sceneSavePoint = -1;
 
             PropertyAction undoAction = new PropertyAction();
             undoAction.target = target;
@@ -147,6 +158,8 @@ namespace HorizonEngine
         {
             if (GameWindow.isPlaying) return;
 
+            if (_sceneSavePoint > _undoStack.Count) _sceneSavePoint = -1;
+
             GameObjectAction undoAction = new GameObjectAction();
             undoAction.parent = gameObject.parent;
             undoAction.gameObject = gameObject;
@@ -158,6 +171,8 @@ namespace HorizonEngine
         internal static void RegisterAction(Component component, bool isCreateAction)
         {
             if (GameWindow.isPlaying) return;
+
+            if (_sceneSavePoint > _undoStack.Count) _sceneSavePoint = -1;
 
             ComponentAction undoAction = new ComponentAction();
             undoAction.gameObject = component.gameObject;
@@ -185,6 +200,12 @@ namespace HorizonEngine
         {
             _undoStack.Clear();
             _redoStack.Clear();
+            _sceneSavePoint = 0;
+        }
+
+        internal static void SceneSaved()
+        {
+            _sceneSavePoint = _undoStack.Count;
         }
     }
 }

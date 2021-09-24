@@ -16,20 +16,21 @@ namespace HorizonEngine
     internal static class MainMenuBar
     {
         private static string _sceneName;
+        private static Action<string> _actionAfterSave;
 
         internal static void Draw()
         {
             bool newSceneFlag = false;
             bool renameSceneFlag = false;
             bool deleteSceneFlag = false;
+            bool saveScenePopUp = false;
 
             if(ImGui.BeginMainMenuBar())
             {
                 if(ImGui.BeginMenu("File"))
                 {
                     if (ImGui.MenuItem("New Scene")) 
-                    {
-                        GameWindow.isPlaying = false;
+                    {                      
                         newSceneFlag = true; 
                     }                  
                     if (ImGui.BeginMenu("Open Scene"))
@@ -39,9 +40,9 @@ namespace HorizonEngine
                         {
                             if(ImGui.MenuItem(x))
                             {
-                                GameWindow.isPlaying = false;
-                                Scene.Load(x);
-                                Undo.Reset();
+                                _actionAfterSave = Application.LoadScene;
+                                _sceneName = x;
+                                saveScenePopUp = true;
                             }
                         }
                         ImGui.EndMenu();
@@ -49,19 +50,15 @@ namespace HorizonEngine
                     ImGui.Separator();
                     if (ImGui.MenuItem("Rename Scene", Scene.name != null)) 
                     {
-                        GameWindow.isPlaying = false;
                         renameSceneFlag = true; 
                     }
                     if (ImGui.MenuItem("Delete Scene", Scene.name != null)) 
                     {
-                        GameWindow.isPlaying = false;
                         deleteSceneFlag = true; 
                     }
                     if (ImGui.MenuItem("Save Scene", Scene.name != null)) 
                     {
-                        GameWindow.isPlaying = false;
-                        Scene.Save();
-                        Assets.Save();
+                        Application.SaveScene();
                     }
                     ImGui.Separator();
                     if (ImGui.MenuItem("Exit")) { Application.Quit(); }
@@ -121,8 +118,8 @@ namespace HorizonEngine
                     {
                         if(!sceneNameExists)
                         {
-                            Scene.NewScene(_sceneName);
-                            Undo.Reset();
+                            _actionAfterSave = Application.NewScene;
+                            saveScenePopUp = true;
                             ImGui.CloseCurrentPopup();
                         }
                     }
@@ -154,7 +151,7 @@ namespace HorizonEngine
                     {
                         if (!sceneNameExists)
                         {
-                            Scene.Rename(_sceneName);
+                            Application.RenameScene(_sceneName);
                             ImGui.CloseCurrentPopup();
                         }
                     }
@@ -179,8 +176,40 @@ namespace HorizonEngine
                     ImGui.SameLine();
                     if (ImGui.Button("Delete"))
                     {
-                        Scene.DeleteScene();
-                        Undo.Reset();
+                        Application.DeleteScene();
+                        ImGui.CloseCurrentPopup();
+                    }
+
+                    ImGui.EndPopup();
+                }
+
+                if (saveScenePopUp)
+                {
+                    if(Undo.isSceneModified) ImGui.OpenPopup("Scene Have Been Modified");
+                    else _actionAfterSave.Invoke(_sceneName);
+                }
+
+                if (ImGui.BeginPopupModal("Scene Have Been Modified"))
+                {
+                    ImGui.Text("Do you want to save changes in the scene.");
+                    ImGui.Text("Your changes will be lost if you don't save.");
+                    ImGui.NewLine();
+
+                    if (ImGui.Button("Cancel"))
+                    {
+                        ImGui.CloseCurrentPopup();
+                    }
+                    ImGui.SameLine();
+                    if (ImGui.Button("Don't Save"))
+                    {
+                        _actionAfterSave.Invoke(_sceneName);
+                        ImGui.CloseCurrentPopup();
+                    }
+                    ImGui.SameLine();
+                    if (ImGui.Button("Save"))
+                    {
+                        Application.SaveScene();
+                        _actionAfterSave.Invoke(_sceneName);
                         ImGui.CloseCurrentPopup();
                     }
 

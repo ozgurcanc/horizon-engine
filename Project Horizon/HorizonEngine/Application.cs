@@ -79,7 +79,43 @@ namespace HorizonEngine
             }
             
             Assets.Load();            
+        }      
+
+        internal static void LoadScene(string name)
+        {
+            GameWindow.isPlaying = false;
+            Scene.Load(name);
+            Undo.Reset();
         }
+
+        internal static void NewScene(string name)
+        {
+            GameWindow.isPlaying = false;
+            Scene.NewScene(name);
+            Undo.Reset();
+        }
+
+        internal static void SaveScene()
+        {
+            GameWindow.isPlaying = false;
+            Scene.Save();
+            Assets.Save();
+            Undo.SceneSaved();
+        }
+
+        internal static void RenameScene(string name)
+        {
+            GameWindow.isPlaying = false;
+            Scene.Rename(name);
+        }
+
+        internal static void DeleteScene()
+        {
+            GameWindow.isPlaying = false;
+            Scene.DeleteScene();
+            Undo.Reset();
+        }
+        
 
         public static void Quit()
         {
