@@ -20,6 +20,12 @@ namespace Project_Horizon_DX
                 {
                     gameObject.GetComponent<Animator>().SetTrigger("Trigger");
                 }
+                if (Input.GetKeyDown(Keys.R))
+                {
+                    gameObject.DontDestroyOnLoad();
+                    Scene.Load("Test Scene");
+                }
+
             }
         }
 

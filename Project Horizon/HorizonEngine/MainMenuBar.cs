@@ -41,6 +41,7 @@ namespace HorizonEngine
                             {
                                 GameWindow.isPlaying = false;
                                 Scene.Load(x);
+                                Undo.Reset();
                             }
                         }
                         ImGui.EndMenu();
@@ -121,6 +122,7 @@ namespace HorizonEngine
                         if(!sceneNameExists)
                         {
                             Scene.NewScene(_sceneName);
+                            Undo.Reset();
                             ImGui.CloseCurrentPopup();
                         }
                     }
@@ -178,6 +180,7 @@ namespace HorizonEngine
                     if (ImGui.Button("Delete"))
                     {
                         Scene.DeleteScene();
+                        Undo.Reset();
                         ImGui.CloseCurrentPopup();
                     }
 
