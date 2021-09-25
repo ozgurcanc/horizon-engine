@@ -31,6 +31,7 @@ namespace HorizonEngine
         private static Dictionary<uint, Font> _fonts;
         private static Dictionary<uint, RenderTexture> _renderTextures;
         private static Dictionary<uint, AnimatorController> _animatorControllers;
+        private static Dictionary<uint, AudioClip> _audioClips;
 
         static Assets()
         {
@@ -40,6 +41,7 @@ namespace HorizonEngine
             _fonts = new Dictionary<uint, Font>();
             _renderTextures = new Dictionary<uint, RenderTexture>();
             _animatorControllers = new Dictionary<uint, AnimatorController>();
+            _audioClips = new Dictionary<uint, AudioClip>();
             _rootDirectory = new AssetsDirectory("Assets");
         }
 
@@ -241,6 +243,39 @@ namespace HorizonEngine
         internal static void Load(AnimatorController animatorController)
         {
             _animatorControllers.Add(animatorController.assetID, animatorController);
+        }
+
+        internal static Dictionary<uint, AudioClip>.ValueCollection audioClips
+        {
+            get
+            {
+                return _audioClips.Values;
+            }
+        }
+
+        internal static AudioClip CreateAudioClip(string name, string source)
+        {
+            AudioClip audioClip = new AudioClip(name, source);
+            _audioClips.Add(audioClip.assetID, audioClip);
+            return audioClip;
+        }
+
+        internal static AudioClip GetAudioClip(uint id)
+        {
+            if (_audioClips.ContainsKey(id))
+                return _audioClips[id];
+
+            return null;
+        }
+
+        internal static void Load(AudioClip audioClip)
+        {
+            _audioClips.Add(audioClip.assetID, audioClip);
+        }
+
+        internal static void Delete(AudioClip audioClip)
+        {
+            _audioClips.Remove(audioClip.assetID);
         }
 
         internal static void Delete(Font font)

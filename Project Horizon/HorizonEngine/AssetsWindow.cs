@@ -106,7 +106,11 @@ namespace HorizonEngine
                 {
                     ImportTexture();
                 }
-                if(ImGui.MenuItem("New Render Texture"))
+                if (ImGui.MenuItem("Import New Audio"))
+                {
+                    ImportAudio();
+                }
+                if (ImGui.MenuItem("New Render Texture"))
                 {
                     RenderTexture renderTexture = Assets.CreateRenderTexture("RenderTexture", 400, 400);
                     _selectedDirectory.AddAsset(renderTexture);
@@ -339,6 +343,39 @@ namespace HorizonEngine
                     HorizonEngine.Texture texture = Assets.CreateTexture(openFileDialog.SafeFileNames[i], openFileDialog.SafeFileNames[i]);
                     _selectedDirectory.AddAsset(texture);
                 }               
+            }
+        }
+
+        private static void ImportAudio()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                InitialDirectory = Application.assetsPath,
+                Title = "Import New Audio",
+
+                CheckFileExists = true,
+                CheckPathExists = true,
+
+                //DefaultExt = "txt",
+                Filter = "Audio files (*.wav)|*.wav",
+                //FilterIndex = 2,
+                RestoreDirectory = true,
+
+                ReadOnlyChecked = true,
+                ShowReadOnly = true,
+
+                Multiselect = true,
+            };
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                //openFileDialog.FileName;
+                for (int i = 0; i < openFileDialog.FileNames.Length; i++)
+                {
+                    File.Copy(openFileDialog.FileNames[i], Path.Combine(Application.assetsPath, openFileDialog.SafeFileNames[i]), true);
+                    AudioClip audioClip = Assets.CreateAudioClip(openFileDialog.SafeFileNames[i], openFileDialog.SafeFileNames[i]);
+                    _selectedDirectory.AddAsset(audioClip);
+                }
             }
         }
     }
