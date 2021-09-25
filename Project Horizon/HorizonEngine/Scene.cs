@@ -28,6 +28,7 @@ namespace HorizonEngine
         private List<Behaviour> _startBehaviours;
         private List<Animator> _animators;
         private List<Camera> _cameras;
+        private List<AudioSource> _audioSources;
         private static Tuple<string, List<GameObject>> _cache;
 
         internal static Scene main
@@ -99,6 +100,11 @@ namespace HorizonEngine
                 component.componetID = scene._cameras.Count;
                 scene._cameras.Add((Camera)component);
             }
+            else if (component is AudioSource)
+            {
+                component.componetID = scene._audioSources.Count;
+                scene._audioSources.Add((AudioSource)component);
+            }
         }
 
         internal static void DisableComponent(Component component)
@@ -152,6 +158,15 @@ namespace HorizonEngine
                 temp.componetID = component.componetID;
                 scene._cameras[component.componetID] = temp;
                 scene._cameras.RemoveAt(lastIndex);
+            }
+            else if (component is AudioSource)
+            {
+                int lastIndex = scene._audioSources.Count - 1;
+                AudioSource temp = scene._audioSources[lastIndex];
+                temp.componetID = component.componetID;
+                scene._audioSources[component.componetID] = temp;
+                scene._audioSources.RemoveAt(lastIndex);
+                ((AudioSource)component).Stop();
             }
         }
 
@@ -227,6 +242,7 @@ namespace HorizonEngine
             _startBehaviours = new List<Behaviour>();
             _animators = new List<Animator>();
             _cameras = new List<Camera>();
+            _audioSources = new List<AudioSource>();
             _main = this;
         }
 
@@ -297,6 +313,7 @@ namespace HorizonEngine
                 Debug.WriteLine("colliders : " + _colliders.Count);
                 Debug.WriteLine("animators : " + _animators.Count);
                 Debug.WriteLine("camera : " + _cameras.Count);
+                Debug.WriteLine("audio sources : " + _audioSources.Count);
                 Debug.WriteLine("");               
             }
 
@@ -476,6 +493,7 @@ namespace HorizonEngine
             _startBehaviours.Clear();
             foreach (var x in _behaviours.ToArray()) x.Update();
             foreach (var x in _animators.ToArray()) x.AnimationUpdate(deltaTime);
+            foreach (var x in _audioSources.ToArray()) x.UpdateAudio();
             //_updatables.ForEach(x => x.Update(gameTime));
         }
 
@@ -531,7 +549,9 @@ namespace HorizonEngine
             _mouseClickedColliders = null;
             _startBehaviours.Clear();
             _animators.Clear();
-            _cameras.Clear();          
+            _cameras.Clear();
+            _audioSources.ForEach(x => x.Stop());
+            _audioSources.Clear();
         }
     }
 }

@@ -82,6 +82,7 @@
     <Compile Include="AssetsDirectory.cs" />
     <Compile Include="AssetsWindow.cs" />
     <Compile Include="AudioClip.cs" />
+    <Compile Include="AudioSource.cs" />
     <Compile Include="Behaviour.cs" />
     <Compile Include="BoxCollider.cs" />
     <Compile Include="BVH.cs" />
