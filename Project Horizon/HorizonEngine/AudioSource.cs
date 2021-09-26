@@ -15,21 +15,30 @@ namespace HorizonEngine
 {
     public class AudioSource : Component
     {
+        public enum AudioSourceMode
+        {
+            Surround,
+            Spatial
+        }
+
         [JsonIgnore]
         private AudioClip _clip;
         [JsonIgnore]
         private SoundEffectInstance _clipInstance;
+        private AudioEmitter _emitter;
         private uint _assetID;
         private bool _loop;
         private bool _mute;
         private float _volume;
         private float _pitch;
-        private float _pan;     
+        private float _pan;
+        private AudioSourceMode _mode;
 
         public AudioSource()
         {
             _volume = 1f;
             _clip = null;
+            _emitter = new AudioEmitter();
         }
 
         public AudioClip clip
@@ -124,9 +133,24 @@ namespace HorizonEngine
             }
         }
 
+        public AudioSourceMode mode
+        {
+            get
+            {
+                return _mode;
+            }
+            set
+            {
+                _mode = value;
+            }
+        }
+
         internal void UpdateAudio()
         {
             if (_clipInstance == null) return;
+
+            _emitter.Position = _mode == AudioSourceMode.Surround ? Audio.audioListener.Position : new Vector3(gameObject.position, 0f);
+            _clipInstance.Apply3D(Audio.audioListener, _emitter);
         }
 
         public void Play()
@@ -218,6 +242,16 @@ namespace HorizonEngine
             {
                 Undo.RegisterAction(this, this.pan, pan, nameof(AudioSource.pan));
                 this.pan = pan;
+            }
+
+            int mode = (int)this.mode;
+            string[] modes = Enum.GetNames(typeof(AudioSourceMode));
+            ImGui.Text("Mode");
+            ImGui.SameLine();
+            if (ImGui.Combo("##mode" + id, ref mode, modes, modes.Length))
+            {
+                Undo.RegisterAction(this, this.mode, (AudioSourceMode)mode, nameof(AudioSource.mode));
+                this.mode = (AudioSourceMode)mode;
             }
 
             ImGui.PushItemWidth(ImGui.GetWindowWidth() * 0.25f);
