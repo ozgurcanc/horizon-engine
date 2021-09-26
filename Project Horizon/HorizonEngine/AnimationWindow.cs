@@ -52,13 +52,15 @@ namespace HorizonEngine
                 if(ImGui.RadioButton("Open Animation", true))
                 {
                     ImGui.OpenPopup("select_animation");
+                    SearchBar.Clear();
                 }
 
                 if(ImGui.BeginPopup("select_animation"))
                 {
+                    SearchBar.Draw();
                     foreach(Animation animation in Assets.animations)
                     {
-                        if (ImGui.Selectable(animation.name)) Open(animation);
+                        if (SearchBar.PassFilter(animation.name) && ImGui.Selectable(animation.name)) Open(animation);
                     }
                     ImGui.EndPopup();
                 }
@@ -99,13 +101,16 @@ namespace HorizonEngine
             if (ImGui.RadioButton("Add new frame", true))
             {
                 ImGui.OpenPopup("add_new_frame");
+                SearchBar.Clear();
             }
 
             if(ImGui.BeginPopup("add_new_frame"))
             {
+                SearchBar.Draw();
                 foreach(HorizonEngine.Texture texture in Assets.textures)
                 {
-                    if (ImGui.Selectable(texture.name)) _animation.AddFrame(texture);
+                    if (SearchBar.PassFilter(texture.name) && ImGui.Selectable(texture.name)) 
+                        _animation.AddFrame(texture);
                 }
 
                 ImGui.EndPopup();

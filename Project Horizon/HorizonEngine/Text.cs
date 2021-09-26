@@ -97,10 +97,13 @@ namespace HorizonEngine
             if(ImGui.Button("select font"))
             {
                 ImGui.OpenPopup("select_font");
+                SearchBar.Clear();
             }
 
             if(ImGui.BeginPopup("select_font"))
             {
+                SearchBar.Draw();
+
                 if (ImGui.Selectable("None"))
                 {
                     Undo.RegisterAction(this, this.font, null, nameof(Text.font));
@@ -109,7 +112,7 @@ namespace HorizonEngine
 
                 foreach(Font font in Assets.fonts)
                 {
-                    if (ImGui.Selectable(font.name))
+                    if (SearchBar.PassFilter(font.name) && ImGui.Selectable(font.name))
                     {
                         Undo.RegisterAction(this, this.font, font, nameof(Text.font));
                         this.font = font;

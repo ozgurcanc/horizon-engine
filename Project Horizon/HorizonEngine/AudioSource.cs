@@ -264,10 +264,13 @@ namespace HorizonEngine
             if (ImGui.Button("Select AudioClip"))
             {
                 ImGui.OpenPopup("select_audio_clip");
+                SearchBar.Clear();
             }
 
             if (ImGui.BeginPopup("select_audio_clip"))
             {
+                SearchBar.Draw();
+
                 if (ImGui.Selectable("None"))
                 {
                     Undo.RegisterAction(this, this.clip, null, nameof(AudioSource.clip));
@@ -276,7 +279,7 @@ namespace HorizonEngine
 
                 foreach (AudioClip clip in Assets.audioClips)
                 {
-                    if (ImGui.Selectable(clip.name))
+                    if (SearchBar.PassFilter(clip.name) && ImGui.Selectable(clip.name))
                     {
                         Undo.RegisterAction(this, this.clip, clip, nameof(AudioSource.clip));
                         this.clip = clip;

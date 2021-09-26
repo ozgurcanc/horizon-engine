@@ -49,13 +49,16 @@ namespace HorizonEngine
                 if (ImGui.RadioButton("Open Animator Controller", true))
                 {
                     ImGui.OpenPopup("select_animator_controller");
+                    SearchBar.Clear();
                 }
 
                 if (ImGui.BeginPopup("select_animator_controller"))
                 {
+                    SearchBar.Draw();
                     foreach (AnimatorController animatorController in Assets.animatorControllers)
                     {
-                        if (ImGui.Selectable(animatorController.name)) Open(animatorController);
+                        if (SearchBar.PassFilter(animatorController.name) && ImGui.Selectable(animatorController.name)) 
+                            Open(animatorController);
                     }
                     ImGui.EndPopup();
                 }
@@ -79,13 +82,16 @@ namespace HorizonEngine
             if (ImGui.RadioButton("Add Animation", true))
             {
                 ImGui.OpenPopup("add_new_animation");
+                SearchBar.Clear();
             }
 
             if(ImGui.BeginPopup("add_new_animation"))
             {
+                SearchBar.Draw();
                 foreach(Animation animation in Assets.animations)
                 {
-                    if (ImGui.Selectable(animation.name)) _animatorController.AddAnimation(animation);
+                    if (SearchBar.PassFilter(animation.name) && ImGui.Selectable(animation.name)) 
+                        _animatorController.AddAnimation(animation);
                 }
                 ImGui.EndPopup();
             }

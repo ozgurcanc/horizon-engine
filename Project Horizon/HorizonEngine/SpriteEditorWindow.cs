@@ -55,15 +55,17 @@ namespace HorizonEngine
                 if (ImGui.RadioButton("Open Sprite", true))
                 {
                     ImGui.OpenPopup("select_texture");
+                    SearchBar.Clear();
                 }
 
                 if (ImGui.BeginPopup("select_texture"))
                 {
+                    SearchBar.Draw();
                     foreach (Texture sprite in Assets.textures)
                     {
                         if (sprite is RenderTexture) continue;
                         if (!sprite.isOriginal) continue;
-                        if (ImGui.Selectable(sprite.name))
+                        if (SearchBar.PassFilter(sprite.name) && ImGui.Selectable(sprite.name))
                         {
                             Open(sprite);
                         }

@@ -233,10 +233,13 @@ namespace HorizonEngine
             if (ImGui.Button("select controller"))
             {
                 ImGui.OpenPopup("select_controller");
+                SearchBar.Clear();
             }
 
             if (ImGui.BeginPopup("select_controller"))
             {
+                SearchBar.Draw();
+
                 if (ImGui.Selectable("None"))
                 {
                     Undo.RegisterAction(this, this.animatorController, null, nameof(Animator.animatorController));
@@ -245,7 +248,7 @@ namespace HorizonEngine
 
                 foreach (AnimatorController animatorController in Assets.animatorControllers)
                 {
-                    if (ImGui.Selectable(animatorController.name))
+                    if (SearchBar.PassFilter(animatorController.name) && ImGui.Selectable(animatorController.name))
                     {
                         Undo.RegisterAction(this, this.animatorController, animatorController, nameof(Animator.animatorController));
                         this.animatorController = animatorController;

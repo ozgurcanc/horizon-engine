@@ -439,15 +439,18 @@ namespace HorizonEngine
             if(ImGui.Button("Add Component"))
             {
                 ImGui.OpenPopup("add_component");
+                SearchBar.Clear();
             }
 
             if(ImGui.BeginPopup("add_component"))
             {
                 var components = AppDomain.CurrentDomain.GetAssemblies().SelectMany(assembly => assembly.GetTypes()).Where(type => type.IsSubclassOf(typeof(Component)) && !type.IsAbstract);
-                
+
+                SearchBar.Draw();
+
                 foreach(Type component in components)
                 {
-                    if(ImGui.Selectable(component.Name))
+                    if(SearchBar.PassFilter(component.Name) && ImGui.Selectable(component.Name))
                     {
                         MethodInfo method = typeof(GameObject).GetMethod(nameof(GameObject.AddComponent));
                         MethodInfo generic = method.MakeGenericMethod(component);
@@ -464,15 +467,17 @@ namespace HorizonEngine
             if(ImGui.Button("Remove Component"))
             {
                 ImGui.OpenPopup("remove_component");
+                SearchBar.Clear();
             }
 
             if(ImGui.BeginPopup("remove_component"))
             {
                 var components = _components.Values;
+                SearchBar.Draw();
 
-                foreach(Component component in components)
+                foreach (Component component in components)
                 {
-                    if(ImGui.Selectable(component.GetType().Name))
+                    if(SearchBar.PassFilter(component.GetType().Name) && ImGui.Selectable(component.GetType().Name))
                     {
                         Undo.RegisterAction(component, false);
                         MethodInfo method = typeof(GameObject).GetMethod(nameof(GameObject.RemoveComponent));

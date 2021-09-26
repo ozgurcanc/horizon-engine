@@ -71,10 +71,13 @@ namespace HorizonEngine
             if(ImGui.Button("select texture"))
             {
                 ImGui.OpenPopup("select_texture");
+                SearchBar.Clear();
             }
 
             if(ImGui.BeginPopup("select_texture"))
             {
+                SearchBar.Draw();
+
                 if (ImGui.Selectable("None"))
                 {
                     Undo.RegisterAction(this, this.texture, null, nameof(Sprite.texture));
@@ -83,7 +86,7 @@ namespace HorizonEngine
 
                 foreach (HorizonEngine.Texture texture in Assets.textures)
                 {
-                    if (ImGui.Selectable(texture.name))
+                    if (SearchBar.PassFilter(texture.name) && ImGui.Selectable(texture.name))
                     {
                         Undo.RegisterAction(this, this.texture, texture, nameof(Sprite.texture));
                         this.texture = texture;

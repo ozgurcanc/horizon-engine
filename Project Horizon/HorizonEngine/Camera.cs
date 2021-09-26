@@ -245,10 +245,13 @@ namespace HorizonEngine
             if(ImGui.Button("select render texture"))
             {
                 ImGui.OpenPopup("select_render_target");
+                SearchBar.Clear();
             }
 
             if(ImGui.BeginPopup("select_render_target"))
             {
+                SearchBar.Draw();
+
                 if (ImGui.Selectable("None"))
                 {
                     Undo.RegisterAction(this, this.renderTarget, null, nameof(Camera.renderTarget));
@@ -257,7 +260,7 @@ namespace HorizonEngine
 
                 foreach(RenderTexture renderTexture in Assets.renderTextures)
                 {
-                    if (ImGui.Selectable(renderTexture.name))
+                    if (SearchBar.PassFilter(renderTexture.name) && ImGui.Selectable(renderTexture.name))
                     {
                         Undo.RegisterAction(this, this.renderTarget, renderTexture, nameof(Camera.renderTarget));
                         this.renderTarget = renderTexture;
