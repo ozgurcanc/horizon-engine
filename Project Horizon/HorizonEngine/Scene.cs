@@ -537,6 +537,16 @@ namespace HorizonEngine
             _cache = null;
         }
 
+        internal static void PausePlayMode()
+        {
+            Scene.main._audioSources.ForEach(x => x.Pause());
+        }
+
+        internal static void ResumePlayMode()
+        {
+            Scene.main._audioSources.ForEach(x => x.Resume());
+        }
+
         private void Clear()
         {
             _gameObjects.Clear();

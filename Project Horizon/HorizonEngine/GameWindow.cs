@@ -65,7 +65,10 @@ namespace HorizonEngine
             }
             set
             {
+                if (_isPaused == value) return;
                 _isPaused = value;
+                if (_isPaused) Scene.PausePlayMode();
+                else Scene.ResumePlayMode();
             }
         }
 

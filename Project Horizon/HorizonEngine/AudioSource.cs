@@ -167,7 +167,7 @@ namespace HorizonEngine
 
         public void Resume()
         {
-            if (_clipInstance == null) return;
+            if (_clipInstance == null || !enabled) return;
             _clipInstance.Resume();
         }
 
