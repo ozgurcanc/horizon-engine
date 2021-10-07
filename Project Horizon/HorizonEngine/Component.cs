@@ -43,8 +43,8 @@ namespace HorizonEngine
                 _enabled = value;
                 if(_gameObject.activeInHierarchy)
                 {
-                    if (_enabled) Scene.EnableComponent(this);
-                    else Scene.DisableComponent(this);
+                    if (_enabled) this.EnableComponent();
+                    else this.DisableComponent();
                 }
             }
         }
@@ -86,6 +86,12 @@ namespace HorizonEngine
         }
 
         public abstract void OnInspectorGUI();
+
+        internal abstract void EnableComponent();
+
+        internal abstract void DisableComponent();
+
+
     }
 
 }

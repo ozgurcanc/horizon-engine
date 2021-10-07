@@ -100,6 +100,16 @@ namespace HorizonEngine
 
         internal abstract void Draw(SpriteBatch spriteBatch);
 
+        internal override void EnableComponent()
+        {
+            Scene.EnableComponent(this);
+        }
+
+        internal override void DisableComponent()
+        {
+            Scene.DisableComponent(this);
+        }
+
         public override void OnInspectorGUI()
         {
             string id = this.GetType().Name + componetID.ToString();

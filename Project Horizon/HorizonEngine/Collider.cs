@@ -71,6 +71,16 @@ namespace HorizonEngine
 
         internal abstract void UpdateCollider();
 
+        internal override void EnableComponent()
+        {
+            Scene.EnableComponent(this);
+        }
+
+        internal override void DisableComponent()
+        {
+            Scene.DisableComponent(this);
+        }
+
         public override void OnInspectorGUI()
         {
             string id = this.GetType().Name + componetID.ToString();

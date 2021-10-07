@@ -44,6 +44,16 @@ namespace HorizonEngine
 
         public virtual void OnMouseUp() { }
 
+        internal override void EnableComponent()
+        {
+            Scene.EnableComponent(this);
+        }
+
+        internal override void DisableComponent()
+        {
+            Scene.DisableComponent(this);
+        }
+
         public override void OnInspectorGUI()
         {
             if (!ImGui.CollapsingHeader(this.GetType().Name)) return;

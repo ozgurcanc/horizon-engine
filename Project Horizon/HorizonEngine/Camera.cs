@@ -192,6 +192,16 @@ namespace HorizonEngine
             _renderTexture = Assets.GetRenderTexture(_assetID);
         }
 
+        internal override void EnableComponent()
+        {
+            Scene.EnableComponent(this);
+        }
+
+        internal override void DisableComponent()
+        {
+            Scene.DisableComponent(this);
+        }
+
         public override void OnInspectorGUI()
         {
             if (!ImGui.CollapsingHeader("Camera")) return;

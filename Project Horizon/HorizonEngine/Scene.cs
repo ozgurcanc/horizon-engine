@@ -58,113 +58,131 @@ namespace HorizonEngine
             Scene.main._gameObjects.Add(gameObject);
         }
 
-        internal static void EnableComponent(Component component)
+        internal static void EnableComponent(Renderer component)
         {
             Scene scene = Scene.main;
-            if (component is Renderer)
+            component.componetID = scene._renderers.Count;
+            scene._renderers.Add(component);
+        }
+
+        internal static void EnableComponent(Behaviour component)
+        {
+            Scene scene = Scene.main;
+            component.componetID = scene._behaviours.Count;
+            scene._behaviours.Add(component);
+            component.OnEnable();
+            if (component.startFlag)
             {
-                component.componetID = scene._renderers.Count;
-                scene._renderers.Add((Renderer)component);
-            }
-            else if(component is Behaviour)
-            {
-                component.componetID = scene._behaviours.Count;
-                scene._behaviours.Add((Behaviour)component);
-                ((Behaviour)component).OnEnable();
-                if(component.startFlag)
-                {
-                    scene._startBehaviours.Add((Behaviour)component);
-                    component.startFlag = false;
-                }
-            }
-            else if(component is Rigidbody)
-            {
-                component.componetID = scene._rigidbodies.Count;
-                scene._rigidbodies.Add((Rigidbody)component);
-            }
-            else if (component is Collider)
-            {
-                component.componetID = scene._colliders.Count;
-                scene._colliders.Add((Collider)component);
-            }
-            else if (component is Animator)
-            {
-                component.componetID = scene._animators.Count;
-                scene._animators.Add((Animator)component);
-            }
-            else if (component is Camera)
-            {
-                component.componetID = scene._cameras.Count;
-                scene._cameras.Add((Camera)component);
-            }
-            else if (component is AudioSource)
-            {
-                component.componetID = scene._audioSources.Count;
-                scene._audioSources.Add((AudioSource)component);
+                scene._startBehaviours.Add(component);
+                component.startFlag = false;
             }
         }
 
-        internal static void DisableComponent(Component component)
+        internal static void EnableComponent(Rigidbody component)
         {
             Scene scene = Scene.main;
-            if (component is Renderer)
-            {
-                int lastIndex = scene._renderers.Count - 1;
-                Renderer temp = scene._renderers[lastIndex];
-                temp.componetID = component.componetID;
-                scene._renderers[component.componetID] = temp;
-                scene._renderers.RemoveAt(lastIndex);
-            }
-            else if (component is Behaviour)
-            {
-                int lastIndex = scene._behaviours.Count - 1;
-                Behaviour temp = scene._behaviours[lastIndex];
-                temp.componetID = component.componetID;
-                scene._behaviours[component.componetID] = temp;
-                scene._behaviours.RemoveAt(lastIndex);
-                ((Behaviour)component).OnDisable();
-            }
-            else if (component is Rigidbody)
-            {
-                int lastIndex = scene._rigidbodies.Count - 1;
-                Rigidbody temp = scene._rigidbodies[lastIndex];
-                temp.componetID = component.componetID;
-                scene._rigidbodies[component.componetID] = temp;
-                scene._rigidbodies.RemoveAt(lastIndex);
-            }
-            else if (component is Collider)
-            {
-                int lastIndex = scene._colliders.Count - 1;
-                Collider temp = scene._colliders[lastIndex];
-                temp.componetID = component.componetID;
-                scene._colliders[component.componetID] = temp;
-                scene._colliders.RemoveAt(lastIndex);
-            }
-            else if(component is Animator)
-            {
-                int lastIndex = scene._animators.Count - 1;
-                Animator temp = scene._animators[lastIndex];
-                temp.componetID = component.componetID;
-                scene._animators[component.componetID] = temp;
-                scene._animators.RemoveAt(lastIndex);
-            }
-            else if (component is Camera)
-            {
-                int lastIndex = scene._cameras.Count - 1;
-                Camera temp = scene._cameras[lastIndex];
-                temp.componetID = component.componetID;
-                scene._cameras[component.componetID] = temp;
-                scene._cameras.RemoveAt(lastIndex);
-            }
-            else if (component is AudioSource)
-            {
-                int lastIndex = scene._audioSources.Count - 1;
-                AudioSource temp = scene._audioSources[lastIndex];
-                temp.componetID = component.componetID;
-                scene._audioSources[component.componetID] = temp;
-                scene._audioSources.RemoveAt(lastIndex);
-                ((AudioSource)component).Stop();
-            }
+            component.componetID = scene._rigidbodies.Count;
+            scene._rigidbodies.Add(component);
+        }
+
+        internal static void EnableComponent(Collider component)
+        {
+            Scene scene = Scene.main;
+            component.componetID = scene._colliders.Count;
+            scene._colliders.Add(component);
+        }
+
+        internal static void EnableComponent(Animator component)
+        {
+            Scene scene = Scene.main;
+            component.componetID = scene._animators.Count;
+            scene._animators.Add(component);
+        }
+
+        internal static void EnableComponent(Camera component)
+        {
+            Scene scene = Scene.main;
+            component.componetID = scene._cameras.Count;
+            scene._cameras.Add(component);
+        }
+
+        internal static void EnableComponent(AudioSource component)
+        {
+            Scene scene = Scene.main;
+            component.componetID = scene._audioSources.Count;
+            scene._audioSources.Add(component);
+        }
+
+        internal static void DisableComponent(Renderer component)
+        {
+            Scene scene = Scene.main;
+            int lastIndex = scene._renderers.Count - 1;
+            Renderer temp = scene._renderers[lastIndex];
+            temp.componetID = component.componetID;
+            scene._renderers[component.componetID] = temp;
+            scene._renderers.RemoveAt(lastIndex);
+        }
+
+        internal static void DisableComponent(Behaviour component)
+        {
+            Scene scene = Scene.main;
+            int lastIndex = scene._behaviours.Count - 1;
+            Behaviour temp = scene._behaviours[lastIndex];
+            temp.componetID = component.componetID;
+            scene._behaviours[component.componetID] = temp;
+            scene._behaviours.RemoveAt(lastIndex);
+            (component).OnDisable();
+        }
+
+        internal static void DisableComponent(Rigidbody component)
+        {
+            Scene scene = Scene.main;
+            int lastIndex = scene._rigidbodies.Count - 1;
+            Rigidbody temp = scene._rigidbodies[lastIndex];
+            temp.componetID = component.componetID;
+            scene._rigidbodies[component.componetID] = temp;
+            scene._rigidbodies.RemoveAt(lastIndex);
+        }
+
+        internal static void DisableComponent(Collider component)
+        {
+            Scene scene = Scene.main;
+            int lastIndex = scene._colliders.Count - 1;
+            Collider temp = scene._colliders[lastIndex];
+            temp.componetID = component.componetID;
+            scene._colliders[component.componetID] = temp;
+            scene._colliders.RemoveAt(lastIndex);
+        }
+
+        internal static void DisableComponent(Animator component)
+        {
+            Scene scene = Scene.main;
+            int lastIndex = scene._animators.Count - 1;
+            Animator temp = scene._animators[lastIndex];
+            temp.componetID = component.componetID;
+            scene._animators[component.componetID] = temp;
+            scene._animators.RemoveAt(lastIndex);
+        }
+
+        internal static void DisableComponent(Camera component)
+        {
+            Scene scene = Scene.main;
+            int lastIndex = scene._cameras.Count - 1;
+            Camera temp = scene._cameras[lastIndex];
+            temp.componetID = component.componetID;
+            scene._cameras[component.componetID] = temp;
+            scene._cameras.RemoveAt(lastIndex);
+        }
+
+        internal static void DisableComponent(AudioSource component)
+        {
+            Scene scene = Scene.main;
+            int lastIndex = scene._audioSources.Count - 1;
+            AudioSource temp = scene._audioSources[lastIndex];
+            temp.componetID = component.componetID;
+            scene._audioSources[component.componetID] = temp;
+            scene._audioSources.RemoveAt(lastIndex);
+            (component).Stop();
         }
 
         internal static void Save()

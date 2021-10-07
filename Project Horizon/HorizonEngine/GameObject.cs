@@ -193,7 +193,7 @@ namespace HorizonEngine
             {
                 foreach (Component component in _components.Values)
                 {
-                    if (component.enabled) Scene.DisableComponent(component);
+                    if (component.enabled) component.DisableComponent();
                 }
             }
             //_components.Clear();
@@ -209,7 +209,7 @@ namespace HorizonEngine
             foreach (Component component in _components.Values)
             {
                 component.OnLoad();
-                if (activeInHierarchy && component.enabled) Scene.EnableComponent(component);
+                if (activeInHierarchy && component.enabled) component.EnableComponent();
             }                    
 
             foreach (GameObject child in _childs) child.OnLoad();
@@ -228,7 +228,7 @@ namespace HorizonEngine
                 temp.gameObject = clone;
                 clone._components.Add(temp.GetType(), temp);
                 if (temp is Behaviour) clone._behaviours.Add((Behaviour)temp);
-                if (temp.enabled && clone.activeInHierarchy) Scene.EnableComponent(temp);
+                if (temp.enabled && clone.activeInHierarchy) temp.EnableComponent();
             }
 
             foreach (GameObject child in _childs) Scene.Clone(child).parent = clone;
@@ -242,7 +242,7 @@ namespace HorizonEngine
             component.gameObject = this;
             _components.Add(component.GetType(), component);
             if (component is Behaviour) _behaviours.Add((Behaviour)component);
-            if (_activeInHierarchy && component.enabled) Scene.EnableComponent(component);
+            if (_activeInHierarchy && component.enabled) component.EnableComponent();
         }
 
         public T AddComponent<T>() where T : Component, new()
@@ -253,7 +253,7 @@ namespace HorizonEngine
             _components.Add(typeof(T), component);
             if (component is Behaviour) _behaviours.Add((Behaviour)component);
 
-            if(activeInHierarchy) Scene.EnableComponent(component);
+            if(activeInHierarchy) component.EnableComponent();
 
             return (T)component;
         }
@@ -266,7 +266,7 @@ namespace HorizonEngine
                 Component component = _components[type];
                 if (component is Behaviour) _behaviours.Remove((Behaviour)component);
                 _components.Remove(type);
-                if (activeInHierarchy && component.enabled) Scene.DisableComponent(component);
+                if (activeInHierarchy && component.enabled) component.DisableComponent();
             }
         }
 
@@ -291,8 +291,8 @@ namespace HorizonEngine
                 foreach (Component temp in components)
                 {
                     if (!temp.enabled) continue;
-                    if (gameObject._activeInHierarchy) Scene.EnableComponent(temp);
-                    else Scene.DisableComponent(temp);
+                    if (gameObject._activeInHierarchy) temp.EnableComponent();
+                    else temp.DisableComponent();
                 }
                 gameObject._childs.ForEach(x => UpdateHierarchy(x));
             }
