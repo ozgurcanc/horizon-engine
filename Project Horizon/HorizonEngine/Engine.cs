@@ -30,7 +30,7 @@ namespace HorizonEngine
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
-            Screen.Init(_graphics);
+            Graphics.Init(_graphics);
             Application.isEditor = true;            
             _scene = new Scene(this.Content, _graphics);           
         }
@@ -93,12 +93,12 @@ namespace HorizonEngine
             GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
-            Screen.Begin();
-            Screen.Clear(Color.DarkBlue);
+            Graphics.Begin();
+            Graphics.Clear(Color.DarkBlue);
 
             _scene.Draw(_spriteBatch);
 
-            Screen.End();
+            Graphics.End();
 
             _guiRenderer.BeginLayout(gameTime);
             ImGui.DockSpaceOverViewport();

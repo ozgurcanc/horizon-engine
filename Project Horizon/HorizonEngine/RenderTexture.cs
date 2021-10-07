@@ -14,7 +14,7 @@ namespace HorizonEngine
         private int _width;
         private int _height;
 
-        internal RenderTexture(string name, int width, int height) : base(name, null, Screen.CreateRenderTarget(width, height), null)
+        internal RenderTexture(string name, int width, int height) : base(name, null, Graphics.CreateRenderTarget(width, height), null)
         {
             _width = width;
             _height = height;
@@ -30,7 +30,7 @@ namespace HorizonEngine
 
         internal override void Reload()
         {
-            this.texture = Screen.CreateRenderTarget(_width, _height);
+            this.texture = Graphics.CreateRenderTarget(_width, _height);
             Assets.Load(this);
         }
 

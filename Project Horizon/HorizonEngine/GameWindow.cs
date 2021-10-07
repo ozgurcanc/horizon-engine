@@ -84,7 +84,7 @@ namespace HorizonEngine
 
             ImGui.Begin("Game", ref _enabled, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse);
 
-            Vector2 resolution = Screen.resolution;
+            Vector2 resolution = Graphics.resolution;
             ImGui.SameLine();
             if (ImGui.Button(resolution.X.ToString() + "x" + resolution.Y.ToString()))
             {
@@ -98,7 +98,7 @@ namespace HorizonEngine
                 ImGui.DragInt("Height", ref _resolutionY);
                 if (ImGui.Button("Apply")) 
                 {
-                    Screen.resolution = new Vector2(_resolutionX, _resolutionY);
+                    Graphics.resolution = new Vector2(_resolutionX, _resolutionY);
                     CreateRenderTarget();
                     ImGui.CloseCurrentPopup();
                 }
@@ -148,9 +148,9 @@ namespace HorizonEngine
             {
                 _guiRenderer.UnbindTexture(_sceneImage);
             }
-            RenderTarget2D renderTarget = Screen.CreateRenderTarget((int)Screen.resolution.X, (int)Screen.resolution.Y);
+            RenderTarget2D renderTarget = Graphics.CreateRenderTarget((int)Graphics.resolution.X, (int)Graphics.resolution.Y);
             _sceneImage = _guiRenderer.BindTexture(renderTarget);
-            Screen.defaultRenderTarget = renderTarget;
+            Graphics.defaultRenderTarget = renderTarget;
         }
     }
 }

@@ -10,7 +10,7 @@ using System.IO;
 
 namespace HorizonEngine
 {
-    public static class Screen
+    public static class Graphics
     {
         private static GraphicsDeviceManager _graphics;
         private static Vector2 _resolution;
@@ -44,6 +44,32 @@ namespace HorizonEngine
                 if (Application.isEditor) return;
                 _graphics.PreferredBackBufferWidth = (int)value.X;
                 _graphics.PreferredBackBufferHeight = (int)value.Y;
+                _graphics.ApplyChanges();
+            }
+        }
+
+        public static bool isFullScreen
+        {
+            get
+            {
+                return _graphics.IsFullScreen;
+            }
+            set
+            {
+                _graphics.IsFullScreen = value;
+                _graphics.ApplyChanges();
+            }
+        }
+
+        public static bool verticalSynchronization
+        {
+            get
+            {
+                return _graphics.SynchronizeWithVerticalRetrace;
+            }
+            set
+            {
+                _graphics.SynchronizeWithVerticalRetrace = value;
                 _graphics.ApplyChanges();
             }
         }

@@ -154,7 +154,7 @@ namespace HorizonEngine
             if (_sourceTextures.ContainsKey(source))
                 return _sourceTextures[source];
 
-            Texture2D texture2D = Screen.CreateTexture2D(Path.Combine(Application.assetsPath, source));
+            Texture2D texture2D = Graphics.CreateTexture2D(Path.Combine(Application.assetsPath, source));
             _sourceTextures.Add(source, texture2D);
             return texture2D;
         }

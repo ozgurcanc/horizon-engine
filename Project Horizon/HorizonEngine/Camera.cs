@@ -70,8 +70,8 @@ namespace HorizonEngine
 
         internal void PreRender()
         {
-            Screen.SetRenderTarget(_renderTexture);
-            Screen.Clear(_backgroundColor);
+            Graphics.SetRenderTarget(_renderTexture);
+            Graphics.Clear(_backgroundColor);
         }
 
         internal Matrix renderTransform
@@ -146,7 +146,7 @@ namespace HorizonEngine
         {
             get
             {
-                return _renderTexture == null ? Screen.resolution : new Vector2(_renderTexture.width, _renderTexture.height);
+                return _renderTexture == null ? Graphics.resolution : new Vector2(_renderTexture.width, _renderTexture.height);
             }
         }
 
