@@ -221,7 +221,7 @@ namespace HorizonEngine
             _main._name = name;
         }
 
-        internal Scene(ContentManager contentManager, GraphicsDeviceManager graphicsDeviceManager)
+        internal Scene()
         {
             _gameObjects = new List<GameObject>();
             _renderers = new List<Renderer>();

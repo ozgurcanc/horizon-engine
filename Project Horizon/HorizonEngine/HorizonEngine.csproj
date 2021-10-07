@@ -95,7 +95,7 @@
     <Compile Include="Component.cs" />
     <Compile Include="Contact.cs" />
     <Compile Include="Editor.cs" />
-    <Compile Include="Engine.cs" />
+    <Compile Include="EditorApp.cs" />
     <Compile Include="Font.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="GameWindow.cs" />

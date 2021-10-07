@@ -10,13 +10,65 @@ using Newtonsoft.Json;
 
 namespace HorizonEngine
 {
-    public static class Application
+    public abstract class Application : Game
     {
+        protected GraphicsDeviceManager _graphics;
+        protected SpriteBatch _spriteBatch;
+        protected Scene _scene;
+
         private static bool _isEditor;
         private static string _projectPath;
         private static string _assetsPath;
         private static string _scenesPath;
         private static bool _isQuit;
+
+        protected Application()
+        {
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented,
+                PreserveReferencesHandling = PreserveReferencesHandling.All,
+                TypeNameHandling = TypeNameHandling.All,
+            };
+
+            _graphics = new GraphicsDeviceManager(this);
+            Content.RootDirectory = "Content";
+            IsMouseVisible = true;
+            IsFixedTimeStep = false;
+
+            Graphics.Init(_graphics);
+            Graphics.resolution = new Vector2(1600, 900);
+            _graphics.ApplyChanges();
+
+            _scene = new Scene();        
+
+            // App Init
+            _projectPath = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "Project");
+            _assetsPath = Path.Combine(_projectPath, "Assets");
+            _scenesPath = Path.Combine(_projectPath, "Scenes");
+
+            string projectSettingsPath = Path.Combine(_projectPath, "ProjectSettings.json");
+
+            if (!Directory.Exists(_projectPath))
+            {
+                Directory.CreateDirectory(_projectPath);
+                Directory.CreateDirectory(_assetsPath);
+                Directory.CreateDirectory(_scenesPath);
+                Assets.Save();
+            }
+
+            Assets.Load();
+        }
+
+        protected override void Initialize()
+        {
+            base.Initialize();
+        }
+
+        protected override void LoadContent()
+        {
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
+        }
 
         public static bool isEditor
         {
@@ -60,26 +112,7 @@ namespace HorizonEngine
             {
                 return _projectPath;
             }
-        }
-
-        internal static void Init()
-        {
-            _projectPath = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "Project");
-            _assetsPath = Path.Combine(_projectPath, "Assets");
-            _scenesPath = Path.Combine(_projectPath, "Scenes");
-
-            string projectSettingsPath = Path.Combine(_projectPath, "ProjectSettings.json");
-
-            if (!Directory.Exists(_projectPath))
-            {
-                Directory.CreateDirectory(_projectPath);
-                Directory.CreateDirectory(_assetsPath);
-                Directory.CreateDirectory(_scenesPath);
-                Assets.Save();
-            }
-            
-            Assets.Load();            
-        }      
+        }           
 
         internal static void LoadScene(string name)
         {

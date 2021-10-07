@@ -62,7 +62,7 @@ namespace Project_Horizon_DX
             //using (var game = new Scene())
             //  game.Run();
 
-            var game = new Engine();
+            var game = new EditorApp();
             game.Run();
         }
     }

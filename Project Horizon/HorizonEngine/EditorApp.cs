@@ -10,43 +10,18 @@ using Newtonsoft.Json;
 
 namespace HorizonEngine
 {
-    public class Engine : Game
+    public class EditorApp : Application
     {
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
-        private Scene _scene;
         private ImGUIRenderer _guiRenderer;
-
-        public Engine()
-        {
-            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
-            {
-                Formatting = Formatting.Indented,
-                PreserveReferencesHandling = PreserveReferencesHandling.All,
-                TypeNameHandling = TypeNameHandling.All,
-            };
-
-            _graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
-            IsMouseVisible = true;
-
-            Graphics.Init(_graphics);
-            Application.isEditor = true;            
-            _scene = new Scene(this.Content, _graphics);           
-        }
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-            IsFixedTimeStep = false;
-            _graphics.PreferredBackBufferWidth = 1600;
-            _graphics.PreferredBackBufferHeight = 900;
-            _graphics.ApplyChanges();
+            base.Initialize();
+
+            isEditor = true;
 
             _guiRenderer = new ImGUIRenderer(this).Initialize().RebuildFontAtlas();
             ImGui.GetIO().ConfigFlags |= ImGuiConfigFlags.DockingEnable;
-
-            Application.Init();
 
             AssetsWindow.Init();
             GameWindow.Init(_guiRenderer);
@@ -62,27 +37,14 @@ namespace HorizonEngine
             SpriteEditorWindow.enabled = true;
 
             DefaultStyle();
-
-            base.Initialize();
-        }
-
-        protected override void LoadContent()
-        {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
         }
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
             if (Application.isQuit)
                 Exit();
-            // TODO: Add your update logic here
 
-            if(GameWindow.isRunning)
+            if (GameWindow.isRunning)
                 _scene.Update(gameTime);
 
             base.Update(gameTime);
@@ -95,16 +57,14 @@ namespace HorizonEngine
             // TODO: Add your drawing code here
             Graphics.Begin();
             Graphics.Clear(Color.DarkBlue);
-
             _scene.Draw(_spriteBatch);
-
             Graphics.End();
 
             _guiRenderer.BeginLayout(gameTime);
             ImGui.DockSpaceOverViewport();
-                      
-            ImGui.ShowDemoWindow();
-            
+
+            //ImGui.ShowDemoWindow();
+
             MainMenuBar.Draw();
             HierarchyWindow.Draw();
             GameWindow.Draw();
