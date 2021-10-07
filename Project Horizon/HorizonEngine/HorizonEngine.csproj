@@ -97,6 +97,7 @@
     <Compile Include="Editor.cs" />
     <Compile Include="EditorApp.cs" />
     <Compile Include="Font.cs" />
+    <Compile Include="GameApp.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="GameWindow.cs" />
     <Compile Include="HierarchyWindow.cs" />

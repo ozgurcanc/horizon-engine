@@ -58,12 +58,11 @@ namespace Project_Horizon_DX
         [STAThread]
         static void Main()
         {
+            //var game = new GameApp("Main Scene");
+            //game.Run();
 
-            //using (var game = new Scene())
-            //  game.Run();
-
-            var game = new EditorApp();
-            game.Run();
+            var editor = new EditorApp();
+            editor.Run();           
         }
     }
 }
