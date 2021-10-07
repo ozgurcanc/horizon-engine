@@ -109,11 +109,6 @@ namespace HorizonEngine
             Vector2 center = circle.transformMatrix.GetColumn(2);
             Vector2 localCenter = box.transformMatrix.InverseTransformPoint(center);
 
-            //if (Math.Abs(localCenter.X) > (box.halfSize.X + circle.radius))
-            //  return null;
-            //if (Math.Abs(localCenter.Y) > (box.halfSize.Y + circle.radius))
-            //  return null;
-
             float w = box.halfSize.X;
             float h = box.halfSize.Y;
             Vector2[] normals = { new Vector2(0, -1), new Vector2(1, 0), new Vector2(0, 1), new Vector2(-1, 0) };
@@ -184,74 +179,7 @@ namespace HorizonEngine
                     penetration,
                     0f,
                     1f
-                );
-
-            /*
-            Vector2 closestPoint = Vector2.Zero;
-            float distance;
-
-            distance = localCenter.X;
-            if (distance > box.halfSize.X) distance = box.halfSize.X;
-            else if (distance < -box.halfSize.X) distance = -box.halfSize.X;
-            closestPoint.X = distance;
-
-            distance = localCenter.Y;
-            if (distance > box.halfSize.Y) distance = box.halfSize.Y;
-            else if (distance < -box.halfSize.Y) distance = -box.halfSize.Y;
-            closestPoint.Y = distance;
-
-            distance = (closestPoint - localCenter).Length();
-
-            if (distance > circle.radius)
-                return null;
-           
-            // if (normal == Vector2.Zero) normal = Vector2.One;
-
-            Vector2 normal;
-            float penetration;
-            Vector2 contactPoint;
-
-            if (distance == 0)
-            {
-                if(box.halfSize.X - Math.Abs(closestPoint.X) >= box.halfSize.Y - Math.Abs(closestPoint.Y))
-                {
-                    closestPoint.Y = closestPoint.Y > 0 ? box.halfSize.Y : -box.halfSize.Y;
-                }
-                else
-                {
-                    closestPoint.X = closestPoint.X > 0 ? box.halfSize.X : -box.halfSize.X;
-                }
-                Vector2 closestPointWorld = box.transformMatrix.TransformPoint(closestPoint);
-                contactPoint = closestPointWorld;
-                normal = box.transformMatrix.GetColumn(2) - closestPointWorld;
-                penetration = (closestPointWorld - center).Length() + circle.radius;
-            }
-            else
-            {
-                Vector2 closestPointWorld = box.transformMatrix.TransformPoint(closestPoint);
-                normal = (closestPointWorld - center);
-                penetration = circle.radius - distance;
-                contactPoint = closestPointWorld;
-            }
-
-            if (normal == Vector2.Zero) throw new NotImplementedException();
-            normal.Normalize();
-
-
-
-            Contact contact = new Contact
-                (
-                    box.rigidbody, 
-                    circle.rigidbody, 
-                    contactPoint, 
-                    normal,
-                    penetration,
-                    0f,
-                    1f                                
-                );
-
-            return contact;
-            */
+                );          
         }
 
         private static Contact BoxAndBox(BoxCollider collider1, BoxCollider collider2)

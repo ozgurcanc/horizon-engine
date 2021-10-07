@@ -97,9 +97,6 @@ namespace HorizonEngine
                 _rigidbodies[1] = null;
                 _contactNormal = -_contactNormal;
             }
-            //Debug.WriteLine("intersect");
-            //Debug.WriteLine(_contactPoint);
-            //if (float.IsNaN(_contactNormal.X) || float.IsNaN(_contactNormal.Y)) return;
 
             bool haveRigidbody = _rigidbodies[1] != null;
 

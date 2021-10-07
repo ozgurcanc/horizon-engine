@@ -46,13 +46,11 @@ namespace HorizonEngine
                 _elements[i] = temp;            
             }
 
-            //Debug.WriteLine(count);
             if(count > 0) BuildBVH(0, count);
         }
 
         private int BuildBVH(int start, int end)
         {
-            //Debug.WriteLine(start + " " + end);
             int nodeIndex = _nodes.Count;
             BVHNode node = new BVHNode();
 

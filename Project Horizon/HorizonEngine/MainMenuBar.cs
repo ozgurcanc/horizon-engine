@@ -69,10 +69,12 @@ namespace HorizonEngine
                     if (ImGui.MenuItem("Undo", "CTRL+Z", false, Undo.canUndo)) { Undo.PerformUndo();  }
                     if (ImGui.MenuItem("Redo", "CRTL+Y", false, Undo.canRedo)) { Undo.PerformRedo();  }
                     ImGui.Separator();
+                    /*
                     if (ImGui.MenuItem("Cut", "CTRL+X")) { }
                     if (ImGui.MenuItem("Copy", "CTRL+C")) { }
                     if (ImGui.MenuItem("Paste", "CTRL+V")) { }
                     ImGui.Separator();
+                    */
                     if (ImGui.MenuItem("Play", null, GameWindow.isPlaying)) { GameWindow.isPlaying = !GameWindow.isPlaying; }
                     if (ImGui.MenuItem("Pause", null, GameWindow.isPaused)) { GameWindow.isPaused = !GameWindow.isPaused; }
 

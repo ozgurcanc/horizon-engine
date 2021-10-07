@@ -12,9 +12,6 @@ namespace HorizonEngine
 {
     public class Scene
     {
-        //private GraphicsDeviceManager _graphics;
-        //private SpriteBatch _spriteBatch;
-
         private static Scene _main;
         private string _name;
         private List<GameObject> _gameObjects;
@@ -226,12 +223,6 @@ namespace HorizonEngine
 
         internal Scene(ContentManager contentManager, GraphicsDeviceManager graphicsDeviceManager)
         {
-            //_graphics = new GraphicsDeviceManager(this);
-            //Camera.InitCamera(graphicsDeviceManager);
-            //Assets.InitAssets(contentManager);
-            //Content.RootDirectory = "Content";
-            //IsMouseVisible = true;
-
             _gameObjects = new List<GameObject>();
             _renderers = new List<Renderer>();
             _behaviours = new List<Behaviour>();
@@ -300,9 +291,6 @@ namespace HorizonEngine
 
         internal void Update(GameTime gameTime)
         {
-            //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-            //    Exit();
-
             
             if(Input.GetKeyDown(Keys.H))
             {
@@ -317,39 +305,11 @@ namespace HorizonEngine
                 Debug.WriteLine("");               
             }
 
-            // TODO: Add your update logic here
-            /*
-            _fps++;
-            _timeCounter += gameTime.ElapsedGameTime.TotalSeconds;
-            if (_timeCounter > 1.0)
-            {
-                //Debug.WriteLine(_fps);
-                _timeCounter = _fps = 0;
-            }
-            */
-
             Time.Update(gameTime);
             float deltaTime = Time.deltaTime;
 
-            //foreach (Camera camera in _cameras) camera.Update();
             Input.Update();
-            var watch = new Stopwatch();
-            watch.Start();
             Collider[] colliders = _colliders.ToArray();
-
-
-
-            /*
-            foreach (var x in colliders) x.UpdateCollider();
-            for (int i = 0; i < colliders.Length; i++)
-                for (int j = i + 1; j < colliders.Length; j++)
-                {
-                    Contact c = CollisionSystem.ResolveCollision(colliders[i], colliders[j]);
-                    if (c != null) contacts.Add(c);
-                }
-            
-            foreach (var x in contacts) x.ResolveContact();
-            */
 
             List<Contact> contacts = new List<Contact>();
             BVH bvh = new BVH(colliders);
@@ -479,14 +439,6 @@ namespace HorizonEngine
                 }
                 _mouseClickedColliders = null;
             }
-    
-            //Debug.WriteLine(contacts.Count);
-            //Debug.WriteLine(bvh.ReselveCollision());
-            //Debug.WriteLine("---");
-
-
-            watch.Stop();
-            //Debug.WriteLine(watch.ElapsedMilliseconds);
 
             foreach (var x in _rigidbodies.ToArray()) x.UpdatePhysics(deltaTime);
             foreach (var x in _startBehaviours.ToArray()) x.Start();
@@ -494,23 +446,16 @@ namespace HorizonEngine
             foreach (var x in _behaviours.ToArray()) x.Update();
             foreach (var x in _animators.ToArray()) x.AnimationUpdate(deltaTime);
             foreach (var x in _audioSources.ToArray()) x.UpdateAudio();
-            //_updatables.ForEach(x => x.Update(gameTime));
         }
 
         internal void Draw(SpriteBatch spriteBatch)
         {
-            //Debug.WriteLine(Vector2.Transform(new Vector2(-5 * Camera.scale, +5 * Camera.scale), _camera.renderTransform));
             foreach(Camera camera in _cameras)
             {
                 camera.PreRender();
-                // TODO: Add your drawing code here
-                //Debug.WriteLine(Vector2.Transform(new Vector2(0, 0), _camera.worldToScreen));
                 spriteBatch.Begin(transformMatrix: camera.renderTransform, sortMode: SpriteSortMode.FrontToBack);
-                //_drawables.ForEach(x => x.Draw(_spriteBatch));
                 foreach (var x in _renderers.ToArray()) if ((camera.cullingMask & (1 << (int)x.gameObject.layer)) == 0) x.Draw(spriteBatch);
                 spriteBatch.End();
-
-
             }
 
             foreach (Camera camera in _cameras) camera.Update();

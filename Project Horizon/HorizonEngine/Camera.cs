@@ -15,7 +15,6 @@ namespace HorizonEngine
     {
         private float _width;
         private float _height;
-        //private Vector2 _resolution;
         private Matrix _renderTransform;
         private Matrix _worldToScreen;
         private Matrix _screenToWorld;

@@ -27,7 +27,6 @@ namespace HorizonEngine
             transformMatrix = new TransformMatrix(gameObject.position, gameObject.rotation);
             attachedRigidbody = gameObject.GetComponent<Rigidbody>();
             _halfSize = gameObject.size / 2;
-            //aabb = new AABB(gameObject.position + halfSize, gameObject.position - halfSize);
             aabb = new AABB(transformMatrix.TransformPoint(halfSize), transformMatrix.TransformPoint(new Vector2(halfSize.X, -halfSize.Y)),
                 transformMatrix.TransformPoint(new Vector2(-halfSize.X, halfSize.Y)), transformMatrix.TransformPoint(new Vector2(-halfSize.X, -halfSize.Y)));
         }
