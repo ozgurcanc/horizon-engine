@@ -125,6 +125,11 @@ namespace HorizonEngine
                     AnimatorController animatorController = Assets.CreateAnimatorController("AnimatorController");
                     _selectedDirectory.AddAsset(animatorController);
                 }
+                if (ImGui.MenuItem("New Physics Material"))
+                {
+                    PhysicsMaterial physicsMaterial = Assets.CreatePhysicsMaterial("Physics Material");
+                    _selectedDirectory.AddAsset(physicsMaterial);
+                }
                 ImGui.Separator();
                 if (ImGui.MenuItem("Delete", _selectedAsset != null))
                 {

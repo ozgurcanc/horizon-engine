@@ -32,6 +32,7 @@ namespace HorizonEngine
         private static Dictionary<uint, RenderTexture> _renderTextures;
         private static Dictionary<uint, AnimatorController> _animatorControllers;
         private static Dictionary<uint, AudioClip> _audioClips;
+        private static Dictionary<uint, PhysicsMaterial> _physicsMaterials;
 
         static Assets()
         {
@@ -42,6 +43,7 @@ namespace HorizonEngine
             _renderTextures = new Dictionary<uint, RenderTexture>();
             _animatorControllers = new Dictionary<uint, AnimatorController>();
             _audioClips = new Dictionary<uint, AudioClip>();
+            _physicsMaterials = new Dictionary<uint, PhysicsMaterial>();
             _rootDirectory = new AssetsDirectory("Assets");
         }
 
@@ -271,6 +273,39 @@ namespace HorizonEngine
         internal static void Load(AudioClip audioClip)
         {
             _audioClips.Add(audioClip.assetID, audioClip);
+        }
+
+        internal static Dictionary<uint, PhysicsMaterial>.ValueCollection physicsMaterials
+        {
+            get
+            {
+                return _physicsMaterials.Values;
+            }
+        }
+
+        internal static PhysicsMaterial CreatePhysicsMaterial(string name)
+        {
+            PhysicsMaterial physicsMaterial = new PhysicsMaterial(name);
+            _physicsMaterials.Add(physicsMaterial.assetID, physicsMaterial);
+            return physicsMaterial;
+        }
+
+        internal static PhysicsMaterial GetPhysicsMaterial(uint id)
+        {
+            if (_physicsMaterials.ContainsKey(id))
+                return _physicsMaterials[id];
+
+            return null;
+        }
+
+        internal static void Load(PhysicsMaterial physicsMaterial)
+        {
+            _physicsMaterials.Add(physicsMaterial.assetID, physicsMaterial);
+        }
+
+        internal static void Delete(PhysicsMaterial physicsMaterial)
+        {
+            _physicsMaterials.Remove(physicsMaterial.assetID);
         }
 
         internal static void Delete(AudioClip audioClip)
