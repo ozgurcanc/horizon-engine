@@ -20,17 +20,11 @@ namespace HorizonEngine
 
         public virtual void OnDisable() { }
 
-        public virtual void OnTriggerEnter(Collider collider) { }
-
-        public virtual void OnTriggerStay(Collider collider) { }
-
-        public virtual void OnTriggerExit(Collider collider) { }
-
-        public virtual void OnCollisionEnter(Collision collision) { }
+        public virtual void OnCollisionBegin(Collision collision) { }
 
         public virtual void OnCollisionStay(Collision collision) { }
 
-        public virtual void OnCollisionExit(Collider collider) { }
+        public virtual void OnCollisionEnd(Collider collider) { }
 
         public virtual void OnMouseEnter() { }
 

@@ -344,60 +344,33 @@ namespace HorizonEngine
 
             foreach (var c in contacts)
             {
-                bool isTrigger = c.isTrigger;
                 var x = c.GetContactPair();
                 contactPairs.Add(x);
+                var colliderOneBehaviours = x.Item1.gameObject.behaviours;
+                var cooliderTwoBehaviours = x.Item2.gameObject.behaviours;
+
                 if (_contactPairs.Remove(x) || _contactPairs.Remove(Tuple.Create(x.Item2, x.Item1)))
                 {
                     // Stay
-                    var colliderOneBehaviours = x.Item1.gameObject.behaviours;
-                    var cooliderTwoBehaviours = x.Item2.gameObject.behaviours;
-                    if(isTrigger)
-                    {
-                        foreach (var y in colliderOneBehaviours) y.OnTriggerStay(x.Item2);
-                        foreach (var y in cooliderTwoBehaviours) y.OnTriggerStay(x.Item1);
-                    }
-                    else
-                    {
-                        foreach (var y in colliderOneBehaviours) y.OnCollisionStay(c.GetCollisionData(0));
-                        foreach (var y in cooliderTwoBehaviours) y.OnCollisionStay(c.GetCollisionData(1));
-                    }
-                    
+                    foreach (var y in colliderOneBehaviours) y.OnCollisionStay(c.GetCollisionData(0));
+                    foreach (var y in cooliderTwoBehaviours) y.OnCollisionStay(c.GetCollisionData(1));
                 }
                 else
                 {
                     // Enter
-                    var colliderOneBehaviours = x.Item1.gameObject.behaviours;
-                    var cooliderTwoBehaviours = x.Item2.gameObject.behaviours;
-                    if(isTrigger)
-                    {
-                        foreach (var y in colliderOneBehaviours) y.OnTriggerEnter(x.Item2);
-                        foreach (var y in cooliderTwoBehaviours) y.OnTriggerEnter(x.Item1);
-                    } 
-                    else
-                    {
-                        foreach (var y in colliderOneBehaviours) y.OnCollisionEnter(c.GetCollisionData(0));
-                        foreach (var y in cooliderTwoBehaviours) y.OnCollisionEnter(c.GetCollisionData(1));
-                    }
+                    foreach (var y in colliderOneBehaviours) y.OnCollisionBegin(c.GetCollisionData(0));
+                    foreach (var y in cooliderTwoBehaviours) y.OnCollisionBegin(c.GetCollisionData(1));
                 }
             }
 
             foreach(var x in _contactPairs)
             {
                 // Exit
-                bool isTrigger = x.Item1.isTrigger || x.Item2.isTrigger;
                 var colliderOneBehaviours = x.Item1.gameObject.behaviours;
                 var cooliderTwoBehaviours = x.Item2.gameObject.behaviours;
-                if(isTrigger)
-                {
-                    foreach (var y in colliderOneBehaviours) y.OnTriggerExit(x.Item2);
-                    foreach (var y in cooliderTwoBehaviours) y.OnTriggerExit(x.Item1);
-                }
-                else
-                {
-                    foreach (var y in colliderOneBehaviours) y.OnCollisionExit(x.Item2);
-                    foreach (var y in cooliderTwoBehaviours) y.OnCollisionExit(x.Item1);
-                }
+
+                foreach (var y in colliderOneBehaviours) y.OnCollisionEnd(x.Item2);
+                foreach (var y in cooliderTwoBehaviours) y.OnCollisionEnd(x.Item1);
             }
 
             _contactPairs = contactPairs;

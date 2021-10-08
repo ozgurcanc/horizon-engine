@@ -79,14 +79,6 @@ namespace HorizonEngine
             
         }
 
-        internal bool isTrigger
-        {
-            get
-            {
-                return _isTrigger;
-            }
-        }
-
         internal void ResolveContact()
         {
             if (_isTrigger) return;
