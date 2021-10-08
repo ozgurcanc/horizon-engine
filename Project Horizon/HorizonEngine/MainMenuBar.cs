@@ -61,6 +61,11 @@ namespace HorizonEngine
                         Application.SaveScene();
                     }
                     ImGui.Separator();
+                    if(ImGui.MenuItem("Project Settings"))
+                    {
+                        ProjectSettingsWindow.enabled = true;
+                    }
+                    ImGui.Separator();
                     if (ImGui.MenuItem("Exit")) { Application.Quit(); }
                     ImGui.EndMenu();
                 }

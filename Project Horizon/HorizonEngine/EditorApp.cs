@@ -63,7 +63,7 @@ namespace HorizonEngine
             _guiRenderer.BeginLayout(gameTime);
             ImGui.DockSpaceOverViewport();
 
-            //ImGui.ShowDemoWindow();
+            ImGui.ShowDemoWindow();
 
             MainMenuBar.Draw();
             HierarchyWindow.Draw();
@@ -73,6 +73,7 @@ namespace HorizonEngine
             AnimationWindow.Draw();
             AnimatorWindow.Draw();
             SpriteEditorWindow.Draw();
+            ProjectSettingsWindow.Draw();
 
             _guiRenderer.EndLayout();
 

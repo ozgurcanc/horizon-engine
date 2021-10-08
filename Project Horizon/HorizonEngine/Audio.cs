@@ -10,16 +10,27 @@ using Microsoft.Xna.Framework.Audio;
 using System.Diagnostics;
 using Newtonsoft.Json;
 using ImGuiNET;
+using System.IO;
 
 namespace HorizonEngine
 {
     public static class Audio
     {
+        [JsonObject(MemberSerialization.Fields)]
+        private class AudioSettings
+        {
+            public float masterVolume;
+            public float dopplerScale;
+            public float speedOfSound;
+            public float distanceScale;
+        }
+
         private static AudioListener _audioListener;
 
         static Audio()
         {
             _audioListener = new AudioListener();
+            LoadSettings();
         }
 
         public static AudioListener audioListener
@@ -74,8 +85,27 @@ namespace HorizonEngine
             }
             set
             {
-                SoundEffect.DistanceScale = Math.Max(value, 0f);
+                SoundEffect.DistanceScale = Math.Max(value, 0.001f);
             }
+        }
+
+        internal static void SaveSettings()
+        {
+            AudioSettings audioSettings = new AudioSettings();
+            audioSettings.masterVolume = masterVolume;
+            audioSettings.dopplerScale = dopplerScale;
+            audioSettings.speedOfSound = speedOfSound;
+            audioSettings.distanceScale = distanceScale;            
+            File.WriteAllText(Path.Combine(Application.projectPath, "AudioSettings.json"), JsonConvert.SerializeObject(audioSettings));
+        }
+
+        internal static void LoadSettings()
+        {
+            AudioSettings audioSettings = JsonConvert.DeserializeObject<AudioSettings>(File.ReadAllText(Path.Combine(Application.projectPath, "AudioSettings.json")));
+            masterVolume = audioSettings.masterVolume;
+            dopplerScale = audioSettings.dopplerScale;
+            speedOfSound = audioSettings.speedOfSound;
+            distanceScale = audioSettings.distanceScale;
         }
     }
 }
