@@ -96,9 +96,7 @@ namespace HorizonEngine
                     collider2,
                     contactPoint,
                     normal,
-                    penetration,
-                    0f,
-                    1f
+                    penetration
                 );
 
             return contact;
@@ -176,9 +174,7 @@ namespace HorizonEngine
                     circle,
                     contactPoint,
                     contactNormal,
-                    penetration,
-                    0f,
-                    1f
+                    penetration
                 );          
         }
 
@@ -221,9 +217,7 @@ namespace HorizonEngine
                     collider2,
                     collider2.transformMatrix.TransformPoint(vertex),
                     normal,
-                    penetration,
-                    0f,
-                    1f
+                    penetration
                 );
 
             return contact;

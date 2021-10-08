@@ -12,7 +12,6 @@ namespace HorizonEngine
 {
     internal class Contact
     {
-        public static int i = 0;
         private Collider[] _colliders;
         private Rigidbody[] _rigidbodies;
         private float _friction;
@@ -22,7 +21,7 @@ namespace HorizonEngine
         private Vector2 _contactNormal;
         private bool _isTrigger;
 
-        internal Contact(Collider collider1, Collider collider2, Vector2 contactPoint, Vector2 contactNormal, float penetration, float friction, float restitution)
+        internal Contact(Collider collider1, Collider collider2, Vector2 contactPoint, Vector2 contactNormal, float penetration)
         {
             _colliders = new Collider[2];
             _rigidbodies = new Rigidbody[2];
@@ -33,10 +32,23 @@ namespace HorizonEngine
             _contactPoint = contactPoint;
             _contactNormal = contactNormal;
             _penetration = penetration;
-            _friction = friction;
-            _restitution = restitution;
+            //_friction = friction;
+            //_restitution = restitution;
             _isTrigger = collider1.isTrigger || collider2.isTrigger;
 
+            float friction1 = collider1.physicsMaterial == null ? 0f : collider1.physicsMaterial.friction;
+            float friction2 = collider2.physicsMaterial == null ? 0f : collider2.physicsMaterial.friction;
+            if (Physics.frictionBlendMode == PhysicsMaterialBlendMode.Average) _friction = (friction1 + friction2) / 2f;
+            else if (Physics.frictionBlendMode == PhysicsMaterialBlendMode.Minumum) _friction = Math.Min(friction1, friction2);
+            else if (Physics.frictionBlendMode == PhysicsMaterialBlendMode.Maximum) _friction = Math.Max(friction1, friction2);
+            else if (Physics.frictionBlendMode == PhysicsMaterialBlendMode.Multiply) _friction = friction1 * friction2;
+
+            float restitution1 = collider1.physicsMaterial == null ? 0f : collider1.physicsMaterial.restitution;
+            float restitution2 = collider2.physicsMaterial == null ? 0f : collider2.physicsMaterial.restitution;
+            if (Physics.restitutionBlendMode == PhysicsMaterialBlendMode.Average) _restitution = (restitution1 + restitution2) / 2f;
+            else if (Physics.restitutionBlendMode == PhysicsMaterialBlendMode.Minumum) _restitution = Math.Min(restitution1, restitution2);
+            else if (Physics.restitutionBlendMode == PhysicsMaterialBlendMode.Maximum) _restitution = Math.Max(restitution1, restitution2);
+            else if (Physics.restitutionBlendMode == PhysicsMaterialBlendMode.Multiply) _restitution = restitution1 * restitution2;
 
             if (float.IsNaN(contactNormal.X) || float.IsNaN(contactNormal.Y))
             {
@@ -105,13 +117,13 @@ namespace HorizonEngine
             }
             
             if (totalMass == 0) Debug.WriteLine("Nan");         
-            float j = -(1 + 0f);       
+            float j = -(1 + _restitution);       
             j *= Vector2.Dot(relativeVelocity, _contactNormal);
             if (j < 0)
                 return;
 
             Vector2 relativePosition1 = _contactPoint - _rigidbodies[0].position;
-            Vector2 totalInertia = Cross(_rigidbodies[0].inverseMass * Cross(relativePosition1, _contactNormal), relativePosition1);
+            Vector2 totalInertia = Cross(_rigidbodies[0].inverseInertia * Cross(relativePosition1, _contactNormal), relativePosition1);
             Vector2 totalVelocity1 = _rigidbodies[0].velocity + Cross(_rigidbodies[0].angularVelocity, relativePosition1);
             Vector2 t = totalVelocity1;
 
@@ -119,7 +131,7 @@ namespace HorizonEngine
             if (haveRigidbody)
             {
                 relativePosition2 = _contactPoint - _rigidbodies[1].position;
-                totalInertia += Cross(_rigidbodies[1].inverseMass * Cross(relativePosition2, _contactNormal), relativePosition2);
+                totalInertia += Cross(_rigidbodies[1].inverseInertia * Cross(relativePosition2, _contactNormal), relativePosition2);
                 Vector2 totalVelocity2 = _rigidbodies[1].velocity + Cross(_rigidbodies[1].angularVelocity, relativePosition2);
                 t -= totalVelocity2;
             }           
@@ -135,8 +147,7 @@ namespace HorizonEngine
             float jt = -Vector2.Dot(relativeVelocity, t);
             jt /= d;
 
-            float ff = 0.01f;
-            Vector2 tangentImpulse = jt * t * ff;
+            Vector2 tangentImpulse = jt * t * _friction * 0.1f;
             Vector2 impulse = j * _contactNormal + tangentImpulse;
 
             _rigidbodies[0].velocity += impulse * _rigidbodies[0].inverseMass;

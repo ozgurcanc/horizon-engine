@@ -9,10 +9,20 @@ using Microsoft.Xna.Framework.Input;
 
 namespace HorizonEngine
 {
+    public enum PhysicsMaterialBlendMode
+    {
+        Average,
+        Minumum,
+        Maximum,
+        Multiply
+    }
+
     public static class Physics
     {
         private static Vector2 _gravity;
         private static int[] _ignoreMask;
+        private static PhysicsMaterialBlendMode _frictionBlendMode;
+        private static PhysicsMaterialBlendMode _restitutionBlendMode;
 
         static Physics()
         {
@@ -28,6 +38,30 @@ namespace HorizonEngine
             set
             {
                 _gravity = value;
+            }
+        }
+
+        public static PhysicsMaterialBlendMode frictionBlendMode
+        {
+            get
+            {
+                return _frictionBlendMode;
+            }
+            set
+            {
+                _frictionBlendMode = value;
+            }
+        }
+
+        public static PhysicsMaterialBlendMode restitutionBlendMode
+        {
+            get
+            {
+                return _restitutionBlendMode;
+            }
+            set
+            {
+                _restitutionBlendMode = value;
             }
         }
 
