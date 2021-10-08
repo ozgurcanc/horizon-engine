@@ -36,15 +36,15 @@ namespace HorizonEngine
             //_restitution = restitution;
             _isTrigger = collider1.isTrigger || collider2.isTrigger;
 
-            float friction1 = collider1.physicsMaterial == null ? 0f : collider1.physicsMaterial.friction;
-            float friction2 = collider2.physicsMaterial == null ? 0f : collider2.physicsMaterial.friction;
+            float friction1 = collider1.physicsMaterial == null ? Physics.defaultFriction : collider1.physicsMaterial.friction;
+            float friction2 = collider2.physicsMaterial == null ? Physics.defaultFriction : collider2.physicsMaterial.friction;
             if (Physics.frictionBlendMode == PhysicsMaterialBlendMode.Average) _friction = (friction1 + friction2) / 2f;
             else if (Physics.frictionBlendMode == PhysicsMaterialBlendMode.Minumum) _friction = Math.Min(friction1, friction2);
             else if (Physics.frictionBlendMode == PhysicsMaterialBlendMode.Maximum) _friction = Math.Max(friction1, friction2);
             else if (Physics.frictionBlendMode == PhysicsMaterialBlendMode.Multiply) _friction = friction1 * friction2;
 
-            float restitution1 = collider1.physicsMaterial == null ? 0f : collider1.physicsMaterial.restitution;
-            float restitution2 = collider2.physicsMaterial == null ? 0f : collider2.physicsMaterial.restitution;
+            float restitution1 = collider1.physicsMaterial == null ? Physics.defaultRestitution : collider1.physicsMaterial.restitution;
+            float restitution2 = collider2.physicsMaterial == null ? Physics.defaultRestitution : collider2.physicsMaterial.restitution;
             if (Physics.restitutionBlendMode == PhysicsMaterialBlendMode.Average) _restitution = (restitution1 + restitution2) / 2f;
             else if (Physics.restitutionBlendMode == PhysicsMaterialBlendMode.Minumum) _restitution = Math.Min(restitution1, restitution2);
             else if (Physics.restitutionBlendMode == PhysicsMaterialBlendMode.Maximum) _restitution = Math.Max(restitution1, restitution2);

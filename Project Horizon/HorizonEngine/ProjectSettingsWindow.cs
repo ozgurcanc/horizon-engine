@@ -55,19 +55,19 @@ namespace HorizonEngine
             ImGui.SameLine();
             ImGui.BeginGroup();
             ImGui.BeginChild("right", new System.Numerics.Vector2(0, -ImGui.GetFrameHeightWithSpacing()));
-            if(_selected == 0)
-            {
-                AudioSettings();
-            }
+            if (_selected == 0) AudioSettings();
+            else if (_selected == 4) PhysicsSettings();
             ImGui.EndChild();
             if(ImGui.Button("Revert"))
             {
                 Audio.LoadSettings();
+                Physics.LoadSettings();
             }
             ImGui.SameLine();
             if(ImGui.Button("Save"))
             {
                 Audio.SaveSettings();
+                Physics.SaveSettings();
             }
             ImGui.EndGroup();
 
@@ -76,6 +76,8 @@ namespace HorizonEngine
 
         private static void AudioSettings()
         {
+            ImGui.PushItemWidth(ImGui.GetWindowWidth() * 0.25f);
+
             float masterVolume = Audio.masterVolume;
             ImGui.Text("Master Volume");
             ImGui.SameLine();
@@ -107,6 +109,66 @@ namespace HorizonEngine
             {
                 Audio.distanceScale = distanceScale;
             }
+
+            ImGui.PopItemWidth();
+        }
+
+        private static void PhysicsSettings()
+        {
+            ImGui.PushItemWidth(ImGui.GetWindowWidth() * 0.35f);
+
+            Vector2 gravity = Physics.gravity;
+            ImGui.Text("Gravity");
+            ImGui.SameLine();
+            ImGui.Text("X");
+            ImGui.SameLine();
+            if(ImGui.DragFloat("##gravityX", ref gravity.X))
+            {
+                Physics.gravity = gravity;
+            }
+            ImGui.SameLine();
+            ImGui.Text("Y");
+            ImGui.SameLine();
+            if (ImGui.DragFloat("##gravityY", ref gravity.Y))
+            {
+                Physics.gravity = gravity;
+            }
+
+            float defaultFriction = Physics.defaultFriction;
+            ImGui.Text("Default Friction");
+            ImGui.SameLine();
+            if (ImGui.DragFloat("##defaultFriction", ref defaultFriction, 0.02f))
+            {
+                Physics.defaultFriction = defaultFriction;
+            }
+
+            float defaultRestitution = Physics.defaultRestitution;
+            ImGui.Text("Default Restitution");
+            ImGui.SameLine();
+            if (ImGui.DragFloat("##defaultRestitution", ref defaultRestitution, 0.02f))
+            {
+                Physics.defaultRestitution = defaultRestitution;
+            }
+
+            string[] physicsMaterialBlendModes = Enum.GetNames(typeof(PhysicsMaterialBlendMode));
+            
+            int frictionBlendMode = (int)Physics.frictionBlendMode;
+            ImGui.Text("Friction Blend Mode");
+            ImGui.SameLine();
+            if (ImGui.Combo("##frictionBlendMode", ref frictionBlendMode, physicsMaterialBlendModes, physicsMaterialBlendModes.Length))
+            {
+                Physics.frictionBlendMode = (PhysicsMaterialBlendMode)frictionBlendMode;
+            }
+
+            int restitutionBlendMode = (int)Physics.restitutionBlendMode;
+            ImGui.Text("Restitution Blend Mode");
+            ImGui.SameLine();
+            if (ImGui.Combo("##restitutionBlendMode", ref restitutionBlendMode, physicsMaterialBlendModes, physicsMaterialBlendModes.Length))
+            {
+                Physics.restitutionBlendMode = (PhysicsMaterialBlendMode)restitutionBlendMode;
+            }
+
+            ImGui.PopItemWidth();
         }
     }
 }
