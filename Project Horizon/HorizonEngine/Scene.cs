@@ -310,7 +310,7 @@ namespace HorizonEngine
         internal void Update(GameTime gameTime)
         {
             
-            if(Input.GetKeyDown(Keys.H))
+            if(Input.IsKeyDown(Keys.H))
             {
                 Debug.WriteLine("gameobjects : " + _gameObjects.Count);
                 Debug.WriteLine("renderers : " + _renderers.Count);
@@ -402,7 +402,7 @@ namespace HorizonEngine
 
             _mouseOverColliders = mouseOverColliders;
 
-            if(Input.GetMouseButtonDown(0))
+            if(Input.IsMouseButtonDown(MouseButton.Left))
             {
                 _mouseClickedColliders = new Collider[mouseOverColliders.Count];
                 mouseOverColliders.CopyTo(_mouseClickedColliders);
@@ -413,7 +413,7 @@ namespace HorizonEngine
                 }
                    
             }
-            else if(Input.GetMouseButton(0))
+            else if(Input.IsMouseButton(MouseButton.Left))
             {
                 foreach (var x in _mouseClickedColliders)
                 {
@@ -421,7 +421,7 @@ namespace HorizonEngine
                     foreach (var y in behaviours) y.OnMouseDrag();
                 }
             }
-            else if(Input.GetMouseButtonUp(0))
+            else if(Input.IsMouseButtonUp(MouseButton.Left))
             {
                 foreach (var x in _mouseClickedColliders)
                 {

@@ -15,11 +15,11 @@ namespace Project_Horizon_DX
         {
             public override void Update()
             {
-                if(Input.GetKeyDown(Keys.Q))
+                if(Input.IsKeyDown(Keys.Q))
                 {
                     gameObject.GetComponent<Animator>().SetTrigger("Trigger");
                 }
-                if (Input.GetKeyDown(Keys.R))
+                if (Input.IsKeyDown(Keys.R))
                 {
                     gameObject.DontDestroyOnLoad();
                     Scene.Load("Test Scene");
@@ -32,19 +32,19 @@ namespace Project_Horizon_DX
         {
             public override void Update()
             {
-                if (Input.GetKeyDown(Keys.A))
+                if (Input.IsKeyDown(Keys.A))
                 {
                     gameObject.GetComponent<AudioSource>().Play();
                 }
-                if (Input.GetKeyDown(Keys.S))
+                if (Input.IsKeyDown(Keys.S))
                 {
                     gameObject.GetComponent<AudioSource>().Pause();
                 }
-                if (Input.GetKeyDown(Keys.D))
+                if (Input.IsKeyDown(Keys.D))
                 {
                     gameObject.GetComponent<AudioSource>().Resume();
                 }
-                if (Input.GetKeyDown(Keys.F))
+                if (Input.IsKeyDown(Keys.F))
                 {
                     gameObject.GetComponent<AudioSource>().Stop();
                 }

@@ -9,6 +9,13 @@ using Microsoft.Xna.Framework.Input;
 
 namespace HorizonEngine
 {
+    public enum MouseButton
+    {
+        Left,
+        Right,
+        Middle
+    }
+
     public static class Input
     {
         private static KeyboardState _previousKeyboardState;
@@ -40,28 +47,28 @@ namespace HorizonEngine
             }
         }
 
-        public static bool GetKeyDown(Keys key)
+        public static bool IsKeyDown(Keys key)
         {
             return _previousKeyboardState.IsKeyUp(key) && _currentKeyboardState.IsKeyDown(key);
         }
 
-        public static bool GetKey(Keys key)
+        public static bool IsKey(Keys key)
         {
             return _currentKeyboardState.IsKeyDown(key);
         }
 
-        public static bool GetKeyUp(Keys key)
+        public static bool IsKeyUp(Keys key)
         {
             return _previousKeyboardState.IsKeyDown(key) && _currentKeyboardState.IsKeyUp(key);
         }
 
-        public static bool GetMouseButton(int button)
+        public static bool IsMouseButton(MouseButton button)
         {
-            if(button == 0)
+            if(button == MouseButton.Left)
             {
                 return _currentMouseState.LeftButton == ButtonState.Pressed;
             }
-            else if(button == 1)
+            else if(button == MouseButton.Right)
             {
                 return _currentMouseState.RightButton == ButtonState.Pressed;
             }
@@ -71,13 +78,13 @@ namespace HorizonEngine
             }
         }
 
-        public static bool GetMouseButtonDown(int button)
+        public static bool IsMouseButtonDown(MouseButton button)
         {
-            if (button == 0)
+            if (button == MouseButton.Left)
             {
                 return _currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released;
             }
-            else if (button == 1)
+            else if (button == MouseButton.Right)
             {
                 return _currentMouseState.RightButton == ButtonState.Pressed && _previousMouseState.RightButton == ButtonState.Released;
             }
@@ -87,13 +94,13 @@ namespace HorizonEngine
             }
         }
 
-        public static bool GetMouseButtonUp(int button)
+        public static bool IsMouseButtonUp(MouseButton button)
         {
-            if (button == 0)
+            if (button == MouseButton.Left)
             {
                 return _currentMouseState.LeftButton == ButtonState.Released && _previousMouseState.LeftButton == ButtonState.Pressed;
             }
-            else if (button == 1)
+            else if (button == MouseButton.Right)
             {
                 return _currentMouseState.RightButton == ButtonState.Released && _previousMouseState.RightButton == ButtonState.Pressed;
             }
