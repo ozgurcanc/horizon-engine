@@ -14,11 +14,17 @@ namespace HorizonEngine
     {
         private ImGUIRenderer _guiRenderer;
 
+        public EditorApp() : base(true)
+        {
+            //Editor Resolution
+            _graphics.PreferredBackBufferWidth = 1600;
+            _graphics.PreferredBackBufferHeight = 900;
+            _graphics.ApplyChanges();
+        }
+
         protected override void Initialize()
         {
             base.Initialize();
-
-            isEditor = true;
 
             _guiRenderer = new ImGUIRenderer(this).Initialize().RebuildFontAtlas();
             ImGui.GetIO().ConfigFlags |= ImGuiConfigFlags.DockingEnable;

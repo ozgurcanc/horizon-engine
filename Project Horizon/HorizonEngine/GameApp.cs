@@ -12,7 +12,7 @@ namespace HorizonEngine
 {
     public class GameApp : Application
     {
-        public GameApp(string openingScene) : base()
+        public GameApp(string openingScene) : base(false)
         {
             LoadScene(openingScene);
         }

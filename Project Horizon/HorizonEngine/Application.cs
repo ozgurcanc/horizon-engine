@@ -22,8 +22,14 @@ namespace HorizonEngine
         private static string _scenesPath;
         private static bool _isQuit;
 
-        protected Application()
+        protected Application(bool isEditorApplication)
         {
+            _isEditor = isEditorApplication; 
+            // Paths Init
+            _projectPath = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "Project");
+            _assetsPath = Path.Combine(_projectPath, "Assets");
+            _scenesPath = Path.Combine(_projectPath, "Scenes");
+
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
                 Formatting = Formatting.Indented,
@@ -36,18 +42,11 @@ namespace HorizonEngine
             IsMouseVisible = true;
             IsFixedTimeStep = false;
 
-            Graphics.Init(_graphics);
-            Graphics.resolution = new Vector2(1600, 900);
-            _graphics.ApplyChanges();
+            Graphics.Init(_graphics);          
 
             _scene = new Scene();        
 
-            // App Init
-            _projectPath = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "Project");
-            _assetsPath = Path.Combine(_projectPath, "Assets");
-            _scenesPath = Path.Combine(_projectPath, "Scenes");
-
-            string projectSettingsPath = Path.Combine(_projectPath, "ProjectSettings.json");
+            // App Init 
 
             if (!Directory.Exists(_projectPath))
             {
@@ -75,10 +74,6 @@ namespace HorizonEngine
             get
             {
                 return _isEditor;
-            }
-            internal set
-            {
-                _isEditor = value;
             }
         }
 

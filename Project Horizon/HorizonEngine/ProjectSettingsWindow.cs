@@ -21,7 +21,8 @@ namespace HorizonEngine
         static ProjectSettingsWindow()
         {
             _selected = -1;
-            _settings = new string[] { "Audio", "Editor", "Graphics", "Game", "Physics", "Time" };
+            _settings = new string[] { "Audio", "Graphics", "Physics"};
+            //_settings = new string[] { "Audio", "Graphics", "Physics", "Game", "Physics", "Time" };
         }
 
         internal static bool enabled
@@ -56,18 +57,21 @@ namespace HorizonEngine
             ImGui.BeginGroup();
             ImGui.BeginChild("right", new System.Numerics.Vector2(0, -ImGui.GetFrameHeightWithSpacing()));
             if (_selected == 0) AudioSettings();
-            else if (_selected == 4) PhysicsSettings();
+            else if (_selected == 1) GraphicsSettings();
+            else if (_selected == 2) PhysicsSettings();
             ImGui.EndChild();
             if(ImGui.Button("Revert"))
             {
                 Audio.LoadSettings();
                 Physics.LoadSettings();
+                Graphics.LoadSettings();
             }
             ImGui.SameLine();
             if(ImGui.Button("Save"))
             {
                 Audio.SaveSettings();
                 Physics.SaveSettings();
+                Graphics.SaveSettings();
             }
             ImGui.EndGroup();
 
@@ -166,6 +170,57 @@ namespace HorizonEngine
             if (ImGui.Combo("##restitutionBlendMode", ref restitutionBlendMode, physicsMaterialBlendModes, physicsMaterialBlendModes.Length))
             {
                 Physics.restitutionBlendMode = (PhysicsMaterialBlendMode)restitutionBlendMode;
+            }
+
+            ImGui.PopItemWidth();
+        }
+
+        private static void GraphicsSettings()
+        {
+            ImGui.PushItemWidth(ImGui.GetWindowWidth() * 0.35f);
+
+            ImGui.Text("Graphics settings have no effect in editor application.");
+            ImGui.NewLine();
+
+            Vector2 resolution = Graphics.resolution;
+            ImGui.Text("Resolution");
+            ImGui.SameLine();
+            ImGui.Text("X");
+            ImGui.SameLine();
+            if (ImGui.DragFloat("##resolutionX", ref resolution.X))
+            {
+                Graphics.resolution = resolution;
+            }
+            ImGui.SameLine();
+            ImGui.Text("Y");
+            ImGui.SameLine();
+            if (ImGui.DragFloat("##resolutionY", ref resolution.Y))
+            {
+                Graphics.resolution = resolution;
+            }
+
+            bool isFullScreen = Graphics.isFullScreen;
+            ImGui.Text("Is Full Screen");
+            ImGui.SameLine();
+            if (ImGui.Checkbox("##isFullScreen", ref isFullScreen))
+            {
+                Graphics.isFullScreen = isFullScreen;
+            }
+
+            bool verticalSynchronization = Graphics.verticalSynchronization;
+            ImGui.Text("Vertical Synchronization");
+            ImGui.SameLine();
+            if (ImGui.Checkbox("##verticalSynchronization", ref verticalSynchronization))
+            {
+                Graphics.verticalSynchronization = verticalSynchronization;
+            }
+
+            bool multiSampling = Graphics.multiSampling;
+            ImGui.Text("Multi Sampling");
+            ImGui.SameLine();
+            if (ImGui.Checkbox("##multiSampling", ref multiSampling))
+            {
+                Graphics.multiSampling = multiSampling;
             }
 
             ImGui.PopItemWidth();

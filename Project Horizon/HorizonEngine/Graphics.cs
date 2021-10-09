@@ -6,21 +6,35 @@ using System;
 using System.Diagnostics;
 using System.Collections.Generic;
 using SpriteFontPlus;
+using Newtonsoft.Json;
 using System.IO;
 
 namespace HorizonEngine
 {
     public static class Graphics
     {
+        [JsonObject(MemberSerialization.Fields)]
+        private class GraphicsSettings
+        {
+            public Vector2 resolution;
+            public bool isFullScreen;
+            public bool verticalSynchronization;
+            public bool multiSampling;
+        }
+
         private static GraphicsDeviceManager _graphics;
         private static Vector2 _resolution;
+        private static bool _isFullScreen;
+        private static bool _verticalSynchronization;
+        private static bool _multiSampling;
         private static RenderTarget2D _defaultRenderTarget;
 
         internal static void Init(GraphicsDeviceManager graphics)
         {
             _defaultRenderTarget = null;
             _graphics = graphics;
-            _resolution = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+            LoadSettings();
+            _graphics.ApplyChanges();
         }
 
         internal static RenderTarget2D defaultRenderTarget
@@ -52,10 +66,12 @@ namespace HorizonEngine
         {
             get
             {
-                return _graphics.IsFullScreen;
+                return _isFullScreen;
             }
             set
             {
+                _isFullScreen = value;
+                if (Application.isEditor) return;
                 _graphics.IsFullScreen = value;
                 _graphics.ApplyChanges();
             }
@@ -65,11 +81,28 @@ namespace HorizonEngine
         {
             get
             {
-                return _graphics.SynchronizeWithVerticalRetrace;
+                return _verticalSynchronization;
             }
             set
             {
+                _verticalSynchronization = value;
+                if (Application.isEditor) return;
                 _graphics.SynchronizeWithVerticalRetrace = value;
+                _graphics.ApplyChanges();
+            }
+        }
+
+        public static bool multiSampling
+        {
+            get
+            {
+                return _multiSampling;
+            }
+            set
+            {
+                _multiSampling = value;
+                if (Application.isEditor) return;
+                _graphics.PreferMultiSampling = value;
                 _graphics.ApplyChanges();
             }
         }
@@ -121,6 +154,25 @@ namespace HorizonEngine
             Texture2D texture = Texture2D.FromStream(_graphics.GraphicsDevice, stream);
             stream.Close();
             return texture;
+        }
+
+        internal static void SaveSettings()
+        {
+            GraphicsSettings graphicsSettings = new GraphicsSettings();
+            graphicsSettings.resolution = resolution;
+            graphicsSettings.isFullScreen = isFullScreen;
+            graphicsSettings.verticalSynchronization = verticalSynchronization;
+            graphicsSettings.multiSampling = multiSampling;
+            File.WriteAllText(Path.Combine(Application.projectPath, "GraphicsSettings.json"), JsonConvert.SerializeObject(graphicsSettings));
+        }
+
+        internal static void LoadSettings()
+        {
+            GraphicsSettings graphicsSettings = JsonConvert.DeserializeObject<GraphicsSettings>(File.ReadAllText(Path.Combine(Application.projectPath, "GraphicsSettings.json")));
+            resolution = graphicsSettings.resolution;
+            isFullScreen = graphicsSettings.isFullScreen;
+            verticalSynchronization = graphicsSettings.verticalSynchronization;
+            multiSampling = graphicsSettings.multiSampling;
         }
     }
 }
