@@ -24,6 +24,7 @@ namespace HorizonEngine
 
         private static GraphicsDeviceManager _graphics;
         private static Vector2 _resolution;
+        private static Vector2 _fullScreenResolution;
         private static bool _isFullScreen;
         private static bool _verticalSynchronization;
         private static bool _multiSampling;
@@ -33,8 +34,9 @@ namespace HorizonEngine
         {
             _defaultRenderTarget = null;
             _graphics = graphics;
-            LoadSettings();
             _graphics.ApplyChanges();
+            _fullScreenResolution = new Vector2(_graphics.GraphicsDevice.Adapter.CurrentDisplayMode.Width, _graphics.GraphicsDevice.Adapter.CurrentDisplayMode.Height);
+            LoadSettings();           
         }
 
         internal static RenderTarget2D defaultRenderTarget
@@ -50,12 +52,12 @@ namespace HorizonEngine
         {
             get
             {
-                return _resolution;
+                return isFullScreen ? _fullScreenResolution : _resolution;
             }
             set
             {
                 _resolution = value;
-                if (Application.isEditor) return;
+                if (isFullScreen || Application.isEditor) return;
                 _graphics.PreferredBackBufferWidth = (int)value.X;
                 _graphics.PreferredBackBufferHeight = (int)value.Y;
                 _graphics.ApplyChanges();
@@ -73,6 +75,16 @@ namespace HorizonEngine
                 _isFullScreen = value;
                 if (Application.isEditor) return;
                 _graphics.IsFullScreen = value;
+                if(_isFullScreen)
+                {
+                    _graphics.PreferredBackBufferWidth = (int)_fullScreenResolution.X;
+                    _graphics.PreferredBackBufferHeight = (int)_fullScreenResolution.Y;
+                }
+                else
+                {
+                    _graphics.PreferredBackBufferWidth = (int)resolution.X;
+                    _graphics.PreferredBackBufferHeight = (int)resolution.Y;
+                }
                 _graphics.ApplyChanges();
             }
         }
