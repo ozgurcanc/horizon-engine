@@ -177,14 +177,10 @@ namespace HorizonEngine
             return new Vector2(-f * v.Y, f * v.X);
         }
 
-        internal Collision GetCollisionData(int collider)
+        internal Collision GetCollisionData(int colliderIndex)
         {
-            Collision collision = new Collision();
-            collision.collider = collider == 0 ? _colliders[1] : _colliders[0];
-            collision.contactNormal = _contactNormal;
-            collision.contactPoint = _contactPoint;
-            collision.penetration = _penetration;
-
+            Collider collider = colliderIndex == 0 ? _colliders[1] : _colliders[0];
+            Collision collision = new Collision(collider, _contactNormal, _contactPoint, _penetration);
             return collision;
         }
 

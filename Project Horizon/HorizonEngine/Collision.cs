@@ -12,9 +12,49 @@ namespace HorizonEngine
 {
     public class Collision
     {
-        public Collider collider;
-        public Vector2 contactNormal;
-        public Vector2 contactPoint;
-        public float penetration;
+        private Collider _collider;
+        private Vector2 _contactNormal;
+        private Vector2 _contactPoint;
+        private float _penetration;
+
+        internal Collision(Collider collider, Vector2 contactNormal, Vector2 contactPoint, float penetration)
+        {
+            _collider = collider;
+            _contactNormal = contactNormal;
+            _contactPoint = contactPoint;
+            _penetration = penetration;
+        }
+
+        public Collider collider
+        {
+            get
+            {
+                return _collider;
+            }
+        }
+
+        public Vector2 contactNormal
+        {
+            get
+            {
+                return _contactNormal;
+            }
+        }
+
+        public Vector2 contactPoint
+        {
+            get
+            {
+                return _contactPoint;
+            }
+        }
+
+        public float penetration
+        {
+            get
+            {
+                return _penetration;
+            }
+        }
     }
 }
