@@ -9,13 +9,6 @@ using Microsoft.Xna.Framework.Input;
 
 namespace HorizonEngine
 {
-    public enum MouseButton
-    {
-        Left,
-        Right,
-        Middle
-    }
-
     public static class Input
     {
         private static KeyboardState _previousKeyboardState;

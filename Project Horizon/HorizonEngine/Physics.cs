@@ -14,14 +14,6 @@ using System.IO;
 
 namespace HorizonEngine
 {
-    public enum PhysicsMaterialBlendMode
-    {
-        Average,
-        Minumum,
-        Maximum,
-        Multiply
-    }
-
     public static class Physics
     {
         [JsonObject(MemberSerialization.Fields)]
@@ -152,12 +144,5 @@ namespace HorizonEngine
             defaultFriction = physicsSettings.defaultFriction;
             defaultRestitution = physicsSettings.defaultRestitution;
         }
-    }
-
-
-    public enum ForceMode
-    {
-        Force,
-        Impulse
     }
 }
