@@ -21,9 +21,11 @@ namespace HorizonEngine
         private static string _assetsPath;
         private static string _scenesPath;
         private static bool _isQuit;
+        private static Application _main;
 
         protected Application(bool isEditorApplication)
         {
+            _main = this;
             _isEditor = isEditorApplication; 
             // Paths Init
             _projectPath = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "Project");
@@ -74,6 +76,19 @@ namespace HorizonEngine
             get
             {
                 return _isEditor;
+            }
+        }
+
+        public static bool isMouseVisible
+        {
+            get
+            {
+                return _main.IsMouseVisible;
+            }
+            set
+            {
+                if (isEditor) return;
+                _main.IsMouseVisible = value;
             }
         }
 
