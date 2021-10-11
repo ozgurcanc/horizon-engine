@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.31112.23
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HorizonEngine", "HorizonEngine\HorizonEngine.csproj", "{C6550305-0CFD-4C4A-A6E1-B32C8AF15637}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectAutoBattler", "..\..\project-auto-battler\ProjectAutoBattler\ProjectAutoBattler.csproj", "{0B0B64BE-CBB9-4703-95CF-5A5CA77ECDCA}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project Horizon DX", "Project Horizon DX\Project Horizon DX.csproj", "{49A140CD-3506-4AD7-9206-6B3C03C72654}"
 EndProject
 Global
@@ -19,10 +17,6 @@ Global
 		{C6550305-0CFD-4C4A-A6E1-B32C8AF15637}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6550305-0CFD-4C4A-A6E1-B32C8AF15637}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6550305-0CFD-4C4A-A6E1-B32C8AF15637}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0B0B64BE-CBB9-4703-95CF-5A5CA77ECDCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0B0B64BE-CBB9-4703-95CF-5A5CA77ECDCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0B0B64BE-CBB9-4703-95CF-5A5CA77ECDCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0B0B64BE-CBB9-4703-95CF-5A5CA77ECDCA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{49A140CD-3506-4AD7-9206-6B3C03C72654}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{49A140CD-3506-4AD7-9206-6B3C03C72654}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49A140CD-3506-4AD7-9206-6B3C03C72654}.Release|Any CPU.ActiveCfg = Release|Any CPU
