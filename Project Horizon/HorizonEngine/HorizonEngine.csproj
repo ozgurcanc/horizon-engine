@@ -105,7 +105,6 @@
     <Compile Include="Input.cs" />
     <Compile Include="InspectorWindow.cs" />
     <Compile Include="Layer.cs" />
-    <Compile Include="LocalText.cs" />
     <Compile Include="MainMenuBar.cs" />
     <Compile Include="MonoGame.ImGui\Data\IndexData.cs" />
     <Compile Include="MonoGame.ImGui\Data\InputData.cs" />
