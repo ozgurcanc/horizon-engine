@@ -309,7 +309,7 @@ namespace HorizonEngine
 
         internal void Update(GameTime gameTime)
         {
-            
+            /*
             if(Input.IsKeyDown(Keys.H))
             {
                 Debug.WriteLine("gameobjects : " + _gameObjects.Count);
@@ -322,11 +322,10 @@ namespace HorizonEngine
                 Debug.WriteLine("audio sources : " + _audioSources.Count);
                 Debug.WriteLine("");               
             }
+            */
 
-            Time.Update(gameTime);
-            float deltaTime = Time.deltaTime;
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            Input.Update();
             Collider[] colliders = _colliders.ToArray();
 
             List<Contact> contacts = new List<Contact>();
@@ -454,6 +453,8 @@ namespace HorizonEngine
 
         internal static void BeginPlayMode()
         {
+            InspectorWindow.Inspect(null);
+
             List<GameObject> rootGameObjects = Scene.main._gameObjects.FindAll(x => x.parent == null);
             _cache = Tuple.Create(Scene.name, rootGameObjects);
 
@@ -465,6 +466,8 @@ namespace HorizonEngine
 
         internal static void EndPlayMode()
         {
+            InspectorWindow.Inspect(null);
+
             Scene scene = Scene.main;
             scene.Clear();
             List<GameObject> rootGameObjects = _cache.Item2;

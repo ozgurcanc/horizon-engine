@@ -190,6 +190,7 @@ namespace HorizonEngine
             if (ImGui.DragFloat("##resolutionX", ref resolution.X))
             {
                 Graphics.resolution = resolution;
+                GameWindow.CreateRenderTarget();
             }
             ImGui.SameLine();
             ImGui.Text("Y");
@@ -197,6 +198,7 @@ namespace HorizonEngine
             if (ImGui.DragFloat("##resolutionY", ref resolution.Y))
             {
                 Graphics.resolution = resolution;
+                GameWindow.CreateRenderTarget();
             }
 
             bool isFullScreen = Graphics.isFullScreen;
@@ -205,6 +207,7 @@ namespace HorizonEngine
             if (ImGui.Checkbox("##isFullScreen", ref isFullScreen))
             {
                 Graphics.isFullScreen = isFullScreen;
+                GameWindow.CreateRenderTarget();
             }
 
             bool verticalSynchronization = Graphics.verticalSynchronization;

@@ -22,6 +22,9 @@ namespace HorizonEngine
             if (Application.isQuit)
                 Exit();
 
+            Time.Update(gameTime);
+            Input.Update();
+
             _scene.Update(gameTime);
 
             base.Update(gameTime);

@@ -39,7 +39,6 @@ namespace HorizonEngine
             _gravity = new Vector2(0, -9.8f);
             _defaultFriction = 0f;
             _defaultRestitution = 0f;
-            LoadSettings();
         }
 
         public static Vector2 gravity

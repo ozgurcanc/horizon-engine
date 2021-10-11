@@ -55,9 +55,15 @@ namespace HorizonEngine
                 Directory.CreateDirectory(_projectPath);
                 Directory.CreateDirectory(_assetsPath);
                 Directory.CreateDirectory(_scenesPath);
+                Graphics.SaveSettings();
+                Audio.SaveSettings();
+                Physics.SaveSettings();
                 Assets.Save();
             }
 
+            Graphics.LoadSettings();
+            Audio.LoadSettings();
+            Physics.LoadSettings();
             Assets.Load();
         }
 

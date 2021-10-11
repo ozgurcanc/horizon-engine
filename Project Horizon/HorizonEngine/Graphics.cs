@@ -35,8 +35,8 @@ namespace HorizonEngine
             _defaultRenderTarget = null;
             _graphics = graphics;
             _graphics.ApplyChanges();
-            _fullScreenResolution = new Vector2(_graphics.GraphicsDevice.Adapter.CurrentDisplayMode.Width, _graphics.GraphicsDevice.Adapter.CurrentDisplayMode.Height);
-            LoadSettings();           
+            _resolution = new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
+            _fullScreenResolution = new Vector2(_graphics.GraphicsDevice.Adapter.CurrentDisplayMode.Width, _graphics.GraphicsDevice.Adapter.CurrentDisplayMode.Height);        
         }
 
         internal static RenderTarget2D defaultRenderTarget

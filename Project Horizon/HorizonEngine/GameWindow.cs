@@ -142,7 +142,7 @@ namespace HorizonEngine
             ImGui.End();
         }
 
-        private static void CreateRenderTarget()
+        internal static void CreateRenderTarget()
         {
             if(_sceneImage != IntPtr.Zero)
             {

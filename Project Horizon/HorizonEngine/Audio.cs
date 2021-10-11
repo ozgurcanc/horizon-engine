@@ -30,7 +30,6 @@ namespace HorizonEngine
         static Audio()
         {
             _audioListener = new AudioListener();
-            LoadSettings();
         }
 
         public static AudioListener audioListener

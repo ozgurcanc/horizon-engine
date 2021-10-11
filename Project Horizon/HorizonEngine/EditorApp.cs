@@ -50,6 +50,9 @@ namespace HorizonEngine
             if (Application.isQuit)
                 Exit();
 
+            Time.Update(gameTime);
+            Input.Update();
+
             if (GameWindow.isRunning)
                 _scene.Update(gameTime);
 
@@ -71,6 +74,7 @@ namespace HorizonEngine
 
             ImGui.ShowDemoWindow();
 
+            ProjectSettingsWindow.Draw();
             MainMenuBar.Draw();
             HierarchyWindow.Draw();
             GameWindow.Draw();
@@ -79,7 +83,6 @@ namespace HorizonEngine
             AnimationWindow.Draw();
             AnimatorWindow.Draw();
             SpriteEditorWindow.Draw();
-            ProjectSettingsWindow.Draw();
 
             _guiRenderer.EndLayout();
 
