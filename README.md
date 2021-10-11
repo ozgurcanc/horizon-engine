@@ -2,6 +2,8 @@
 
 2D game engine based on the [MonoGame Framework](https://www.monogame.net/). Its main goal is to significantly simplify working with Monogame by providing an editor and set of built-in classes.
 
+[Documentation](https://github.com/ozgurcanc/horizon-engine/wiki)
+
 ---
 
 |   |  |
